@@ -110,12 +110,12 @@ export function OpeningHero({ onDismiss }: OpeningHeroProps) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: showContent ? 1 : 0, y: showContent ? 0 : 20 }}
                 transition={{ delay: 0.4, duration: 0.6 }}
-                className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white font-mono tracking-[0.15em] text-center"
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white font-mono tracking-[0.15em] text-center whitespace-nowrap"
                 style={{
                   textShadow: "0 0 20px rgba(34, 211, 238, 0.3), 0 0 40px rgba(34, 211, 238, 0.15)",
                 }}
               >
-                VISHALDESHMUKH
+                VISHAL//DESHMUKH
               </motion.h1>
 
               {/* Subtitle */}

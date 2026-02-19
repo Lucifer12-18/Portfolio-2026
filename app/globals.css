@@ -143,6 +143,7 @@ html {
   body {
     @apply bg-background text-foreground antialiased;
     font-family: var(--font-sans);
+    overflow-x: hidden;
     /* More visible dot pattern for subtle pixel aesthetic */
     background-image: radial-gradient(circle, rgba(100, 100, 120, 0.08) 1.5px, transparent 1.5px);
     background-size: 16px 16px;

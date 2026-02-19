@@ -15,6 +15,15 @@ export default function HirelloFullCaseStudyPage() {
         <ViewModeProvider>
           <Navbar />
           <main className="mx-auto w-full max-w-4xl px-6 py-12 md:py-16">
+            <div className="mb-8">
+              <Link
+                href="/"
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <span aria-hidden>←</span>
+                Back to home
+              </Link>
+            </div>
             <WindowShell title="hirello_ai_full_case.tsx">
               <div className="space-y-16 md:space-y-20">
                 {/* 1. Hero / Overview */}

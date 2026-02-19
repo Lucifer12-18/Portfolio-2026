@@ -30,7 +30,7 @@ export default function Home() {
               <Navbar />
               <main
                 className="mx-auto w-full max-w-[1440px] lg:max-w-[1680px] px-6 lg:px-4
-                 lg:grid lg:grid-cols-[220px_minmax(1000px,1fr)_360px] lg:gap-7"
+                 lg:grid lg:grid-cols-[220px_1fr_360px] lg:gap-7"
               >
                 {/* Left column: sticky ChapterRail */}
                 <div className="hidden lg:block">

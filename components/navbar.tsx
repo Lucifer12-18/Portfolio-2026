@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Menu, X, Download, Users, Palette } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
@@ -28,7 +29,7 @@ export function Navbar() {
           <div className="flex items-center justify-between">
             {/* Left - Logo */}
             <div className="flex-shrink-0">
-              <a href="#home" className="group">
+              <Link href="/" className="group">
                 <div className="flex flex-col">
                   <div className="flex items-baseline gap-2">
                     <span className="relative inline-flex items-center">
@@ -49,7 +50,7 @@ export function Navbar() {
                     Personal UX OS for complex systems
                   </span>
                 </div>
-              </a>
+              </Link>
             </div>
 
             {/* Right - Toggle + Status + CTA */}
@@ -98,9 +99,16 @@ export function Navbar() {
                 <Button
                   size="sm"
                   className="gap-1.5 h-7 px-3 text-[11px] bg-[#4A7BF7] hover:bg-[#3B6CE8] text-white rounded-full shadow-sm hover:shadow-md transition-all"
+                  asChild
                 >
-                  <Download className="h-3 w-3" />
-                  Resume
+                  <a
+                    href="https://drive.google.com/file/d/1jaaSJL7kWIxkYDRnyQOkN-DpAu9-hZTG/view?usp=drive_link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Download className="h-3 w-3" />
+                    Resume
+                  </a>
                 </Button>
               </motion.div>
             </div>
@@ -193,9 +201,15 @@ export function Navbar() {
 
               {/* Resume button */}
               <div className="pt-4 mt-2 border-t border-slate-200">
-                <Button size="sm" className="w-full gap-2 bg-[#4A7BF7] hover:bg-[#3B6CE8] rounded-full">
-                  <Download className="h-3.5 w-3.5" />
-                  Download Resume
+                <Button size="sm" className="w-full gap-2 bg-[#4A7BF7] hover:bg-[#3B6CE8] rounded-full" asChild>
+                  <a
+                    href="https://drive.google.com/file/d/1jaaSJL7kWIxkYDRnyQOkN-DpAu9-hZTG/view?usp=drive_link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Download className="h-3.5 w-3.5" />
+                    Download Resume
+                  </a>
                 </Button>
               </div>
             </div>
