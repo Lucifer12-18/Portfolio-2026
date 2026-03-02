@@ -46,7 +46,7 @@ export function ChapterRail() {
                     className={cn(
                       "w-3 h-3 rounded-full border-2 transition-all relative z-10",
                       isActive
-                        ? "bg-primary border-primary shadow-lg shadow-primary/50"
+                        ? "bg-primary border-primary shadow-[0_0_10px_3px_rgba(74,123,247,0.55)]"
                         : "bg-transparent border-muted-foreground/40 group-hover:border-primary/70 group-hover:bg-primary/20"
                     )}
                     animate={

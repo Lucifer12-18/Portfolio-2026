@@ -58,8 +58,17 @@ export function HeroSection() {
 
   const miniWindows = [
     { filename: "system_arch.fig", image: "/images/prologue-system-arch.png" },
-    { filename: "flow_mapping.ai", image: "/images/prologue-flow-mapping.png" },
     { filename: "ai_integration.ai", image: "/images/prologue-ai-integration.png" },
+  ]
+
+  const skillSet = [
+    { label: "UX Research", borderClass: "border-l-blue-500" },
+    { label: "Systems Design", borderClass: "border-l-violet-500" },
+    { label: "AI/ML UX", borderClass: "border-l-cyan-500" },
+    { label: "Figma", borderClass: "border-l-red-500" },
+    { label: "Prototyping", borderClass: "border-l-amber-500" },
+    { label: "Design Ops", borderClass: "border-l-emerald-500" },
+    { label: "Data Viz", borderClass: "border-l-purple-500" },
   ]
 
   return (
@@ -186,25 +195,23 @@ export function HeroSection() {
           </div>
         </div>
 
-        {/* Right Column - Mini Window Stack */}
-        <div className="space-y-4">
+        {/* Right Column - Mini Window Stack + SKILL.SET (with spacing) */}
+        <div className="space-y-5">
           {miniWindows.map((window, index) => (
             <motion.div
-            key={window.filename}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            whileHover={{ y: -4, scale: 1.02 }}
-            transition={{
-              delay: 0.2 + index * 0.1,
-              duration: 0.4,
-              type: "spring",
-              stiffness: 250,
-              damping: 24,
-            }}
-          >
-          
+              key={window.filename}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              whileHover={{ y: -4, scale: 1.02 }}
+              transition={{
+                delay: 0.2 + index * 0.1,
+                duration: 0.4,
+                type: "spring",
+                stiffness: 250,
+                damping: 24,
+              }}
+            >
               <Card className="overflow-hidden border-border shadow-sm hover:shadow-md transition-all">
-                {/* Mini Window Header */}
                 <div className="flex items-center gap-2 px-3 py-2 bg-slate-50 border-b border-border">
                   <div className="flex items-center gap-1">
                     <div className="w-2 h-2 rounded-full bg-[#FF5F57]" />
@@ -213,7 +220,6 @@ export function HeroSection() {
                   </div>
                   <span className="text-xs font-mono text-muted-foreground">{window.filename}</span>
                 </div>
-                {/* Mini Window Preview — 16:9 to match diagram proportions; contain to avoid cropping */}
                 <div className="aspect-video relative overflow-hidden bg-slate-100/80 flex items-center justify-center">
                   <Image
                     src={window.image}
@@ -226,6 +232,28 @@ export function HeroSection() {
               </Card>
             </motion.div>
           ))}
+
+          {/* SKILL.SET — comfortable spacing between heading, tags, and between tags */}
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.3 }}
+            className="pt-4"
+          >
+            <h3 className="font-pixel text-[10px] tracking-[0.2em] uppercase text-slate-500 mb-4">
+              SKILL.SET:
+            </h3>
+            <div className="flex flex-wrap gap-3">
+              {skillSet.map((skill) => (
+                <span
+                  key={skill.label}
+                  className={`inline-flex items-center rounded-md border-l-4 bg-white/80 px-3 py-2 text-xs font-medium text-slate-700 shadow-sm border border-slate-200/60 ${skill.borderClass}`}
+                >
+                  {skill.label}
+                </span>
+              ))}
+            </div>
+          </motion.div>
         </div>
       </div>
     </SectionWrapper>

@@ -1,21 +1,35 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Menu, X, Download, Users, Palette } from "lucide-react"
+import { Menu, X, Download, FileText } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useViewMode } from "@/contexts/view-mode-context"
 import { useSystemLog } from "@/contexts/system-log-context"
 import { useReadingStore } from "@/contexts/reading-store-context"
 
-const contextTags = ["UX Design", "AI", "Systems"]
+const TOTAL_CHAPTERS = 6
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [utcTime, setUtcTime] = useState("")
   const { viewMode, setViewMode } = useViewMode()
   const { addLog } = useSystemLog()
   const { activeChapterConfig } = useReadingStore()
+
+  useEffect(() => {
+    const format = () => {
+      const d = new Date()
+      const h = d.getUTCHours().toString().padStart(2, "0")
+      const m = d.getUTCMinutes().toString().padStart(2, "0")
+      const s = d.getUTCSeconds().toString().padStart(2, "0")
+      setUtcTime(`${h}:${m}:${s} UTC`)
+    }
+    format()
+    const id = setInterval(format, 1000)
+    return () => clearInterval(id)
+  }, [])
 
   const handleViewModeToggle = (mode: "recruiter" | "designer") => {
     setViewMode(mode)
@@ -23,82 +37,83 @@ export function Navbar() {
   }
 
   return (
-    <header className="relative sticky top-0 z-40 bg-[#fafafa]/95 backdrop-blur border-b border-slate-100 py-2.5 lg:py-2">
-      <nav className="relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
+    <header className="relative sticky top-0 z-40 bg-[#fafafa]/95 backdrop-blur border-b border-slate-100 pt-6 pb-0 lg:pt-7 lg:pb-0">
+      <nav className="relative w-full">
+        <div className="w-full px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between gap-6 w-full">
             {/* Left - Logo */}
             <div className="flex-shrink-0">
               <Link href="/" className="group">
-                <div className="flex flex-col">
-                  <div className="flex items-baseline gap-2">
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-baseline gap-2.5">
                     <span className="relative inline-flex items-center">
-                      <span className="font-pixel text-[13px] leading-none tracking-[0.18em] uppercase text-slate-900">
-                        Pixelogic OS
+                      <span className="font-pixel text-[15px] sm:text-[16px] leading-none tracking-[0.18em] uppercase text-slate-900 font-bold">
+                        PIXELOGIC OS
                       </span>
-                      {/* tiny animated underline */}
                       <span
                         aria-hidden="true"
                         className="pointer-events-none absolute -bottom-1 left-0 h-[2px] w-full rounded-full bg-gradient-to-r from-sky-400/0 via-sky-400/70 to-sky-400/0 animate-pulse"
                       />
                     </span>
-                    <span className="hidden sm:inline text-[11px] lg:text-xs text-slate-400">
+                    <span className="hidden sm:inline text-[11px] lg:text-[12px] text-slate-500">
                       by Vishal Deshmukh
                     </span>
                   </div>
-                  <span className="hidden md:inline mt-1 inline-flex items-center rounded-full border border-slate-100 bg-slate-50/80 px-2.5 py-0.5 font-pixel text-[9px] leading-none tracking-[0.24em] uppercase text-slate-400">
-                    Personal UX OS for complex systems
+                  <span className="hidden md:inline font-pixel text-[9px] leading-none tracking-[0.24em] uppercase text-slate-400">
+                    PERSONAL UX OS FOR COMPLEX SYSTEMS
                   </span>
                 </div>
               </Link>
             </div>
 
-            {/* Right - Toggle + Status + CTA */}
-            <div className="hidden lg:flex items-center justify-end gap-3 ml-auto">
-              <div className="flex flex-col items-end gap-1">
-                {/* View mode toggle */}
-                <div className="flex items-center bg-slate-100/80 rounded-full p-0.5 border border-slate-200/60">
+            {/* Right - Open roles + Rectangular buttons (more spacing) */}
+            <div className="hidden lg:flex items-center justify-end gap-6 ml-auto">
+              <div className="flex items-center gap-2.5 text-[11px] text-slate-600">
+                <span>Open roles:</span>
+                <span
+                  className="h-2 w-2 rounded-full bg-emerald-400 flex-shrink-0 shadow-[0_0_8px_3px_rgba(52,211,153,0.55)] animate-pulse"
+                  aria-hidden
+                />
+                <span className="font-medium text-slate-700">Product · UX · Systems</span>
+              </div>
+              <div className="flex items-center gap-2.5">
+                {/* Joined slider toggle */}
+                <div className="relative flex items-center bg-slate-100 border border-slate-200 rounded-sm p-0 gap-0 overflow-hidden">
+                  {/* Sliding indicator */}
+                  <motion.div
+                    className="absolute inset-y-0 bg-[#4A7BF7] rounded-none"
+                    layout
+                    layoutId="view-mode-slider"
+                    style={{
+                      left: viewMode === "recruiter" ? "0" : "50%",
+                      right: viewMode === "recruiter" ? "50%" : "0",
+                    }}
+                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                  />
                   <button
                     onClick={() => handleViewModeToggle("recruiter")}
-                    className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-medium transition-all ${
-                      viewMode === "recruiter"
-                        ? "bg-[#4A7BF7] text-white shadow-sm"
-                        : "text-[#6B7280] hover:text-[#0F172A]"
+                    className={`relative z-10 flex items-center gap-1.5 px-3.5 py-1.5 text-[11px] font-medium transition-colors duration-150 rounded-[3px] ${
+                      viewMode === "recruiter" ? "text-white" : "text-slate-600 hover:text-slate-900"
                     }`}
                   >
-                    <Users className="h-2.5 w-2.5" />
+                    <span className="text-[13px] leading-none">🤝</span>
                     Recruiter
                   </button>
                   <button
                     onClick={() => handleViewModeToggle("designer")}
-                    className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-medium transition-all ${
-                      viewMode === "designer"
-                        ? "bg-[#4A7BF7] text-white shadow-sm"
-                        : "text-[#6B7280] hover:text-[#0F172A]"
+                    className={`relative z-10 flex items-center gap-1.5 px-3.5 py-1.5 text-[11px] font-medium transition-colors duration-150 rounded-[3px] ${
+                      viewMode === "designer" ? "text-white" : "text-slate-600 hover:text-slate-900"
                     }`}
                   >
-                    <Palette className="h-2.5 w-2.5" />
+                    <span className="text-[13px] leading-none">🎨</span>
                     Designer
                   </button>
                 </div>
 
-                {/* Open to work pill */}
-                <div className="hidden sm:inline-flex items-center gap-2 rounded-full border border-emerald-300/40 bg-emerald-50/60 px-3 py-[3px] text-[11px] font-medium text-emerald-700 shadow-lg breathing">
-                  <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                  <span>Open to roles: Product · UX · Systems</span>
-                </div>
-
-                {/* Mini status line */}
-                <p className="font-pixel text-[10px] leading-relaxed tracking-[0.26em] uppercase text-slate-500">
-                  SYSTEM.STATUS: OPERATIONAL · VIEW.MODE: {viewMode.toUpperCase()}
-                </p>
-              </div>
-
-              {/* Resume button */}
-              <motion.div whileHover={{ y: -1 }} whileTap={{ y: 0 }} transition={{ duration: 0.15 }}>
+                {/* Resume button */}
                 <Button
                   size="sm"
-                  className="gap-1.5 h-7 px-3 text-[11px] bg-[#4A7BF7] hover:bg-[#3B6CE8] text-white rounded-full shadow-sm hover:shadow-md transition-all"
+                  className="gap-1.5 h-9 px-3.5 text-[11px] rounded-sm bg-slate-900 hover:bg-slate-800 text-white border-0"
                   asChild
                 >
                   <a
@@ -106,11 +121,11 @@ export function Navbar() {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <Download className="h-3 w-3" />
+                    <FileText className="h-3 w-3" />
                     Resume
                   </a>
                 </Button>
-              </motion.div>
+              </div>
             </div>
 
             {/* Mobile menu button */}
@@ -130,30 +145,47 @@ export function Navbar() {
         className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-sky-300/40 to-transparent animate-pulse"
       />
 
-      <div className="hidden lg:block bg-[#EEEEE9]/90 backdrop-blur-sm border-b border-slate-200/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-7">
-            {/* Left - Current view label */}
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] text-[#9CA3AF] font-medium">Reading:</span>
-              <span className="font-pixel text-[10px] leading-relaxed tracking-[0.26em] uppercase text-slate-500">
-                {activeChapterConfig?.fullLabel || "Prologue · Pixelogic OS"}
-              </span>
-            </div>
-
-            {/* Right - Context tags */}
-            <div className="flex items-center gap-1.5">
-              {contextTags.map((tag) => (
-                <span
-                  key={tag}
-                  className="px-2 py-0.5 text-[9px] font-medium text-[#6B7280] bg-white/60 rounded-full border border-slate-200/50"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </div>
+      {/* Chapter status bar — full-width strip, feels integrated not floating */}
+      <div
+        className="hidden lg:flex items-center justify-between w-full px-4 sm:px-6 lg:px-8 py-3 mt-5 border-t border-slate-200/60 bg-[#EEEEE9]/70"
+        style={{ fontFamily: "var(--font-pixel), monospace" }}
+      >
+        {/* Left: SYSTEM.STATUS · VIEW.MODE · READING */}
+        <div className="flex items-center flex-wrap gap-x-4 gap-y-1 text-[10px] tracking-[0.12em] uppercase text-slate-500">
+          <span className="flex items-center gap-1.5">
+            <span>SYSTEM.STATUS:</span>
+            <span
+              className="h-1.5 w-1.5 rounded-full bg-emerald-400 flex-shrink-0 shadow-[0_0_6px_2px_rgba(52,211,153,0.55)]"
+              aria-hidden
+            />
+            <span className="text-emerald-600 font-medium">OPERATIONAL</span>
+          </span>
+          <span className="text-slate-400">·</span>
+          <span className="flex items-center gap-1.5">
+            <span>VIEW.MODE:</span>
+            <span
+              className="h-1.5 w-1.5 rounded-full bg-[#4A7BF7] flex-shrink-0 shadow-[0_0_6px_2px_rgba(74,123,247,0.6)]"
+              aria-hidden
+            />
+            <span className="text-[#4A7BF7] font-medium">
+              {viewMode === "designer" ? "DESIGNER" : "RECRUITER"}
+            </span>
+          </span>
+          <span className="text-slate-400">·</span>
+          <span className="flex items-center gap-1.5">
+            <span>READING:</span>
+            <span className="text-slate-600 font-medium">
+              {activeChapterConfig?.fullLabel ?? "Prologue · Pixelogic OS"}
+            </span>
+          </span>
         </div>
+
+        {/* Right: timestamp */}
+        {utcTime && (
+          <span className="text-[9px] text-slate-400 tracking-[0.1em] flex-shrink-0">
+            {utcTime}
+          </span>
+        )}
       </div>
 
       {/* Mobile Navigation - unchanged */}
