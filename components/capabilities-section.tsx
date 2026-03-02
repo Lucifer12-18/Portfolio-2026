@@ -59,13 +59,14 @@ const capabilitiesContent = {
 }
 
 const cardVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 28, scale: 0.97 },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
+    scale: 1,
     transition: {
-      delay: i * 0.1,
-      duration: 0.4,
+      delay: 0.1 + i * 0.12,
+      duration: 0.55,
       ease: [0.16, 1, 0.3, 1],
     },
   }),
@@ -77,13 +78,13 @@ export function CapabilitiesSection() {
   return (
     <SectionWrapper
       id="chapter-2"
-      windowTitle="CHAPTER 2 · SHIFT INTO UX & PRODUCT"
-      moduleLabel="CHAPTER 2 · SHIFT INTO UX & PRODUCT"
+      windowTitle="SHIFT · FROM LOGIC TO EXPERIENCE"
+      moduleLabel="SHIFT · FROM LOGIC TO EXPERIENCE"
     >
-      <ModuleBadge module="02" label="SHIFT INTO UX & PRODUCT" />
+      <ModuleBadge module="02" label="SHIFT" />
 
       <div className="text-center mb-12">
-        <h2 className="text-3xl md:text-4xl font-semibold text-foreground mb-4">The Shift into UX & Product</h2>
+        <h2 className="text-3xl md:text-4xl font-semibold text-foreground mb-4">From Logic to Experience</h2>
 
         {viewMode === "recruiter" && (
           <div className="flex flex-col gap-2 p-4 bg-primary/5 rounded-xl border border-primary/10 mb-6 max-w-lg mx-auto text-left">

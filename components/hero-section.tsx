@@ -74,13 +74,13 @@ export function HeroSection() {
   return (
     <SectionWrapper
       id="prologue"
-      className="pt-28 md:pt-36"
-      windowTitle="PROLOGUE · SYSTEM OVERVIEW"
-      moduleLabel="PROLOGUE · SYSTEM OVERVIEW"
+      className="pt-20 md:pt-24"
+      windowTitle="PROLOGUE · PIXELOGIC OS"
+      moduleLabel="PROLOGUE · PIXELOGIC OS"
     >
-      <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center min-h-[80vh]">
+      <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
         {/* Left Column */}
-        <div className="space-y-8">
+        <div className="space-y-5">
           <ModuleBadge module="00" label="PROLOGUE" />
 
           <motion.div
@@ -93,12 +93,12 @@ export function HeroSection() {
               text={content.headline}
               speed={28}
               loop={false}
-              className="text-4xl sm:text-5xl lg:text-[64px] font-semibold leading-tight text-slate-900"
+              className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-[1.15] tracking-tight text-slate-50"
             />
           </motion.div>
 
-          <p className="typewriter text-sm text-slate-500/90 mt-4">
-            boot: designing clarity inside complex systems...
+          <p className="text-xs font-mono text-slate-500 tracking-wide">
+            <span className="text-cyan-400/60">$</span> boot: designing clarity inside complex systems<span className="inline-block w-[2px] h-3 bg-cyan-400/50 animate-pulse ml-0.5 align-middle rounded-full" />
           </p>
 
           <motion.div
@@ -106,10 +106,10 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: 0.1 }}
-            className="space-y-4"
+            className="space-y-3"
           >
             {viewMode === "recruiter" && content.bullets && (
-              <div className="flex flex-col gap-2 p-4 bg-primary/5 rounded-xl border border-primary/10 mb-4">
+              <div className="flex flex-col gap-2 p-3.5 bg-primary/5 rounded-xl border border-primary/10 mb-3">
                 <span className="text-xs font-mono text-primary uppercase tracking-wide">Quick Summary</span>
                 <ul className="space-y-1.5">
                   {content.bullets.map((bullet, i) => (
@@ -121,7 +121,7 @@ export function HeroSection() {
                 </ul>
               </div>
             )}
-            <p className="text-xl text-muted-foreground leading-relaxed max-w-xl whitespace-pre-line">
+            <p className="text-base lg:text-lg text-muted-foreground leading-relaxed max-w-xl whitespace-pre-line">
               {content.description}
             </p>
           </motion.div>
@@ -142,7 +142,7 @@ export function HeroSection() {
           </div>
 
           {/* Status Row */}
-          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 py-4 px-5 bg-secondary/50 rounded-xl border border-border">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 py-3 px-4 bg-secondary/50 rounded-xl border border-border">
             <div className="flex items-center gap-2">
               <span className="relative flex h-3 w-3">
                 <motion.span
@@ -211,16 +211,16 @@ export function HeroSection() {
                 damping: 24,
               }}
             >
-              <Card className="overflow-hidden border-border shadow-sm hover:shadow-md transition-all">
-                <div className="flex items-center gap-2 px-3 py-2 bg-slate-50 border-b border-border">
+              <Card className="overflow-hidden border-white/8 bg-slate-900/70 shadow-[0_4px_20px_rgba(0,0,0,0.5)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.6)] transition-all">
+                <div className="flex items-center gap-2 px-3 py-2 bg-slate-900/80 border-b border-white/5">
                   <div className="flex items-center gap-1">
                     <div className="w-2 h-2 rounded-full bg-[#FF5F57]" />
                     <div className="w-2 h-2 rounded-full bg-[#FEBC2E]" />
                     <div className="w-2 h-2 rounded-full bg-[#28C840]" />
                   </div>
-                  <span className="text-xs font-mono text-muted-foreground">{window.filename}</span>
+                  <span className="text-xs font-mono text-slate-500">{window.filename}</span>
                 </div>
-                <div className="aspect-video relative overflow-hidden bg-slate-100/80 flex items-center justify-center">
+                <div className="aspect-video relative overflow-hidden bg-slate-800/50 flex items-center justify-center">
                   <Image
                     src={window.image}
                     alt={window.filename}
@@ -247,7 +247,7 @@ export function HeroSection() {
               {skillSet.map((skill) => (
                 <span
                   key={skill.label}
-                  className={`inline-flex items-center rounded-md border-l-4 bg-white/80 px-3 py-2 text-xs font-medium text-slate-700 shadow-sm border border-slate-200/60 ${skill.borderClass}`}
+                  className={`inline-flex items-center rounded-md border-l-4 bg-slate-800/60 px-3 py-2 text-xs font-medium text-slate-300 shadow-sm border border-white/8 ${skill.borderClass}`}
                 >
                   {skill.label}
                 </span>

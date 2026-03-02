@@ -73,10 +73,10 @@ export function ProcessSection() {
   const currentStep = steps[activeStep]
 
   return (
-    <SectionWrapper id="chapter-3" windowTitle="CHAPTER 3 · HOW I WORK" moduleLabel="CHAPTER 3 · HOW I WORK">
-      <ModuleBadge module="03" label="HOW I WORK" />
+    <SectionWrapper id="chapter-3" windowTitle="METHOD · THE DESIGN RHYTHM" moduleLabel="METHOD · THE DESIGN RHYTHM">
+      <ModuleBadge module="03" label="METHOD" />
 
-      <h2 className="text-3xl md:text-4xl font-semibold text-foreground mb-4">How I Work</h2>
+      <h2 className="text-3xl md:text-4xl font-semibold text-foreground mb-4">The Design Rhythm</h2>
 
       {viewMode === "recruiter" && (
         <div className="flex flex-col gap-2 p-4 bg-primary/5 rounded-xl border border-primary/10 mb-6 max-w-lg">

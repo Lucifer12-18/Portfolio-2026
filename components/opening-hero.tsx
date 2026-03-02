@@ -2,6 +2,9 @@
 
 import { useState, useEffect, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import dynamic from "next/dynamic"
+
+const ThreeDScene = dynamic(() => import("./three-scene"), { ssr: false })
 
 interface OpeningHeroProps {
   onDismiss: () => void
@@ -63,13 +66,19 @@ export function OpeningHero({ onDismiss }: OpeningHeroProps) {
           transition={{ duration: 0.5 }}
           className="fixed inset-0 z-[100] min-h-[100svh] flex items-center justify-center overflow-hidden"
         >
-          {/* Background gradient with vignette */}
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
-            {/* Subtle noise overlay */}
-            <div className="absolute inset-0 opacity-[0.03] noise-texture" />
-            {/* Vignette effect */}
-            <div className="absolute inset-0 bg-radial-gradient from-transparent via-transparent to-black/40" />
+          {/* Base background — visible instantly before 3D loads */}
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-[#020617] to-slate-950" />
+
+          {/* 3D scene — Vishal's system map (Design ↔ AI/Systems via translation layer) */}
+          <div className="absolute inset-0">
+            <ThreeDScene />
           </div>
+
+          {/* Vignette — darkens edges so terminal card pops */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(0,0,0,0.65)_100%)]" />
+
+          {/* Subtle noise overlay */}
+          <div className="absolute inset-0 opacity-[0.025] noise-texture" />
 
           {/* Corner brackets */}
           <div className="absolute top-6 left-6 w-12 h-12 border-t-2 border-l-2 border-cyan-400/60" />

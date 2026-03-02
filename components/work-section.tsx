@@ -107,14 +107,15 @@ const workContent = {
 }
 
 const cardVariants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 28, scale: 0.97 },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
+    scale: 1,
     transition: {
-      delay: i * 0.1,
-      duration: 0.4,
-      ease: "easeOut",
+      delay: 0.1 + i * 0.12,
+      duration: 0.55,
+      ease: [0.16, 1, 0.3, 1],
     },
   }),
 }
@@ -138,11 +139,11 @@ export function WorkSection() {
   return (
     <SectionWrapper
       id="chapter-4"
-      windowTitle="CHAPTER 4 · CASE STORIES"
-      moduleLabel="CHAPTER 4 · CASE STORIES"
+      windowTitle="WORK · CASE STORIES IN PRACTICE"
+      moduleLabel="WORK · CASE STORIES IN PRACTICE"
       className="py-20 md:py-20"
     >
-      <ModuleBadge module="04" label="CASE STORIES" />
+      <ModuleBadge module="04" label="WORK" />
 
       <h2 className="mb-4">
         <TypewriterText

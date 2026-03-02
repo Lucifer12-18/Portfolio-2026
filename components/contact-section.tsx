@@ -11,13 +11,13 @@ import Image from "next/image"
 
 export function ContactSection() {
   return (
-    <SectionWrapper id="epilogue" windowTitle="EPILOGUE · CONNECTION HUB">
+    <SectionWrapper id="epilogue" windowTitle="EPILOGUE · OPEN CHANNEL">
       <div className="flex justify-center mb-6">
         <ModuleBadge module="06" label="EPILOGUE" />
       </div>
 
       {/* Centered dialog-style window */}
-      <WindowShell title="EPILOGUE · CONNECTION HUB">
+      <WindowShell title="EPILOGUE · OPEN CHANNEL">
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Left Column - Text */}
           <div className="space-y-6">

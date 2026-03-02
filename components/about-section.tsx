@@ -136,13 +136,13 @@ export function AboutSection() {
   const content = aboutContent[viewMode]
 
   return (
-    <SectionWrapper id="chapter-1" windowTitle="CHAPTER 1 · ORIGIN STORY" moduleLabel="CHAPTER 1 · ORIGIN STORY">
-      <ModuleBadge module="01" label="ORIGIN STORY" />
+    <SectionWrapper id="chapter-1" windowTitle="ORIGIN · THE SYSTEMS BACKGROUND" moduleLabel="ORIGIN · THE SYSTEMS BACKGROUND">
+      <ModuleBadge module="01" label="ORIGIN" />
 
       <div className="grid lg:grid-cols-2 gap-12 lg:gap-20">
         {/* Left Column - Story Text + Pull Quote */}
         <div className="space-y-6">
-          <h2 className="text-3xl md:text-4xl font-semibold text-foreground">Origin Story</h2>
+          <h2 className="text-3xl md:text-4xl font-semibold text-foreground">The Systems Background</h2>
 
           <motion.div
             key={viewMode}
@@ -236,9 +236,10 @@ export function AboutSection() {
               {timeline.map((item, index) => (
                 <motion.div
                   key={item.year}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1, duration: 0.4 }}
+                  initial={{ opacity: 0, x: -20, scale: 0.97 }}
+                  whileInView={{ opacity: 1, x: 0, scale: 1 }}
+                  viewport={{ once: true, margin: "-60px" }}
+                  transition={{ delay: 0.08 + index * 0.1, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                   className="relative pl-16"
                 >
                   <div className="absolute left-3 top-2 w-6 h-6 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-xs font-bold shadow-lg z-10">

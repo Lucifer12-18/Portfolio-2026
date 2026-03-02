@@ -74,12 +74,12 @@ export function NotesSection() {
   return (
     <SectionWrapper
       id="chapter-5"
-      windowTitle="CHAPTER 5 · NOTES FROM THE SYSTEM"
-      moduleLabel="CHAPTER 5 · NOTES FROM THE SYSTEM"
+      windowTitle="NOTES · OBSERVATIONS FROM THE FIELD"
+      moduleLabel="NOTES · OBSERVATIONS FROM THE FIELD"
     >
-      <ModuleBadge module="05" label="NOTES FROM THE SYSTEM" />
+      <ModuleBadge module="05" label="NOTES" />
 
-      <h2 className="text-3xl md:text-4xl font-semibold text-foreground mb-4">Notes from the System</h2>
+      <h2 className="text-3xl md:text-4xl font-semibold text-foreground mb-4">Observations from the Field</h2>
 
       <p className="text-muted-foreground mb-8 max-w-2xl leading-relaxed">
         Between big projects, I keep short notes—little system logs on what I'm learning about UX, AI, and working with

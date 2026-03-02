@@ -21,49 +21,49 @@ export const CHAPTERS: ChapterConfig[] = [
     chapterNumber: 0,
     label: "Prologue",
     fullLabel: "Prologue · Pixelogic OS",
-    sectionId: "prologue", // matches HeroSection section/id
+    sectionId: "prologue",
   },
   {
     id: "origin",
     chapterNumber: 1,
-    label: "Chapter 1",
-    fullLabel: "Chapter 1 · Origin Story",
-    sectionId: "chapter-1", // AboutSection
+    label: "Origin",
+    fullLabel: "Origin · The Systems Background",
+    sectionId: "chapter-1",
   },
   {
     id: "shift",
     chapterNumber: 2,
-    label: "Chapter 2",
-    fullLabel: "Chapter 2 · Shift into UX & Product",
-    sectionId: "chapter-2", // CapabilitiesSection
+    label: "Shift",
+    fullLabel: "Shift · From Logic to Experience",
+    sectionId: "chapter-2",
   },
   {
     id: "how",
     chapterNumber: 3,
-    label: "Chapter 3",
-    fullLabel: "Chapter 3 · How I Work",
-    sectionId: "chapter-3", // ProcessSection
+    label: "Method",
+    fullLabel: "Method · The Design Rhythm",
+    sectionId: "chapter-3",
   },
   {
     id: "cases",
     chapterNumber: 4,
-    label: "Chapter 4",
-    fullLabel: "Chapter 4 · Case Stories",
-    sectionId: "chapter-4", // WorkSection
+    label: "Work",
+    fullLabel: "Work · Case Stories in Practice",
+    sectionId: "chapter-4",
   },
   {
     id: "notes",
     chapterNumber: 5,
-    label: "Chapter 5",
-    fullLabel: "Chapter 5 · Notes from the System",
-    sectionId: "chapter-5", // NotesSection
+    label: "Notes",
+    fullLabel: "Notes · Observations from the Field",
+    sectionId: "chapter-5",
   },
   {
     id: "epilogue",
     chapterNumber: 6,
     label: "Epilogue",
-    fullLabel: "Epilogue · Contact",
-    sectionId: "epilogue", // ContactSection
+    fullLabel: "Epilogue · Open Channel",
+    sectionId: "epilogue",
   },
 ]
 
