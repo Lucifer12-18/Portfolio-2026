@@ -139,10 +139,10 @@ export function AboutSection() {
     <SectionWrapper id="chapter-1" windowTitle="ORIGIN · THE SYSTEMS BACKGROUND" moduleLabel="ORIGIN · THE SYSTEMS BACKGROUND">
       <ModuleBadge module="01" label="ORIGIN" />
 
-      <div className="grid lg:grid-cols-2 gap-12 lg:gap-20">
+      <div className="grid lg:grid-cols-2 gap-8 lg:gap-10">
         {/* Left Column - Story Text + Pull Quote */}
         <div className="space-y-6">
-          <h2 className="text-3xl md:text-4xl font-semibold text-foreground">The Systems Background</h2>
+          <h2 className="text-2xl md:text-3xl font-semibold text-foreground">The Systems Background</h2>
 
           <motion.div
             key={viewMode}
@@ -172,13 +172,13 @@ export function AboutSection() {
               </div>
             )}
             {viewMode === "designer" && content.blocks && (
-              <div className="text-muted-foreground text-lg leading-[1.7]">
+              <div className="text-muted-foreground text-sm leading-[1.6]">
                 {content.blocks.map((block, i) => {
                   if (block.type === "paragraph") {
                     return (
                       <p
                         key={i}
-                        className={block.sectionBreak ? "mb-6" : "mb-4"}
+                        className={block.sectionBreak ? "mb-3" : "mb-2"}
                       >
                         {block.text}
                       </p>
@@ -188,7 +188,7 @@ export function AboutSection() {
                     return (
                       <div key={i}>
                         <p className="mb-4">{block.intro}</p>
-                        <ul className="mt-3 mb-6 flex flex-col gap-2 list-none pl-0">
+                        <ul className="mt-2 mb-3 flex flex-col gap-1.5 list-none pl-0">
                           {block.items.map((item, j) => (
                             <li key={j} className="flex items-center gap-2">
                               <span className="h-1.5 w-1.5 rounded-full bg-primary flex-shrink-0 mt-[0.4em]" />
@@ -214,17 +214,7 @@ export function AboutSection() {
             )}
           </motion.div>
 
-          {/* Pull Quote */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1, duration: 0.3 }}
-            className="relative pl-6 border-l-4 border-primary/30 my-8"
-          >
-            <p className="text-2xl font-semibold text-foreground italic leading-relaxed">
-              "Good design isn't about adding clarity - it's about removing unnecessary complexity from the system."
-            </p>
-          </motion.div>
+          {/* Pull quote removed for density */}
         </div>
 
         {/* Right Column - Timeline + Sketch */}
@@ -232,7 +222,7 @@ export function AboutSection() {
           {/* Vertical Timeline */}
           <div className="relative">
             <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-border" />
-            <div className="space-y-8">
+            <div className="space-y-3">
               {timeline.map((item, index) => (
                 <motion.div
                   key={item.year}
@@ -245,10 +235,10 @@ export function AboutSection() {
                     {index + 1}
                   </div>
                   <Card className="border-border shadow-sm">
-                    <CardContent className="p-4">
-                      <div className="text-xs font-mono text-muted-foreground mb-1">{item.year}</div>
-                      <h3 className="font-semibold text-foreground mb-1">{item.milestone}</h3>
-                      <p className="text-sm text-muted-foreground">{item.description}</p>
+                    <CardContent className="p-3">
+                      <div className="text-xs font-mono text-muted-foreground mb-0.5">{item.year}</div>
+                      <h3 className="font-semibold text-foreground text-sm mb-0.5">{item.milestone}</h3>
+                      <p className="text-xs text-muted-foreground">{item.description}</p>
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -256,23 +246,7 @@ export function AboutSection() {
             </div>
           </div>
 
-          {/* Chapter 1 sketch — image only, no frame */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.3 }}
-            className="relative w-full"
-          >
-            <div className="relative w-full aspect-[4/3] min-h-[260px] rounded-xl overflow-hidden">
-              <Image
-                src="/origin-story-sketch.png"
-                alt="Hand-drawn wireframe and flow sketch on paper"
-                fill
-                className="object-contain object-center"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
-            </div>
-          </motion.div>
+          {/* Sketch image removed for density — timeline alone fills column */}
         </div>
       </div>
     </SectionWrapper>

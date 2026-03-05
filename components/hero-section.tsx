@@ -80,7 +80,7 @@ export function HeroSection() {
       windowTitle="PROLOGUE · PIXELOGIC OS"
       moduleLabel="PROLOGUE · PIXELOGIC OS"
     >
-      <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+      <div className="grid lg:grid-cols-2 gap-6 lg:gap-8 items-center">
         {/* Left Column */}
         <div className="space-y-5">
           <ModuleBadge module="00" label="PROLOGUE" />
@@ -95,7 +95,7 @@ export function HeroSection() {
               text={content.headline}
               speed={28}
               loop={false}
-              className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-[1.15] tracking-tight text-slate-50"
+              className="text-2xl sm:text-3xl lg:text-4xl font-bold leading-[1.15] tracking-tight text-slate-50"
             />
           </motion.div>
 
@@ -123,7 +123,7 @@ export function HeroSection() {
                 </ul>
               </div>
             )}
-            <p className="text-base lg:text-lg text-muted-foreground leading-relaxed max-w-xl whitespace-pre-line">
+            <p className="text-sm lg:text-base text-muted-foreground leading-relaxed max-w-xl whitespace-pre-line">
               {content.description}
             </p>
           </motion.div>
@@ -134,9 +134,8 @@ export function HeroSection() {
               <Badge
                 key={role}
                 variant="outline"
-                className={`px-4 py-2 text-sm font-medium bg-background border-border text-foreground ${
-                  i === 2 ? "border-[#A78BFA]/30 bg-[#EDE9FE]/30" : ""
-                }`}
+                className={`px-4 py-2 text-sm font-medium bg-background border-border text-foreground ${i === 2 ? "border-[#A78BFA]/30 bg-[#EDE9FE]/30" : ""
+                  }`}
               >
                 {role}
               </Badge>
@@ -144,7 +143,7 @@ export function HeroSection() {
           </div>
 
           {/* Status Row */}
-          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 py-3 px-4 bg-secondary/50 rounded-xl border border-border">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 py-2 px-3 bg-secondary/50 rounded-xl border border-border">
             <div className="flex items-center gap-2">
               <span className="relative flex h-3 w-3">
                 <motion.span
@@ -220,7 +219,7 @@ export function HeroSection() {
                   </div>
                   <span className="text-xs font-mono text-slate-500">{window.filename}</span>
                 </div>
-                <div className="aspect-video relative overflow-hidden bg-slate-800/50 flex items-center justify-center">
+                <div className="aspect-[21/9] relative overflow-hidden bg-slate-800/50 flex items-center justify-center">
                   <Image
                     src={window.image}
                     alt={window.filename}
@@ -238,7 +237,7 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.3 }}
-            className="pt-4"
+            className="pt-2"
           >
             <h3 className="font-pixel text-[10px] tracking-[0.2em] uppercase text-slate-500 mb-4">
               SKILL.SET:
@@ -247,7 +246,7 @@ export function HeroSection() {
               {skillSet.map((skill) => (
                 <span
                   key={skill.label}
-                  className={`inline-flex items-center rounded-md border-l-4 bg-slate-800/60 px-3 py-2 text-xs font-medium text-slate-300 shadow-sm border border-white/8 ${skill.borderClass}`}
+                  className={`inline-flex items-center rounded-md border-l-4 bg-slate-800/60 px-2.5 py-1.5 text-xs font-medium text-slate-300 shadow-sm border border-white/8 ${skill.borderClass}`}
                 >
                   {skill.label}
                 </span>

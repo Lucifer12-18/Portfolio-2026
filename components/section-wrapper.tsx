@@ -10,13 +10,13 @@ import { useReadingStore } from "@/contexts/reading-store-context"
 import { CHAPTERS } from "@/lib/chapters-config"
 
 const SECTION_ACCENT: Record<string, string> = {
-  prologue:   "34, 211, 238",
+  prologue: "34, 211, 238",
   "chapter-1": "6, 182, 212",
   "chapter-2": "124, 58, 237",
   "chapter-3": "167, 139, 250",
   "chapter-4": "56, 189, 248",
   "chapter-5": "147, 197, 253",
-  epilogue:   "224, 249, 255",
+  epilogue: "224, 249, 255",
 }
 
 interface SectionWrapperProps {
@@ -48,7 +48,7 @@ export function SectionWrapper({ id, children, className, windowTitle, moduleLab
   return (
     <section
       id={id}
-      className={cn("relative py-16 md:py-24", className)}
+      className={cn("relative h-full flex flex-col", className)}
     >
       {/* Radial gradient spotlight — per-section accent glow */}
       <div
@@ -63,8 +63,9 @@ export function SectionWrapper({ id, children, className, windowTitle, moduleLab
         />
       </div>
 
-      <div className="relative mx-auto w-full space-y-8 lg:space-y-10">
+      <div className="relative flex-1 min-h-0 w-full">
         <motion.div
+          className="h-full"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, ease: "easeOut" }}

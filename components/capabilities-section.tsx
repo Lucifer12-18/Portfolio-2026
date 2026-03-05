@@ -83,8 +83,8 @@ export function CapabilitiesSection() {
     >
       <ModuleBadge module="02" label="SHIFT" />
 
-      <div className="text-center mb-12">
-        <h2 className="text-3xl md:text-4xl font-semibold text-foreground mb-4">From Logic to Experience</h2>
+      <div className="text-center mb-6">
+        <h2 className="text-2xl md:text-3xl font-semibold text-foreground mb-3">From Logic to Experience</h2>
 
         {viewMode === "recruiter" && (
           <div className="flex flex-col gap-2 p-4 bg-primary/5 rounded-xl border border-primary/10 mb-6 max-w-lg mx-auto text-left">
@@ -121,20 +121,20 @@ export function CapabilitiesSection() {
             transition={{ duration: 0.3, type: "spring", stiffness: 300 }}
           >
             <Card className="border-border shadow-sm hover:shadow-xl transition-all group rounded-2xl">
-              <CardContent className="p-10 flex flex-col">
-                <div className="flex items-center justify-center mb-6">
-                  <div className="p-6 rounded-2xl bg-primary/10 group-hover:bg-primary/20 transition-colors icon-container-glow">
-                    <capability.icon className="h-12 w-12 text-primary icon-glow" />
+              <CardContent className="p-6 flex flex-col">
+                <div className="flex items-center justify-center mb-3">
+                  <div className="p-4 rounded-2xl bg-primary/10 group-hover:bg-primary/20 transition-colors icon-container-glow">
+                    <capability.icon className="h-8 w-8 text-primary icon-glow" />
                   </div>
                 </div>
 
-                <div className="text-center mb-6">
+                <div className="text-center mb-3">
                   <span className="text-xs font-mono text-muted-foreground">{capability.file}</span>
                   <h3 className="text-xl font-semibold text-foreground mt-2 mb-2">{capability.title}</h3>
                   <p className="text-sm text-foreground/85 italic">{capability.subtitle}</p>
                 </div>
 
-                <ul className="space-y-4 mt-auto">
+                <ul className="space-y-2 mt-auto">
                   {capability.bullets.map((bullet) => (
                     <li key={bullet} className="flex items-start gap-2 text-sm text-muted-foreground">
                       <span className="h-1.5 w-1.5 rounded-full bg-primary mt-2 flex-shrink-0"></span>
@@ -192,9 +192,7 @@ export function CapabilitiesSection() {
         </div>
       </div>
 
-      <p className="text-center text-muted-foreground max-w-2xl mx-auto mt-10 leading-relaxed">
-        I design for environments where clarity is not optional - it directly impacts decisions, efficiency, and trust.
-      </p>
+
     </SectionWrapper>
   )
 }

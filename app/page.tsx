@@ -25,7 +25,7 @@ const ForegroundParticles = dynamic(() => import("@/components/foreground-partic
 
 const ACCENT_COLORS = [
   { r: 34, g: 211, b: 238 },
-  { r:  6, g: 182, b: 212 },
+  { r: 6, g: 182, b: 212 },
   { r: 124, g: 58, b: 237 },
   { r: 167, g: 139, b: 250 },
   { r: 56, g: 189, b: 248 },
@@ -115,8 +115,8 @@ function PageFlipContainer() {
   const prevIndexRef = useRef(activeChapterIndex)
   const direction =
     activeChapterIndex > prevIndexRef.current ? 1
-    : activeChapterIndex < prevIndexRef.current ? -1
-    : 0
+      : activeChapterIndex < prevIndexRef.current ? -1
+        : 0
 
   useEffect(() => {
     prevIndexRef.current = activeChapterIndex
@@ -163,12 +163,12 @@ function PageFlipContainer() {
 
   return (
     <div
-      className="relative min-w-0 w-full h-[calc(100vh-160px)] overflow-hidden"
+      className="relative min-w-0 w-full h-[calc(100vh-220px)] overflow-hidden"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      <div className="absolute inset-0 overflow-y-auto scrollbar-hide pt-4 pb-8">
-        <div style={{ perspective: "1800px" }}>
+      <div className="absolute inset-0 overflow-hidden pt-3 pb-8">
+        <div style={{ perspective: "1800px" }} className="h-full">
           <AnimatePresence mode="popLayout" custom={direction}>
             <motion.div
               key={activeChapterIndex}
@@ -178,6 +178,7 @@ function PageFlipContainer() {
               animate="animate"
               exit="exit"
               style={{ transformStyle: "preserve-3d" }}
+              className="h-full"
             >
               <ActiveComponent />
             </motion.div>
@@ -191,11 +192,10 @@ function PageFlipContainer() {
           <button
             key={i}
             onClick={() => setActiveChapterIndex(i)}
-            className={`h-1.5 rounded-full transition-all duration-300 ${
-              i === activeChapterIndex
-                ? "w-6 bg-primary"
-                : "w-1.5 bg-slate-600 hover:bg-slate-400"
-            }`}
+            className={`h-1.5 rounded-full transition-all duration-300 ${i === activeChapterIndex
+              ? "w-6 bg-primary"
+              : "w-1.5 bg-slate-600 hover:bg-slate-400"
+              }`}
             aria-label={`Go to ${CHAPTERS[i].label}`}
           />
         ))}
