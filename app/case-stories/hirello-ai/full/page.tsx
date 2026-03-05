@@ -13,19 +13,22 @@ export default function HirelloFullCaseStudyPage() {
     <SystemLogProvider>
       <ReadingStoreProvider>
         <ViewModeProvider>
-          <Navbar />
-          <main className="mx-auto w-full max-w-4xl px-6 py-12 md:py-16">
-            <div className="mb-8">
-              <Link
-                href="/"
-                className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-              >
-                <span aria-hidden>←</span>
-                Back to home
-              </Link>
-            </div>
-            <WindowShell title="hirello_ai_full_case.tsx">
-              <div className="space-y-16 md:space-y-20">
+          <div className="min-h-screen flex flex-col">
+            <Navbar />
+            <main className="flex-1 flex">
+              <div className="mx-auto w-full max-w-4xl px-6 py-12 md:py-16 flex-1 flex">
+                <div className="w-full">
+                  <div className="mb-8">
+                    <Link
+                      href="/"
+                      className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      <span aria-hidden>←</span>
+                      Back to home
+                    </Link>
+                  </div>
+                  <WindowShell title="hirello_ai_full_case.tsx" className="max-h-full">
+                    <div className="space-y-16 md:space-y-20">
                 {/* 1. Hero / Overview */}
                 <header className="space-y-6">
                   <div className="space-y-3">
@@ -406,8 +409,11 @@ export default function HirelloFullCaseStudyPage() {
                 </section>
               </div>
             </WindowShell>
-          </main>
-          <Footer />
+          </div>
+        </div>
+      </main>
+            <Footer />
+          </div>
         </ViewModeProvider>
       </ReadingStoreProvider>
     </SystemLogProvider>

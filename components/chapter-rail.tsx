@@ -6,21 +6,7 @@ import { CHAPTERS } from "@/lib/chapters-config"
 import { useReadingStore } from "@/contexts/reading-store-context"
 
 export function ChapterRail() {
-  const { activeChapterConfig } = useReadingStore()
-
-  const scrollToChapter = (sectionId: string) => {
-    const section = document.getElementById(sectionId)
-    if (section) {
-      const offset = 72 // Navbar height
-      const elementPosition = section.getBoundingClientRect().top + window.scrollY
-      const offsetPosition = elementPosition - offset
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth",
-      })
-    }
-  }
+  const { activeChapterConfig, setActiveChapterIndex } = useReadingStore()
 
   return (
     <div className="flex flex-col items-center min-h-[400px]">
@@ -35,7 +21,7 @@ export function ChapterRail() {
             return (
               <motion.button
                 key={chapter.id}
-                onClick={() => scrollToChapter(chapter.sectionId)}
+                onClick={() => setActiveChapterIndex(index)}
                 className="group relative flex flex-col items-center gap-2"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}

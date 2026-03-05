@@ -8,6 +8,7 @@ import { SectionWrapper } from "@/components/section-wrapper"
 import { ArrowRight } from "lucide-react"
 import { motion } from "framer-motion"
 import { useViewMode } from "@/contexts/view-mode-context"
+import { useReadingStore } from "@/contexts/reading-store-context"
 import { TypewriterText } from "@/components/typewriter-text"
 import Image from "next/image"
 
@@ -54,6 +55,7 @@ from "how it works" → to "how it feels to use."`,
 
 export function HeroSection() {
   const { viewMode } = useViewMode()
+  const { setActiveChapterIndex } = useReadingStore()
   const content = heroContent[viewMode as ViewMode]
 
   const miniWindows = [
@@ -174,12 +176,10 @@ export function HeroSection() {
               <Button
                 size="lg"
                 className="gap-2 shadow-md hover:shadow-lg transition-all rounded-full px-8 py-6 text-base btn-soft-hover"
-                asChild
+                onClick={() => setActiveChapterIndex(4)}
               >
-                <a href="#work">
-                  View Case Stories
-                  <ArrowRight className="h-4 w-4" />
-                </a>
+                View Case Stories
+                <ArrowRight className="h-4 w-4" />
               </Button>
             </motion.div>
             <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }} transition={{ duration: 0.15 }}>
@@ -187,9 +187,9 @@ export function HeroSection() {
                 size="lg"
                 variant="outline"
                 className="bg-transparent rounded-full px-8 py-6 text-base hover:bg-[#EDE9FE]/50 hover:border-[#A78BFA]/30 transition-all"
-                asChild
+                onClick={() => setActiveChapterIndex(3)}
               >
-                <a href="#process">See How I Work</a>
+                See How I Work
               </Button>
             </motion.div>
           </div>

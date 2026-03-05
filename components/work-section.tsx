@@ -113,8 +113,8 @@ const cardVariants = {
     y: 0,
     scale: 1,
     transition: {
-      delay: 0.1 + i * 0.12,
-      duration: 0.55,
+      delay: 0.05 + i * 0.06,
+      duration: 0.4,
       ease: [0.16, 1, 0.3, 1],
     },
   }),
@@ -178,8 +178,7 @@ export function WorkSection() {
         <div className="mb-10">
           <motion.div
             initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
+            animate="visible"
             variants={cardVariants}
             custom={0}
           >
@@ -193,6 +192,7 @@ export function WorkSection() {
                     src={featuredProject.imagePath || "/placeholder.svg"}
                     alt={featuredProject.title}
                     fill
+                    sizes="(max-width: 1024px) 100vw, 50vw"
                     className="object-contain object-center transition-transform duration-500 group-hover:scale-[1.02]"
                   />
                 </div>
@@ -230,8 +230,7 @@ export function WorkSection() {
             key={project.title}
             custom={i + 1}
             initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
+            animate="visible"
             variants={cardVariants}
           >
             <Card
@@ -243,6 +242,7 @@ export function WorkSection() {
                   src={project.imagePath || "/placeholder.svg"}
                   alt={project.title}
                   fill
+                  sizes="(max-width: 768px) 100vw, 33vw"
                   className="object-contain object-center transition-transform duration-500 group-hover:scale-[1.02]"
                 />
               </div>
@@ -286,15 +286,15 @@ export function WorkSection() {
         project={
           selectedProject
             ? {
-                title: selectedProject.title,
-                file: selectedProject.file,
-                tags: selectedProject.tags,
-                tools: selectedProject.tools,
-                problem: selectedProject.problem,
-                approach: selectedProject.approach,
-                outcome: selectedProject.outcome,
-                imagePath: selectedProject.imagePath,
-              }
+              title: selectedProject.title,
+              file: selectedProject.file,
+              tags: selectedProject.tags,
+              tools: selectedProject.tools,
+              problem: selectedProject.problem,
+              approach: selectedProject.approach,
+              outcome: selectedProject.outcome,
+              imagePath: selectedProject.imagePath,
+            }
             : null
         }
         isOpen={isModalOpen}

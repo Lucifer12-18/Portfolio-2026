@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 import { cn } from "@/lib/utils"
 import { WindowShell } from "@/components/window-shell"
 import { motion } from "framer-motion"
@@ -30,43 +30,25 @@ interface SectionWrapperProps {
 export function SectionWrapper({ id, children, className, windowTitle, moduleLabel }: SectionWrapperProps) {
   const { addLog } = useSystemLog()
   const { setActiveModule } = useReadingStore()
-  const [hasLogged, setHasLogged] = useState(false)
-  const sectionRef = useRef<HTMLElement>(null)
+  const hasLoggedRef = useRef(false)
   const accentRgb = SECTION_ACCENT[id] ?? "34, 211, 238"
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !hasLogged) {
-            const chapterConfig = CHAPTERS.find((c) => c.sectionId === id)
-            const sectionName = chapterConfig ? chapterConfig.fullLabel.toUpperCase() : id.toUpperCase()
-            addLog(`> loaded section: ${sectionName}`)
-            if (moduleLabel) {
-              setActiveModule(moduleLabel)
-            }
-            setHasLogged(true)
-          }
-        })
-      },
-      { threshold: 0.3 },
-    )
+    if (hasLoggedRef.current) return
+    hasLoggedRef.current = true
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current)
+    const chapterConfig = CHAPTERS.find((c) => c.sectionId === id)
+    const sectionName = chapterConfig ? chapterConfig.fullLabel.toUpperCase() : id.toUpperCase()
+    addLog(`> loaded section: ${sectionName}`)
+    if (moduleLabel) {
+      setActiveModule(moduleLabel)
     }
-
-    return () => observer.disconnect()
-  }, [id, moduleLabel, windowTitle, addLog, hasLogged, setActiveModule])
+  }, [id, moduleLabel, addLog, setActiveModule])
 
   return (
     <section
-      ref={sectionRef}
       id={id}
-      className={cn(
-        "relative py-16 md:py-24 scroll-mt-16 lg:snap-start lg:min-h-[90vh] lg:flex lg:items-center",
-        className
-      )}
+      className={cn("relative py-16 md:py-24", className)}
     >
       {/* Radial gradient spotlight — per-section accent glow */}
       <div
@@ -83,10 +65,9 @@ export function SectionWrapper({ id, children, className, windowTitle, moduleLab
 
       <div className="relative mx-auto w-full space-y-8 lg:space-y-10">
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, ease: "easeOut" }}
         >
           {windowTitle ? <WindowShell title={windowTitle}>{children}</WindowShell> : children}
         </motion.div>

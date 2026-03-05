@@ -37,7 +37,7 @@ export function ContactSection() {
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }}>
                 <Button size="lg" className="gap-2 rounded-full px-8 w-full sm:w-auto" asChild>
-                  <a href="mailto:vishal@example.com">
+                  <a href="mailto:vishald089@gmail.com">
                     <Mail className="h-4 w-4" />
                     Send me a note
                   </a>
@@ -65,6 +65,7 @@ export function ContactSection() {
                       alt="Vishal Deshmukh"
                       width={64}
                       height={64}
+                      sizes="64px"
                       className="object-cover"
                     />
                   </div>

@@ -4,352 +4,509 @@ import { useRef, useMemo, useEffect, useState } from "react"
 import { Canvas, useFrame } from "@react-three/fiber"
 import { EffectComposer, Bloom } from "@react-three/postprocessing"
 import * as THREE from "three"
+import { useReadingStore } from "@/contexts/reading-store-context"
 
 // ─────────────────────────────────────────────────────────────────────────────
-// SCROLL-DRIVEN CAMERA JOURNEY
-//
-// The portfolio is a narrative. As you read through chapters, the camera
-// slowly drifts through the same living network — each chapter seen from a
-// different perspective. The world never changes; only your viewpoint does.
+// CONFIGURATION
 // ─────────────────────────────────────────────────────────────────────────────
 
-interface CamFrame { scroll: number; x: number; y: number; z: number }
+const PARTICLE_COUNT = 2500
 
-const CAM_PATH: CamFrame[] = [
-  { scroll: 0.00, x:  0.0, y:  0.0, z: 11.0 }, // Prologue
-  { scroll: 0.17, x: -2.0, y:  0.7, z: 10.5 }, // Origin Story   — lean into Design cluster
-  { scroll: 0.36, x:  0.0, y:  1.2, z: 13.0 }, // Capabilities   — pull back, full overview
-  { scroll: 0.53, x:  2.0, y:  0.3, z: 10.5 }, // Process        — lean into AI/Systems cluster
-  { scroll: 0.70, x:  0.8, y: -0.8, z: 11.5 }, // Case Stories   — slightly below, intimate
-  { scroll: 0.86, x:  0.0, y:  1.0, z: 12.5 }, // Notes          — elevated, serene
-  { scroll: 1.00, x:  0.0, y:  0.0, z: 15.0 }, // Contact        — far back, open, calm
+const CHAPTER_COLORS: [number, number, number][] = [
+  [0.133, 0.827, 0.933], // 0 Prologue  — cyan
+  [0.024, 0.714, 0.831], // 1 Origin    — teal
+  [0.486, 0.227, 0.929], // 2 Shift     — violet
+  [0.655, 0.545, 0.980], // 3 Method    — lavender
+  [0.220, 0.741, 0.973], // 4 Cases     — sky
+  [0.576, 0.773, 0.992], // 5 Notes     — ice blue
+  [0.878, 0.976, 1.000], // 6 Epilogue  — white
+]
+
+const CHAPTER_BG = [
+  "#020617", "#041822", "#0e0520", "#12032a",
+  "#031018", "#061525", "#020617",
+]
+
+const CHAPTER_BLOOM = [0.75, 1.0, 1.2, 1.0, 0.9, 0.85, 0.65]
+
+const CAM_TARGETS: [number, number, number][] = [
+  [ 0.0,  0.0, 8.0],  // Prologue  — centered
+  [-1.5,  0.5, 7.5],  // Origin    — lean into the helix
+  [ 0.0,  1.0, 9.0],  // Shift     — pull back, see full torus
+  [ 1.5,  0.3, 7.5],  // Method    — lean into the knot
+  [ 0.5, -0.5, 8.0],  // Cases     — slightly below the lattice
+  [ 0.0,  0.8, 8.5],  // Notes     — elevated, serene
+  [ 0.0,  0.0, 10.0], // Epilogue  — far back, starburst fills view
 ]
 
 // ─────────────────────────────────────────────────────────────────────────────
-// PER-CHAPTER ATMOSPHERE PALETTES
+// GLSL VERTEX SHADER
 //
-// Each chapter gets a distinct visual mood: background tint, connection line
-// color, bloom intensity, and ambient warmth — all lerped smoothly between
-// scroll positions so transitions feel like breathing, not cutting.
+// Each chapter maps to a mathematically generated formation.
+// Transitions use curl noise displacement — particles flow like luminous
+// spirit energy between shapes rather than teleporting.
 //
-//   Prologue     → deep navy, full cyan glow
-//   Origin Story → darker, cyan surge — leaning into the design cluster
-//   Capabilities → violet deep space — abstract, expansive
-//   Process      → lavender wash — methodical, considered
-//   Case Stories → sky blue, open — the work revealed
-//   Notes        → pale blue serenity — reflective, quiet
-//   Contact      → still ice-white — journey complete
+//   0  Prologue  →  Fibonacci Sphere  (the universe before the story)
+//   1  Origin    →  Double Helix      (DNA, foundations)
+//   2  Shift     →  Torus             (transformation, cyclic change)
+//   3  Method    →  Trefoil Knot      (interconnected, rhythmic)
+//   4  Cases     →  Crystal Lattice   (structured, concrete work)
+//   5  Notes     →  Wave Surface      (reflective, flowing thoughts)
+//   6  Epilogue  →  Starburst         (expanding, opening up)
 // ─────────────────────────────────────────────────────────────────────────────
 
-interface Atmosphere {
-  scroll: number
-  bg: string
-  line: string
-  bloom: number
-  ambient: number
+const vertexShader = /* glsl */ `
+precision highp float;
+
+#define PI 3.14159265359
+#define TAU 6.28318530718
+#define GOLDEN 1.6180339887
+#define N ${PARTICLE_COUNT.toFixed(1)}
+
+attribute float aIndex;
+attribute vec3 aRandom;
+
+uniform float uTime;
+uniform float uChapterFrom;
+uniform float uChapterTo;
+uniform float uTransition;
+uniform float uPixelRatio;
+uniform vec3 uColorFrom;
+uniform vec3 uColorTo;
+uniform vec2 uMouse;
+
+varying vec3 vColor;
+varying float vAlpha;
+
+// ─── Simplex 3D Noise (Ashima Arts / Stefan Gustavson) ──────────────────
+vec4 permute(vec4 x) { return mod(((x * 34.0) + 1.0) * x, 289.0); }
+vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
+
+float snoise(vec3 v) {
+  const vec2 C = vec2(1.0 / 6.0, 1.0 / 3.0);
+  const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
+
+  vec3 i = floor(v + dot(v, C.yyy));
+  vec3 x0 = v - i + dot(i, C.xxx);
+
+  vec3 g = step(x0.yzx, x0.xyz);
+  vec3 l = 1.0 - g;
+  vec3 i1 = min(g.xyz, l.zxy);
+  vec3 i2 = max(g.xyz, l.zxy);
+
+  vec3 x1 = x0 - i1 + C.xxx;
+  vec3 x2 = x0 - i2 + C.yyy;
+  vec3 x3 = x0 - D.yyy;
+
+  i = mod(i, 289.0);
+  vec4 p = permute(permute(permute(
+      i.z + vec4(0.0, i1.z, i2.z, 1.0))
+    + i.y + vec4(0.0, i1.y, i2.y, 1.0))
+    + i.x + vec4(0.0, i1.x, i2.x, 1.0));
+
+  float n_ = 1.0 / 7.0;
+  vec3 ns = n_ * D.wyz - D.xzx;
+
+  vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
+
+  vec4 x_ = floor(j * ns.z);
+  vec4 y_ = floor(j - 7.0 * x_);
+
+  vec4 x = x_ * ns.x + ns.yyyy;
+  vec4 y = y_ * ns.x + ns.yyyy;
+  vec4 h = 1.0 - abs(x) - abs(y);
+
+  vec4 b0 = vec4(x.xy, y.xy);
+  vec4 b1 = vec4(x.zw, y.zw);
+
+  vec4 s0 = floor(b0) * 2.0 + 1.0;
+  vec4 s1 = floor(b1) * 2.0 + 1.0;
+  vec4 sh = -step(h, vec4(0.0));
+
+  vec4 a0 = b0.xzyw + s0.xzyw * sh.xxyy;
+  vec4 a1 = b1.xzyw + s1.xzyw * sh.zzww;
+
+  vec3 p0 = vec3(a0.xy, h.x);
+  vec3 p1 = vec3(a0.zw, h.y);
+  vec3 p2 = vec3(a1.xy, h.z);
+  vec3 p3 = vec3(a1.zw, h.w);
+
+  vec4 norm = taylorInvSqrt(vec4(dot(p0, p0), dot(p1, p1), dot(p2, p2), dot(p3, p3)));
+  p0 *= norm.x;
+  p1 *= norm.y;
+  p2 *= norm.z;
+  p3 *= norm.w;
+
+  vec4 m = max(0.6 - vec4(dot(x0, x0), dot(x1, x1), dot(x2, x2), dot(x3, x3)), 0.0);
+  m = m * m;
+  return 42.0 * dot(m * m, vec4(dot(p0, x0), dot(p1, x1), dot(p2, x2), dot(p3, x3)));
 }
 
-const ATMOSPHERES: Atmosphere[] = [
-  { scroll: 0.00, bg: "#020617", line: "#22d3ee", bloom: 0.75, ambient: 0.04 },
-  { scroll: 0.17, bg: "#041822", line: "#06b6d4", bloom: 1.00, ambient: 0.07 },
-  { scroll: 0.36, bg: "#0e0520", line: "#7c3aed", bloom: 1.20, ambient: 0.04 },
-  { scroll: 0.53, bg: "#12032a", line: "#a78bfa", bloom: 1.00, ambient: 0.06 },
-  { scroll: 0.70, bg: "#031018", line: "#38bdf8", bloom: 0.90, ambient: 0.08 },
-  { scroll: 0.86, bg: "#061525", line: "#93c5fd", bloom: 0.85, ambient: 0.05 },
-  { scroll: 1.00, bg: "#020617", line: "#e0f9ff", bloom: 0.65, ambient: 0.03 },
-]
+// ─── Curl Noise (approximate, divergence-free-ish) ──────────────────────
+vec3 curlNoise(vec3 p) {
+  float e = 0.1;
 
-// Pre-allocated scratch colors — avoids per-frame GC pressure
-const _colA = new THREE.Color()
-const _colB = new THREE.Color()
+  float x1 = snoise(p + vec3(e, 0.0, 0.0));
+  float x2 = snoise(p - vec3(e, 0.0, 0.0));
+  float y1 = snoise(p + vec3(0.0, e, 0.0));
+  float y2 = snoise(p - vec3(0.0, e, 0.0));
+  float z1 = snoise(p + vec3(0.0, 0.0, e));
+  float z2 = snoise(p - vec3(0.0, 0.0, e));
 
-function lerp(a: number, b: number, t: number) { return a + (b - a) * t }
-function easeInOut(t: number) { return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t }
+  return vec3(
+    (y1 - y2) - (z1 - z2),
+    (z1 - z2) - (x1 - x2),
+    (x1 - x2) - (y1 - y2)
+  ) / (2.0 * e);
+}
 
-function getCamTarget(s: number): { x: number; y: number; z: number } {
-  s = Math.max(0, Math.min(1, s))
-  for (let i = 0; i < CAM_PATH.length - 1; i++) {
-    const a = CAM_PATH[i], b = CAM_PATH[i + 1]
-    if (s >= a.scroll && s <= b.scroll) {
-      const t = easeInOut((s - a.scroll) / (b.scroll - a.scroll))
-      return { x: lerp(a.x, b.x, t), y: lerp(a.y, b.y, t), z: lerp(a.z, b.z, t) }
+// ─── Chapter Shape Functions ────────────────────────────────────────────
+
+// 0 · Fibonacci sphere — meditative breathing
+vec3 shapeSphere(float i, vec3 r, float t) {
+  float phi = acos(1.0 - 2.0 * i);
+  float theta = PI * (1.0 + sqrt(5.0)) * i * N;
+  float radius = 3.0 + sin(t * 0.4 + r.x * TAU) * 0.15;
+  return vec3(
+    radius * sin(phi) * cos(theta),
+    radius * sin(phi) * sin(theta),
+    radius * cos(phi)
+  );
+}
+
+// 1 · Double helix — DNA, foundational origins
+vec3 shapeHelix(float i, vec3 r, float t) {
+  float angle = i * 10.0 * PI;
+  float y = (i - 0.5) * 8.0;
+  float strand = step(0.5, r.x) * PI;
+  float helixR = 1.8 + sin(t * 0.3 + i * 6.0) * 0.15;
+  return vec3(
+    cos(angle + strand) * helixR,
+    y + sin(t * 0.2 + r.y * 3.0) * 0.1,
+    sin(angle + strand) * helixR
+  );
+}
+
+// 2 · Torus — cyclic transformation
+vec3 shapeTorus(float i, vec3 r, float t) {
+  float theta = i * TAU * 24.0;
+  float phi = fract(i * GOLDEN) * TAU;
+  float R = 2.8;
+  float rr = 0.9 + r.x * 0.2;
+  return vec3(
+    (R + rr * cos(phi)) * cos(theta) + sin(t * 0.2) * 0.08,
+    rr * sin(phi) + sin(t * 0.25 + i * 4.0) * 0.08,
+    (R + rr * cos(phi)) * sin(theta)
+  );
+}
+
+// 3 · Trefoil knot — interconnected rhythm
+vec3 shapeKnot(float i, vec3 r, float t) {
+  float a = i * TAU * 2.0;
+  float R = 2.2;
+  float rr = 0.6;
+  float cx = (R + rr * cos(3.0 * a)) * cos(2.0 * a);
+  float cy = rr * sin(3.0 * a);
+  float cz = (R + rr * cos(3.0 * a)) * sin(2.0 * a);
+  vec3 offset = (r - 0.5) * 0.4;
+  return vec3(cx, cy, cz) + offset + sin(t * 0.3) * 0.05;
+}
+
+// 4 · Crystal lattice — structured, concrete
+vec3 shapeLattice(float i, vec3 r, float t) {
+  float idx = i * N;
+  float side = ceil(pow(N, 1.0 / 3.0));
+  float x = mod(idx, side);
+  float y = mod(floor(idx / side), side);
+  float z = floor(idx / (side * side));
+  vec3 pos = (vec3(x, y, z) / side - 0.5) * 5.0;
+  pos += (r - 0.5) * 0.15;
+  pos += sin(t * 0.3 + pos * 0.5) * 0.06;
+  return pos;
+}
+
+// 5 · Wave surface — reflective, flowing
+vec3 shapeWave(float i, vec3 r, float t) {
+  float side = sqrt(N);
+  float idx = i * N;
+  float col = mod(idx, side) / side;
+  float row = floor(idx / side) / side;
+  float x = (col - 0.5) * 8.0 + (r.x - 0.5) * 0.2;
+  float z = (row - 0.5) * 8.0 + (r.z - 0.5) * 0.2;
+  float y = sin(x * 0.7 + t * 0.3) * cos(z * 0.5 + t * 0.25) * 1.2;
+  return vec3(x, y, z);
+}
+
+// 6 · Starburst — dissolving outward
+vec3 shapeStarburst(float i, vec3 r, float t) {
+  float phi = acos(1.0 - 2.0 * i);
+  float theta = PI * (1.0 + sqrt(5.0)) * i * N;
+  float radius = 0.5 + pow(i, 0.6) * 5.5 + sin(t * 0.4 + r.x * TAU) * 0.3;
+  return vec3(
+    radius * sin(phi) * cos(theta),
+    radius * sin(phi) * sin(theta),
+    radius * cos(phi)
+  );
+}
+
+vec3 getShape(float i, vec3 r, float chapter, float t) {
+  if (chapter < 0.5) return shapeSphere(i, r, t);
+  if (chapter < 1.5) return shapeHelix(i, r, t);
+  if (chapter < 2.5) return shapeTorus(i, r, t);
+  if (chapter < 3.5) return shapeKnot(i, r, t);
+  if (chapter < 4.5) return shapeLattice(i, r, t);
+  if (chapter < 5.5) return shapeWave(i, r, t);
+  return shapeStarburst(i, r, t);
+}
+
+// ─── Main ───────────────────────────────────────────────────────────────
+void main() {
+  vec3 posA = getShape(aIndex, aRandom, uChapterFrom, uTime);
+  vec3 posB = getShape(aIndex, aRandom, uChapterTo, uTime);
+
+  float t = smoothstep(0.0, 1.0, uTransition);
+
+  // Spirit flow: turbulence peaks at transition midpoint
+  float turbulence = sin(t * PI) * 1.8;
+  vec3 noiseInput = mix(posA, posB, t) * 0.4 + uTime * 0.12;
+  vec3 curl = curlNoise(noiseInput);
+
+  vec3 finalPos = mix(posA, posB, t) + curl * turbulence;
+
+  // Gentle floating when settled (fades out during transitions)
+  float settled = 1.0 - sin(t * PI);
+  finalPos += vec3(
+    sin(uTime * 0.15 + aRandom.x * TAU) * 0.05,
+    cos(uTime * 0.12 + aRandom.y * TAU) * 0.06,
+    sin(uTime * 0.10 + aRandom.z * TAU) * 0.04
+  ) * settled;
+
+  // Subtle mouse-driven parallax — closer points react more
+  float depth = clamp(length(finalPos) * 0.12, 0.2, 1.4);
+  vec2 parallax = uMouse * depth * 0.45;
+  finalPos.x += parallax.x;
+  finalPos.y += parallax.y;
+
+  vec4 mvPosition = modelViewMatrix * vec4(finalPos, 1.0);
+  gl_Position = projectionMatrix * mvPosition;
+
+  // Size: swell during transition, subtle depth attenuation
+  float baseSize = 2.0 + aRandom.x * 3.0;
+  float sizePulse = 1.0 + sin(t * PI) * 0.6;
+  float depthScale = clamp(8.0 / -mvPosition.z, 0.5, 2.0);
+  gl_PointSize = baseSize * sizePulse * uPixelRatio * depthScale;
+
+  // Color: blend palettes, brighten during transition
+  vColor = mix(uColorFrom, uColorTo, t);
+  vColor += vec3(0.12, 0.15, 0.25) * sin(t * PI);
+
+  vAlpha = 0.5 + aRandom.y * 0.4 + sin(t * PI) * 0.1;
+}
+`
+
+// ─────────────────────────────────────────────────────────────────────────────
+// GLSL FRAGMENT SHADER
+// ─────────────────────────────────────────────────────────────────────────────
+
+const fragmentShader = /* glsl */ `
+precision highp float;
+
+varying vec3 vColor;
+varying float vAlpha;
+
+void main() {
+  float d = length(gl_PointCoord - vec2(0.5));
+  if (d > 0.5) discard;
+
+  float alpha = smoothstep(0.5, 0.05, d) * vAlpha;
+  float core = smoothstep(0.3, 0.0, d) * 0.3;
+
+  gl_FragColor = vec4(vColor + core, alpha);
+}
+`
+
+// ─────────────────────────────────────────────────────────────────────────────
+// R3F INNER SCENE — runs inside the Canvas reconciler
+// ─────────────────────────────────────────────────────────────────────────────
+
+interface MorphingSceneProps {
+  chapterIndex: number
+  bloomRef: React.MutableRefObject<number>
+}
+
+function MorphingScene({ chapterIndex, bloomRef }: MorphingSceneProps) {
+  const groupRef = useRef<THREE.Group>(null!)
+
+  const chapterRef = useRef(chapterIndex)
+  chapterRef.current = chapterIndex
+
+  const transitionRef = useRef({ from: 0, to: 0, progress: 1.0 })
+  const prevChapter = useRef(0)
+
+  const camPos = useRef(new THREE.Vector3(...CAM_TARGETS[0]))
+  const currentBg = useRef(new THREE.Color(CHAPTER_BG[0]))
+  const targetBg = useRef(new THREE.Color(CHAPTER_BG[0]))
+
+  const mouseTarget = useRef(new THREE.Vector2(0, 0))
+
+  const { positions, indices, randoms } = useMemo(() => {
+    const count = PARTICLE_COUNT
+    const pos = new Float32Array(count * 3)
+    const idx = new Float32Array(count)
+    const rnd = new Float32Array(count * 3)
+
+    for (let i = 0; i < count; i++) {
+      idx[i] = i / count
+      rnd[i * 3] = Math.random()
+      rnd[i * 3 + 1] = Math.random()
+      rnd[i * 3 + 2] = Math.random()
     }
-  }
-  const last = CAM_PATH[CAM_PATH.length - 1]
-  return { x: last.x, y: last.y, z: last.z }
-}
 
-interface AtmosphereLerp {
-  bgA: string; bgB: string; bgT: number
-  lineA: string; lineB: string; lineT: number
-  bloom: number
-  ambient: number
-}
+    return { positions: pos, indices: idx, randoms: rnd }
+  }, [])
 
-function getAtmosphereLerp(s: number): AtmosphereLerp {
-  s = Math.max(0, Math.min(1, s))
-  for (let i = 0; i < ATMOSPHERES.length - 1; i++) {
-    const a = ATMOSPHERES[i], b = ATMOSPHERES[i + 1]
-    if (s >= a.scroll && s <= b.scroll) {
-      const t = easeInOut((s - a.scroll) / (b.scroll - a.scroll))
-      return {
-        bgA: a.bg, bgB: b.bg, bgT: t,
-        lineA: a.line, lineB: b.line, lineT: t,
-        bloom: lerp(a.bloom, b.bloom, t),
-        ambient: lerp(a.ambient, b.ambient, t),
-      }
+  const uniforms = useMemo(
+    () => ({
+      uTime: { value: 0 },
+      uChapterFrom: { value: 0.0 },
+      uChapterTo: { value: 0.0 },
+      uTransition: { value: 1.0 },
+      uPixelRatio: { value: 1.0 },
+      uColorFrom: { value: new THREE.Vector3(...CHAPTER_COLORS[0]) },
+      uColorTo: { value: new THREE.Vector3(...CHAPTER_COLORS[0]) },
+      uMouse: { value: new THREE.Vector2(0, 0) },
+    }),
+    [],
+  )
+
+  useEffect(() => {
+    const handlePointerMove = (event: MouseEvent) => {
+      const x = (event.clientX / window.innerWidth) * 2 - 1
+      const y = -(event.clientY / window.innerHeight) * 2 + 1
+      mouseTarget.current.set(x, y)
     }
-  }
-  const last = ATMOSPHERES[ATMOSPHERES.length - 1]
-  return {
-    bgA: last.bg, bgB: last.bg, bgT: 0,
-    lineA: last.line, lineB: last.line, lineT: 0,
-    bloom: last.bloom, ambient: last.ambient,
-  }
-}
 
-// ─────────────────────────────────────────────────────────────────────────────
-// NODE TOPOLOGY
-// ─────────────────────────────────────────────────────────────────────────────
-
-interface NodeData {
-  position: [number, number, number]
-  size: number
-  color: string
-  floatSpeed: number
-  floatOffset: number
-  floatAmp: number
-  shape: "sphere" | "octahedron" | "icosahedron"
-  emissive: number
-}
-
-const CONNECTION_DISTANCE = 4.2
-
-const NODES: NodeData[] = [
-  // Central convergence — icosahedron
-  { position: [0, 0, 0],       size: 0.22, color: "#e0f9ff", shape: "icosahedron", floatSpeed: 0.18, floatOffset: 0.00, floatAmp: 0.05, emissive: 2.8 },
-
-  // Design cluster — cyan (left)
-  { position: [-3.8, 0.4, 0.3],  size: 0.18, color: "#22d3ee", shape: "octahedron", floatSpeed: 0.28, floatOffset: 0.0,  floatAmp: 0.12, emissive: 2.4 },
-  { position: [-5.2, 1.8, -0.8], size: 0.13, color: "#06b6d4", shape: "sphere",     floatSpeed: 0.35, floatOffset: 1.2,  floatAmp: 0.10, emissive: 2.0 },
-  { position: [-2.4, 2.2, 1.1],  size: 0.12, color: "#22d3ee", shape: "sphere",     floatSpeed: 0.30, floatOffset: 2.5,  floatAmp: 0.11, emissive: 2.0 },
-  { position: [-4.5, -1.2, 0.6], size: 0.11, color: "#0ea5e9", shape: "sphere",     floatSpeed: 0.25, floatOffset: 3.8,  floatAmp: 0.09, emissive: 1.8 },
-  { position: [-1.8, -0.5,-1.2], size: 0.09, color: "#67e8f9", shape: "sphere",     floatSpeed: 0.42, floatOffset: 0.8,  floatAmp: 0.08, emissive: 1.6 },
-  { position: [-5.8, -0.3, 1.0], size: 0.08, color: "#a5f3fc", shape: "sphere",     floatSpeed: 0.38, floatOffset: 4.1,  floatAmp: 0.07, emissive: 1.5 },
-  { position: [-3.0, 3.1, -0.5], size: 0.07, color: "#67e8f9", shape: "sphere",     floatSpeed: 0.33, floatOffset: 1.9,  floatAmp: 0.08, emissive: 1.5 },
-  { position: [-6.0, 2.4, 0.2],  size: 0.06, color: "#a5f3fc", shape: "sphere",     floatSpeed: 0.45, floatOffset: 5.2,  floatAmp: 0.07, emissive: 1.3 },
-  { position: [-4.2,-2.8, -0.3], size: 0.06, color: "#67e8f9", shape: "sphere",     floatSpeed: 0.50, floatOffset: 2.7,  floatAmp: 0.06, emissive: 1.3 },
-  { position: [-2.0, 1.5, 2.2],  size: 0.05, color: "#a5f3fc", shape: "sphere",     floatSpeed: 0.48, floatOffset: 0.3,  floatAmp: 0.06, emissive: 1.2 },
-  { position: [-5.5, 0.8,-1.5],  size: 0.05, color: "#67e8f9", shape: "sphere",     floatSpeed: 0.40, floatOffset: 3.3,  floatAmp: 0.05, emissive: 1.2 },
-  { position: [-3.5,-1.8, 1.8],  size: 0.05, color: "#a5f3fc", shape: "sphere",     floatSpeed: 0.44, floatOffset: 1.5,  floatAmp: 0.06, emissive: 1.2 },
-  { position: [-1.5, 3.5, 0.8],  size: 0.04, color: "#67e8f9", shape: "sphere",     floatSpeed: 0.52, floatOffset: 4.7,  floatAmp: 0.05, emissive: 1.1 },
-  { position: [-6.2,-1.5, 0.8],  size: 0.04, color: "#a5f3fc", shape: "sphere",     floatSpeed: 0.46, floatOffset: 2.1,  floatAmp: 0.05, emissive: 1.1 },
-  { position: [-2.8,-3.2,-0.9],  size: 0.04, color: "#67e8f9", shape: "sphere",     floatSpeed: 0.55, floatOffset: 5.8,  floatAmp: 0.04, emissive: 1.0 },
-  { position: [-4.8, 3.0, 1.2],  size: 0.04, color: "#a5f3fc", shape: "sphere",     floatSpeed: 0.43, floatOffset: 3.0,  floatAmp: 0.05, emissive: 1.0 },
-
-  // AI / Systems cluster — violet (right)
-  { position: [3.8, 0.4, 0.3],   size: 0.18, color: "#a78bfa", shape: "octahedron", floatSpeed: 0.28, floatOffset: 0.6,  floatAmp: 0.12, emissive: 2.4 },
-  { position: [5.2, 1.8, -0.8],  size: 0.13, color: "#8b5cf6", shape: "sphere",     floatSpeed: 0.35, floatOffset: 1.8,  floatAmp: 0.10, emissive: 2.0 },
-  { position: [2.4, 2.2, 1.1],   size: 0.12, color: "#a78bfa", shape: "sphere",     floatSpeed: 0.30, floatOffset: 3.1,  floatAmp: 0.11, emissive: 2.0 },
-  { position: [4.5, -1.2, 0.6],  size: 0.11, color: "#7c3aed", shape: "sphere",     floatSpeed: 0.25, floatOffset: 4.4,  floatAmp: 0.09, emissive: 1.8 },
-  { position: [1.8, -0.5,-1.2],  size: 0.09, color: "#c4b5fd", shape: "sphere",     floatSpeed: 0.42, floatOffset: 1.4,  floatAmp: 0.08, emissive: 1.6 },
-  { position: [5.8, -0.3, 1.0],  size: 0.08, color: "#ddd6fe", shape: "sphere",     floatSpeed: 0.38, floatOffset: 4.7,  floatAmp: 0.07, emissive: 1.5 },
-  { position: [3.0, 3.1, -0.5],  size: 0.07, color: "#c4b5fd", shape: "sphere",     floatSpeed: 0.33, floatOffset: 2.5,  floatAmp: 0.08, emissive: 1.5 },
-  { position: [6.0, 2.4, 0.2],   size: 0.06, color: "#ddd6fe", shape: "sphere",     floatSpeed: 0.45, floatOffset: 5.8,  floatAmp: 0.07, emissive: 1.3 },
-  { position: [4.2,-2.8, -0.3],  size: 0.06, color: "#c4b5fd", shape: "sphere",     floatSpeed: 0.50, floatOffset: 3.3,  floatAmp: 0.06, emissive: 1.3 },
-  { position: [2.0, 1.5, 2.2],   size: 0.05, color: "#ddd6fe", shape: "sphere",     floatSpeed: 0.48, floatOffset: 0.9,  floatAmp: 0.06, emissive: 1.2 },
-  { position: [5.5, 0.8,-1.5],   size: 0.05, color: "#c4b5fd", shape: "sphere",     floatSpeed: 0.40, floatOffset: 3.9,  floatAmp: 0.05, emissive: 1.2 },
-  { position: [3.5,-1.8, 1.8],   size: 0.05, color: "#ddd6fe", shape: "sphere",     floatSpeed: 0.44, floatOffset: 2.1,  floatAmp: 0.06, emissive: 1.2 },
-  { position: [1.5, 3.5, 0.8],   size: 0.04, color: "#c4b5fd", shape: "sphere",     floatSpeed: 0.52, floatOffset: 5.3,  floatAmp: 0.05, emissive: 1.1 },
-  { position: [6.2,-1.5, 0.8],   size: 0.04, color: "#ddd6fe", shape: "sphere",     floatSpeed: 0.46, floatOffset: 2.7,  floatAmp: 0.05, emissive: 1.1 },
-  { position: [2.8,-3.2,-0.9],   size: 0.04, color: "#c4b5fd", shape: "sphere",     floatSpeed: 0.55, floatOffset: 6.4,  floatAmp: 0.04, emissive: 1.0 },
-  { position: [4.8, 3.0, 1.2],   size: 0.04, color: "#ddd6fe", shape: "sphere",     floatSpeed: 0.43, floatOffset: 3.6,  floatAmp: 0.05, emissive: 1.0 },
-
-  // Bridge nodes — sky blue (center, the translation layer)
-  { position: [ 0.8, 1.5,  0.5], size: 0.09, color: "#7dd3fc", shape: "sphere",     floatSpeed: 0.32, floatOffset: 1.0,  floatAmp: 0.13, emissive: 1.8 },
-  { position: [-0.6,-1.8,  0.3], size: 0.08, color: "#93c5fd", shape: "sphere",     floatSpeed: 0.28, floatOffset: 2.2,  floatAmp: 0.12, emissive: 1.7 },
-  { position: [ 1.2,-0.8,  1.5], size: 0.07, color: "#7dd3fc", shape: "sphere",     floatSpeed: 0.35, floatOffset: 3.5,  floatAmp: 0.10, emissive: 1.7 },
-  { position: [-1.0, 0.9, -1.0], size: 0.07, color: "#93c5fd", shape: "sphere",     floatSpeed: 0.25, floatOffset: 4.8,  floatAmp: 0.11, emissive: 1.7 },
-  { position: [ 0.5, 2.8, -0.8], size: 0.06, color: "#7dd3fc", shape: "sphere",     floatSpeed: 0.40, floatOffset: 0.5,  floatAmp: 0.09, emissive: 1.5 },
-  { position: [-0.3,-2.5,  1.2], size: 0.05, color: "#93c5fd", shape: "sphere",     floatSpeed: 0.45, floatOffset: 1.7,  floatAmp: 0.08, emissive: 1.4 },
-  { position: [ 1.5, 0.3, -1.8], size: 0.05, color: "#7dd3fc", shape: "sphere",     floatSpeed: 0.38, floatOffset: 5.1,  floatAmp: 0.09, emissive: 1.4 },
-  { position: [-1.3, 2.0,  1.3], size: 0.05, color: "#93c5fd", shape: "sphere",     floatSpeed: 0.42, floatOffset: 2.9,  floatAmp: 0.08, emissive: 1.4 },
-]
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Scene inner component
-// ─────────────────────────────────────────────────────────────────────────────
-
-interface SceneProps {
-  scrollRef: React.MutableRefObject<number>
-  bloomRef:  React.MutableRefObject<number>
-}
-
-function AmbientNetworkScene({ scrollRef, bloomRef }: SceneProps) {
-  const groupRef     = useRef<THREE.Group>(null!)
-  const centralRef   = useRef<THREE.Mesh>(null!)
-  const meshRefs     = useRef<(THREE.Mesh | null)[]>([])
-  const lineMatRef   = useRef<THREE.LineBasicMaterial>(null!)
-  const ambientRef   = useRef<THREE.AmbientLight>(null!)
-  const camPos       = useRef(new THREE.Vector3(0, 0, 11))
-  const currentBg    = useRef(new THREE.Color("#020617"))
-  const currentLine  = useRef(new THREE.Color("#22d3ee"))
-  const currentAmb   = useRef(0.04)
-  const currentBloom = useRef(0.75)
-
-  const linePositions = useMemo(() => {
-    const pts = NODES.map(n => new THREE.Vector3(...n.position))
-    const pos: number[] = []
-    for (let i = 0; i < pts.length; i++)
-      for (let j = i + 1; j < pts.length; j++)
-        if (pts[i].distanceTo(pts[j]) < CONNECTION_DISTANCE)
-          pos.push(pts[i].x, pts[i].y, pts[i].z, pts[j].x, pts[j].y, pts[j].z)
-    return new Float32Array(pos)
+    window.addEventListener("mousemove", handlePointerMove)
+    return () => window.removeEventListener("mousemove", handlePointerMove)
   }, [])
 
   useFrame((state, delta) => {
-    const s = Math.max(0, Math.min(1, scrollRef.current))
+    const chapter = chapterRef.current
 
-    // ── Camera ──────────────────────────────────────────────────────────────
-    const camTarget = getCamTarget(s)
-    camPos.current.x += (camTarget.x - camPos.current.x) * 0.022
-    camPos.current.y += (camTarget.y - camPos.current.y) * 0.022
-    camPos.current.z += (camTarget.z - camPos.current.z) * 0.022
+    // Detect chapter change and start a new transition
+    if (chapter !== prevChapter.current) {
+      transitionRef.current = {
+        from: prevChapter.current,
+        to: chapter,
+        progress: 0,
+      }
+      prevChapter.current = chapter
+      targetBg.current.set(CHAPTER_BG[chapter] ?? CHAPTER_BG[0])
+    }
+
+    const tr = transitionRef.current
+
+    // Animate transition progress (~1.5 s total)
+    if (tr.progress < 1.0) {
+      tr.progress = Math.min(1.0, tr.progress + delta * 0.65)
+    }
+
+    // ── Uniforms ──────────────────────────────────────────────────────────
+    uniforms.uTime.value = state.clock.elapsedTime
+    uniforms.uChapterFrom.value = tr.from
+    uniforms.uChapterTo.value = tr.to
+    uniforms.uTransition.value = tr.progress
+    uniforms.uPixelRatio.value = state.gl.getPixelRatio()
+
+    // Smoothly ease mouse uniform toward latest pointer target
+    const uMouse = uniforms.uMouse.value as THREE.Vector2
+    uMouse.lerp(mouseTarget.current, 0.08)
+
+    const fromColor = CHAPTER_COLORS[tr.from] ?? CHAPTER_COLORS[0]
+    const toColor = CHAPTER_COLORS[tr.to] ?? CHAPTER_COLORS[0]
+    uniforms.uColorFrom.value.set(fromColor[0], fromColor[1], fromColor[2])
+    uniforms.uColorTo.value.set(toColor[0], toColor[1], toColor[2])
+
+    // ── Camera ────────────────────────────────────────────────────────────
+    const camTarget = CAM_TARGETS[tr.to] ?? CAM_TARGETS[0]
+    camPos.current.x += (camTarget[0] - camPos.current.x) * 0.02
+    camPos.current.y += (camTarget[1] - camPos.current.y) * 0.02
+    camPos.current.z += (camTarget[2] - camPos.current.z) * 0.02
     state.camera.position.copy(camPos.current)
     state.camera.lookAt(0, 0, 0)
 
-    // ── Atmosphere ───────────────────────────────────────────────────────────
-    const atm = getAtmosphereLerp(s)
-
-    // Background — set once as the scene.background reference, then lerp in place
-    _colA.set(atm.bgA)
-    _colB.set(atm.bgB)
-    _colA.lerp(_colB, atm.bgT)
-    currentBg.current.lerp(_colA, 0.015)
+    // ── Background ────────────────────────────────────────────────────────
+    currentBg.current.lerp(targetBg.current, 0.015)
     state.scene.background = currentBg.current
 
-    // Connection line color
-    _colA.set(atm.lineA)
-    _colB.set(atm.lineB)
-    _colA.lerp(_colB, atm.lineT)
-    currentLine.current.lerp(_colA, 0.02)
-    if (lineMatRef.current) {
-      lineMatRef.current.color.copy(currentLine.current)
-    }
+    // ── Bloom (synced to PersistentScene via shared ref) ──────────────────
+    const baseBloom = CHAPTER_BLOOM[tr.to] ?? CHAPTER_BLOOM[0]
+    const transitionBoost = Math.sin(tr.progress * Math.PI)
+    const boostedBloom = baseBloom * (1.0 + 0.45 * transitionBoost)
+    bloomRef.current += (boostedBloom - bloomRef.current) * 0.02
 
-    // Ambient light intensity
-    currentAmb.current += (atm.ambient - currentAmb.current) * 0.02
-    if (ambientRef.current) ambientRef.current.intensity = currentAmb.current
-
-    // Bloom (written to shared ref — synced to React state via RAF in PersistentScene)
-    currentBloom.current += (atm.bloom - currentBloom.current) * 0.015
-    bloomRef.current = currentBloom.current
-
-    // ── Scene motion ─────────────────────────────────────────────────────────
-    const speed = 0.020 * (1 - s * 0.65)
+    // ── Slow scene rotation ───────────────────────────────────────────────
     if (groupRef.current) {
-      groupRef.current.rotation.y += speed * delta
-      groupRef.current.rotation.x = Math.sin(state.clock.getElapsedTime() * 0.013) * 0.05
+      groupRef.current.rotation.y += 0.06 * delta
+      groupRef.current.rotation.x =
+        Math.sin(state.clock.elapsedTime * 0.015) * 0.03
     }
-
-    if (centralRef.current) {
-      centralRef.current.rotation.y = state.clock.getElapsedTime() * 0.35
-      centralRef.current.rotation.z = state.clock.getElapsedTime() * 0.22
-    }
-
-    const t = state.clock.getElapsedTime()
-    meshRefs.current.forEach((mesh, i) => {
-      if (!mesh || !NODES[i]) return
-      const n = NODES[i]
-      mesh.position.y = n.position[1] + Math.sin(t * n.floatSpeed + n.floatOffset) * n.floatAmp
-      mesh.position.x = n.position[0] + Math.cos(t * n.floatSpeed * 0.6 + n.floatOffset) * n.floatAmp * 0.4
-    })
   })
 
   return (
     <group ref={groupRef}>
-      <ambientLight ref={ambientRef} intensity={0.04} />
-
-      {/* Connection lines — color shifts with each chapter atmosphere */}
-      <lineSegments>
+      <points frustumCulled={false}>
         <bufferGeometry>
           {/* @ts-expect-error – R3F bufferAttribute args tuple */}
-          <bufferAttribute attach="attributes-position" args={[linePositions, 3]} />
+          <bufferAttribute attach="attributes-position" args={[positions, 3]} />
+          {/* @ts-expect-error – R3F bufferAttribute args tuple */}
+          <bufferAttribute attach="attributes-aIndex" args={[indices, 1]} />
+          {/* @ts-expect-error – R3F bufferAttribute args tuple */}
+          <bufferAttribute attach="attributes-aRandom" args={[randoms, 3]} />
         </bufferGeometry>
-        <lineBasicMaterial ref={lineMatRef} color="#22d3ee" transparent opacity={0.13} />
-      </lineSegments>
-
-      {/* Nodes */}
-      {NODES.map((node, i) => {
-        const isCentral = node.shape === "icosahedron"
-        return (
-          <mesh
-            key={i}
-            ref={(el) => {
-              meshRefs.current[i] = el
-              if (isCentral && el)
-                (centralRef as React.MutableRefObject<THREE.Mesh>).current = el
-            }}
-            position={node.position}
-          >
-            {node.shape === "icosahedron" && <icosahedronGeometry args={[node.size, 1]} />}
-            {node.shape === "octahedron"  && <octahedronGeometry  args={[node.size, 0]} />}
-            {node.shape === "sphere"      && <sphereGeometry      args={[node.size, 10, 10]} />}
-            <meshStandardMaterial
-              color={node.color}
-              emissive={node.color}
-              emissiveIntensity={node.emissive}
-              roughness={0.15}
-              metalness={0.5}
-              toneMapped={false}
-            />
-          </mesh>
-        )
-      })}
+        <shaderMaterial
+          vertexShader={vertexShader}
+          fragmentShader={fragmentShader}
+          uniforms={uniforms}
+          transparent
+          depthWrite={false}
+          blending={THREE.AdditiveBlending}
+        />
+      </points>
     </group>
   )
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Exported canvas wrapper
+// EXPORTED CANVAS WRAPPER
 // ─────────────────────────────────────────────────────────────────────────────
+
 export default function PersistentScene() {
-  const scrollRef      = useRef<number>(0)
-  const bloomRef       = useRef(0.75)
+  const { activeChapterIndex } = useReadingStore()
+  const bloomRef = useRef(0.75)
   const [bloomIntensity, setBloomIntensity] = useState(0.75)
 
   useEffect(() => {
-    const onScroll = () => {
-      const max = document.documentElement.scrollHeight - window.innerHeight
-      scrollRef.current = max > 0 ? window.scrollY / max : 0
-    }
-    window.addEventListener("scroll", onScroll, { passive: true })
-
-    // RAF loop: sync bloom ref → React state. Uses bail-out optimization so
-    // React only re-renders when the value actually changes meaningfully.
     let rafId: number
     const tick = () => {
-      setBloomIntensity(prev => {
+      setBloomIntensity((prev) => {
         const next = Math.round(bloomRef.current * 100) / 100
         return Math.abs(next - prev) > 0.01 ? next : prev
       })
       rafId = requestAnimationFrame(tick)
     }
     rafId = requestAnimationFrame(tick)
-
-    return () => {
-      window.removeEventListener("scroll", onScroll)
-      cancelAnimationFrame(rafId)
-    }
+    return () => cancelAnimationFrame(rafId)
   }, [])
 
   return (
     <Canvas
-      camera={{ position: [0, 0, 11], fov: 65 }}
+      camera={{ position: [0, 0, 8], fov: 65 }}
+      dpr={[1, 2]}
       gl={{ antialias: true }}
       style={{ width: "100%", height: "100%" }}
     >
-      <AmbientNetworkScene scrollRef={scrollRef} bloomRef={bloomRef} />
+      <MorphingScene chapterIndex={activeChapterIndex} bloomRef={bloomRef} />
       <EffectComposer>
         <Bloom
           intensity={bloomIntensity}

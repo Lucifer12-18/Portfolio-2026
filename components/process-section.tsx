@@ -229,7 +229,7 @@ export function ProcessSection() {
                       key={i}
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.1 + i * 0.05 }}
+                      transition={{ delay: 0.05 + i * 0.03 }}
                       className="flex items-start gap-3 text-muted-foreground"
                     >
                       <span className="h-1.5 w-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
@@ -252,9 +252,8 @@ export function ProcessSection() {
             <motion.div
               key={step.title}
               initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1, duration: 0.4 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.05, duration: 0.3 }}
               className="relative pl-16"
             >
               <div

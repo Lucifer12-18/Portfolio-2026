@@ -56,8 +56,8 @@ const cardVariants = {
     opacity: 1,
     y: 0,
     transition: {
-      delay: i * 0.1,
-      duration: 0.4,
+      delay: i * 0.05,
+      duration: 0.3,
       ease: "easeOut",
     },
   }),
@@ -92,11 +92,10 @@ export function NotesSection() {
           <button
             key={filter}
             onClick={() => setActiveFilter(filter)}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-              activeFilter === filter
+            className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${activeFilter === filter
                 ? "bg-primary text-primary-foreground shadow-md"
                 : "bg-secondary text-muted-foreground hover:bg-secondary/80"
-            }`}
+              }`}
           >
             {filter}
           </button>
@@ -114,16 +113,14 @@ export function NotesSection() {
                 key={note.title}
                 custom={i}
                 initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
+                animate="visible"
                 variants={cardVariants}
                 whileHover={{ y: -4 }}
                 transition={{ duration: 0.2 }}
               >
                 <Card
-                  className={`border-border shadow-sm hover:shadow-md transition-shadow group relative overflow-hidden ${
-                    note.height === "tall" ? "min-h-[320px]" : note.height === "medium" ? "min-h-[260px]" : ""
-                  }`}
+                  className={`border-border shadow-sm hover:shadow-md transition-shadow group relative overflow-hidden ${note.height === "tall" ? "min-h-[320px]" : note.height === "medium" ? "min-h-[260px]" : ""
+                    }`}
                   style={{
                     backgroundImage: `
                       repeating-linear-gradient(0deg, transparent, transparent 24px, rgba(0,0,0,0.03) 24px, rgba(0,0,0,0.03) 25px),
@@ -143,6 +140,7 @@ export function NotesSection() {
                         src={note.imagePath || "/placeholder.svg"}
                         alt={note.title}
                         fill
+                        sizes="(max-width: 768px) 100vw, 50vw"
                         className="object-cover"
                       />
                     </div>
@@ -182,16 +180,14 @@ export function NotesSection() {
                 key={note.title}
                 custom={i}
                 initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
+                animate="visible"
                 variants={cardVariants}
                 whileHover={{ y: -4 }}
                 transition={{ duration: 0.2 }}
               >
                 <Card
-                  className={`border-border shadow-sm hover:shadow-md transition-shadow group relative overflow-hidden ${
-                    note.height === "tall" ? "min-h-[320px]" : note.height === "medium" ? "min-h-[260px]" : ""
-                  }`}
+                  className={`border-border shadow-sm hover:shadow-md transition-shadow group relative overflow-hidden ${note.height === "tall" ? "min-h-[320px]" : note.height === "medium" ? "min-h-[260px]" : ""
+                    }`}
                   style={{
                     backgroundImage: `
                       repeating-linear-gradient(0deg, transparent, transparent 24px, rgba(0,0,0,0.03) 24px, rgba(0,0,0,0.03) 25px),
@@ -211,6 +207,7 @@ export function NotesSection() {
                         src={note.imagePath || "/placeholder.svg"}
                         alt={note.title}
                         fill
+                        sizes="(max-width: 768px) 100vw, 50vw"
                         className="object-cover"
                       />
                     </div>
@@ -249,8 +246,7 @@ export function NotesSection() {
             key={note.title}
             custom={i}
             initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
+            animate="visible"
             variants={cardVariants}
             whileHover={{ y: -4 }}
             transition={{ duration: 0.2 }}
@@ -258,7 +254,7 @@ export function NotesSection() {
             <Card className="border-border shadow-sm hover:shadow-md transition-shadow group">
               <CardContent className="p-5">
                 <div className="w-full h-20 rounded-lg relative overflow-hidden flex-shrink-0 mb-4">
-                  <Image src={note.imagePath || "/placeholder.svg"} alt={note.title} fill className="object-cover" />
+                  <Image src={note.imagePath || "/placeholder.svg"} alt={note.title} fill sizes="100vw" className="object-cover" />
                 </div>
 
                 <div className="flex items-center justify-between mb-3">

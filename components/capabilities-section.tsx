@@ -65,8 +65,8 @@ const cardVariants: Variants = {
     y: 0,
     scale: 1,
     transition: {
-      delay: 0.1 + i * 0.12,
-      duration: 0.55,
+      delay: 0.05 + i * 0.06,
+      duration: 0.4,
       ease: [0.16, 1, 0.3, 1],
     },
   }),
@@ -115,8 +115,7 @@ export function CapabilitiesSection() {
             key={capability.title}
             custom={i}
             initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
+            animate="visible"
             variants={cardVariants}
             whileHover={{ y: -8, rotate: 2 }}
             transition={{ duration: 0.3, type: "spring", stiffness: 300 }}
@@ -157,8 +156,7 @@ export function CapabilitiesSection() {
               key={capability.title}
               custom={i}
               initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
+              animate="visible"
               variants={cardVariants}
               className="snap-center"
               style={{ width: "280px" }}

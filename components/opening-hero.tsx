@@ -28,7 +28,7 @@ export function OpeningHero({ onDismiss }: OpeningHeroProps) {
       setTimeout(() => {
         document.getElementById("prologue")?.scrollIntoView({ behavior: "smooth" })
       }, 100)
-    }, 500) // Wait for exit animation
+    }, 350) // Wait for exit animation
   }, [onDismiss])
 
 
@@ -63,7 +63,7 @@ export function OpeningHero({ onDismiss }: OpeningHeroProps) {
         <motion.section
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, scale: 0.98 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.35 }}
           className="fixed inset-0 z-[100] min-h-[100svh] flex items-center justify-center overflow-hidden"
         >
           {/* Base background — visible instantly before 3D loads */}
@@ -91,14 +91,14 @@ export function OpeningHero({ onDismiss }: OpeningHeroProps) {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: showContent ? 1 : 0 }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.4 }}
               className="flex flex-col items-center space-y-8"
             >
               {/* SYSTEM ONLINE label */}
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: showContent ? 1 : 0, y: showContent ? 0 : -10 }}
-                transition={{ delay: 0.2, duration: 0.5 }}
+                transition={{ delay: 0.1, duration: 0.35 }}
                 className="flex items-center gap-2"
               >
                 <div className="flex gap-1">
@@ -118,7 +118,7 @@ export function OpeningHero({ onDismiss }: OpeningHeroProps) {
               <motion.h1
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: showContent ? 1 : 0, y: showContent ? 0 : 20 }}
-                transition={{ delay: 0.4, duration: 0.6 }}
+                transition={{ delay: 0.2, duration: 0.45 }}
                 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white font-mono tracking-[0.15em] text-center whitespace-nowrap"
                 style={{
                   textShadow: "0 0 20px rgba(34, 211, 238, 0.3), 0 0 40px rgba(34, 211, 238, 0.15)",
@@ -131,7 +131,7 @@ export function OpeningHero({ onDismiss }: OpeningHeroProps) {
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: showContent ? 1 : 0, y: showContent ? 0 : 10 }}
-                transition={{ delay: 0.6, duration: 0.5 }}
+                transition={{ delay: 0.3, duration: 0.35 }}
                 className="flex items-center gap-2"
               >
                 <span className="text-sm font-mono text-cyan-400/70 tracking-wider">
@@ -143,7 +143,7 @@ export function OpeningHero({ onDismiss }: OpeningHeroProps) {
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: showContent ? 1 : 0, scale: showContent ? 1 : 0.95 }}
-                transition={{ delay: 0.8, duration: 0.5 }}
+                transition={{ delay: 0.4, duration: 0.4 }}
                 className="w-full max-w-2xl mt-8"
               >
                 <div
@@ -210,7 +210,7 @@ export function OpeningHero({ onDismiss }: OpeningHeroProps) {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: showContent ? 1 : 0, y: showContent ? 0 : 20 }}
-                transition={{ delay: 1.5, duration: 0.5 }}
+                transition={{ delay: 0.6, duration: 0.35 }}
                 className="flex flex-col items-center gap-3 mt-8"
               >
                 <motion.button
@@ -226,10 +226,10 @@ export function OpeningHero({ onDismiss }: OpeningHeroProps) {
                 <motion.p
                   initial={{ opacity: 0 }}
                   animate={{ opacity: showContent ? 1 : 0 }}
-                  transition={{ delay: 1.7, duration: 0.5 }}
+                  transition={{ delay: 0.7, duration: 0.35 }}
                   className="text-xs font-mono text-cyan-400/50 text-center max-w-md"
                 >
-                  Navigation is chapter-based. Scroll to explore.
+                  Navigation is chapter-based. Click to explore.
                 </motion.p>
               </motion.div>
             </motion.div>

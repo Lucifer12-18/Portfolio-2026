@@ -89,6 +89,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                     src={project.imagePath || "/images/hirello-mockup.jpg"}
                     alt={project.title}
                     fill
+                    sizes="(max-width: 768px) 100vw, 672px"
                     className="object-cover"
                   />
                 </div>

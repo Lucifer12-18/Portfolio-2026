@@ -14,7 +14,7 @@ export function WindowShell({ title, children, className }: WindowShellProps) {
   return (
     <motion.div
       className={cn(
-        "w-full h-full min-h-0 flex flex-col bg-slate-950/50 backdrop-blur-xl rounded-xl border border-white/8 shadow-[0_8px_40px_rgba(0,0,0,0.65)] overflow-hidden group/window",
+        "w-full h-full min-h-0 flex flex-col bg-slate-950/[0.87] backdrop-blur-xl rounded-xl border border-white/8 shadow-[0_8px_40px_rgba(0,0,0,0.65)] overflow-hidden group/window",
         className
       )}
       whileHover={{
@@ -51,7 +51,7 @@ export function WindowShell({ title, children, className }: WindowShellProps) {
         />
       </div>
       {/* Window Content */}
-      <div className="flex-1 min-h-0 overflow-hidden p-4 md:p-6">{children}</div>
+      <div className="flex-1 min-h-0 overflow-y-auto p-4 md:p-6">{children}</div>
     </motion.div>
   )
 }
