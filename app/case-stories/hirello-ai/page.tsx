@@ -47,112 +47,113 @@ export default function HirelloSnapshotPage() {
                   </div>
                   <WindowShell title="case_story_hirello.tsx" className="max-h-full">
                     <div className="space-y-8">
-                {/* Hero / Snapshot */}
-                <div className="grid gap-6 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] items-start">
-                  <div className="space-y-4">
-                    <p className="text-[11px] font-mono uppercase tracking-wide text-muted-foreground">
-                      CASE SNAPSHOT · AI Career OS
-                    </p>
-                    <h1 className="text-2xl md:text-3xl font-semibold text-foreground">
-                      Hirello – AI-First Hiring & Career Flow
-                    </h1>
-                    <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
-                      How I designed two connected systems — Networking Intelligence and AI Interview Gym — to turn a
-                      chaotic job search into a structured, feedback-driven workflow.
-                    </p>
-
-                    <div className="flex flex-wrap gap-2 text-xs">
-                      {hirelloSnapshot.tags.map((tag) => (
-                        <Badge key={tag} variant="secondary" className="bg-[#F0EDE8] text-[#44403c] border-0">
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="relative h-40 md:h-48 rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
-                    <Image
-                      src={hirelloSnapshot.imagePath}
-                      alt="Hirello welcome screen with Hiro, the AI career co‑pilot"
-                      fill
-                      className="object-contain object-center"
-                    />
-                  </div>
-                </div>
-
-                {/* Problem */}
-                <section className="space-y-2">
-                  <h2 className="text-sm font-mono uppercase tracking-wide text-muted-foreground flex items-center gap-2">
-                    <span className="inline-block w-1.5 h-1.5 bg-primary rounded-[2px]" />
-                    What was broken or unclear
-                  </h2>
-                  <p className="text-sm md:text-base text-muted-foreground leading-relaxed">{hirelloSnapshot.problem}</p>
-                </section>
-
-                {/* Approach */}
-                <section className="space-y-2">
-                  <h2 className="text-sm font-mono uppercase tracking-wide text-muted-foreground flex items-center gap-2">
-                    <span className="inline-block w-1.5 h-1.5 bg-primary rounded-[2px]" />
-                    How I explored, mapped, and designed
-                  </h2>
-                  <ul className="space-y-2 text-sm md:text-base text-muted-foreground leading-relaxed">
-                    {hirelloSnapshot.approach.map((item) => (
-                      <li key={item} className="flex items-start gap-2">
-                        <span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary/70" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </section>
-
-                {/* Outcome */}
-                <section className="space-y-2">
-                  <h2 className="text-sm font-mono uppercase tracking-wide text-muted-foreground flex items-center gap-2">
-                    <span className="inline-block w-1.5 h-1.5 bg-primary rounded-[2px]" />
-                    What changed for users / stakeholders
-                  </h2>
-                  <p className="text-sm md:text-base text-muted-foreground leading-relaxed">{hirelloSnapshot.outcome}</p>
-                </section>
-
-                    {/* Tools + CTA */}
-                    <section className="space-y-4 border-t border-slate-200 pt-6">
-                      <div>
-                        <h2 className="text-sm font-mono uppercase tracking-wide text-muted-foreground flex items-center gap-2 mb-2">
-                          <span className="inline-block w-1.5 h-1.5 bg-primary rounded-[2px]" />
-                          Tools used
-                        </h2>
-                        <div className="flex flex-wrap gap-2">
-                          {hirelloSnapshot.tools.map((tool) => (
-                            <Badge
-                              key={tool}
-                              variant="secondary"
-                              className="font-mono text-xs bg-[#F0EDE8] text-[#6B6B7B] border-0"
-                            >
-                              {tool}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Level 3 CTA */}
-                      <div className="border border-dashed border-slate-300/80 rounded-lg px-4 py-3 md:px-5 md:py-4 bg-slate-50/60 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-                        <div className="space-y-1">
+                      {/* Hero / Snapshot */}
+                      <div className="grid gap-6 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] items-start">
+                        <div className="space-y-4">
                           <p className="text-[11px] font-mono uppercase tracking-wide text-muted-foreground">
-                            NEXT MODULE
+                            CASE SNAPSHOT · AI Career OS
                           </p>
-                          <h3 className="text-sm md:text-base font-medium text-foreground">Explore Full Case Study</h3>
-                          <p className="text-xs md:text-sm text-muted-foreground">
-                            Decisions, flows, tradeoffs, and what shipped.
+                          <h1 className="text-2xl md:text-3xl font-semibold text-foreground">
+                            Hirello – AI-First Hiring & Career Flow
+                          </h1>
+                          <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
+                            How I designed two connected systems — Networking Intelligence and AI Interview Gym — to turn a
+                            chaotic job search into a structured, feedback-driven workflow.
                           </p>
+
+                          <div className="flex flex-wrap gap-2 text-xs">
+                            {hirelloSnapshot.tags.map((tag) => (
+                              <Badge key={tag} variant="secondary" className="bg-[#F0EDE8] text-[#44403c] border-0">
+                                {tag}
+                              </Badge>
+                            ))}
+                          </div>
                         </div>
-                        <Link
-                          href="/case-stories/hirello-ai/full"
-                          className="text-xs md:text-sm font-medium inline-flex items-center gap-1 rounded-full px-4 py-2 border border-transparent bg-foreground text-background hover:bg-background hover:text-foreground hover:border-foreground/40 transition-colors underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
-                        >
-                          Open system log →
-                        </Link>
+
+                        <div className="relative h-40 md:h-48 rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
+                          <Image
+                            src={hirelloSnapshot.imagePath}
+                            alt="Hirello welcome screen with Hiro, the AI career co‑pilot"
+                            fill
+                            className="object-contain object-center"
+                          />
+                        </div>
                       </div>
-                    </section>
+
+                      {/* Problem */}
+                      <section className="space-y-2">
+                        <h2 className="text-sm font-mono uppercase tracking-wide text-muted-foreground flex items-center gap-2">
+                          <span className="inline-block w-1.5 h-1.5 bg-primary rounded-[2px]" />
+                          What was broken or unclear
+                        </h2>
+                        <p className="text-sm md:text-base text-muted-foreground leading-relaxed">{hirelloSnapshot.problem}</p>
+                      </section>
+
+                      {/* Approach */}
+                      <section className="space-y-2">
+                        <h2 className="text-sm font-mono uppercase tracking-wide text-muted-foreground flex items-center gap-2">
+                          <span className="inline-block w-1.5 h-1.5 bg-primary rounded-[2px]" />
+                          How I explored, mapped, and designed
+                        </h2>
+                        <ul className="space-y-2 text-sm md:text-base text-muted-foreground leading-relaxed">
+                          {hirelloSnapshot.approach.map((item) => (
+                            <li key={item} className="flex items-start gap-2">
+                              <span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary/70" />
+                              <span>{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </section>
+
+                      {/* Outcome */}
+                      <section className="space-y-2">
+                        <h2 className="text-sm font-mono uppercase tracking-wide text-muted-foreground flex items-center gap-2">
+                          <span className="inline-block w-1.5 h-1.5 bg-primary rounded-[2px]" />
+                          What changed for users / stakeholders
+                        </h2>
+                        <p className="text-sm md:text-base text-muted-foreground leading-relaxed">{hirelloSnapshot.outcome}</p>
+                      </section>
+
+                      {/* Tools + CTA */}
+                      <section className="space-y-4 border-t border-slate-200 pt-6">
+                        <div>
+                          <h2 className="text-sm font-mono uppercase tracking-wide text-muted-foreground flex items-center gap-2 mb-2">
+                            <span className="inline-block w-1.5 h-1.5 bg-primary rounded-[2px]" />
+                            Tools used
+                          </h2>
+                          <div className="flex flex-wrap gap-2">
+                            {hirelloSnapshot.tools.map((tool) => (
+                              <Badge
+                                key={tool}
+                                variant="secondary"
+                                className="font-mono text-xs bg-[#F0EDE8] text-[#6B6B7B] border-0"
+                              >
+                                {tool}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Level 3 CTA */}
+                        <div className="border border-dashed border-slate-300/80 rounded-lg px-4 py-3 md:px-5 md:py-4 bg-slate-50/60 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                          <div className="space-y-1">
+                            <p className="text-[11px] font-mono uppercase tracking-wide text-muted-foreground">
+                              NEXT MODULE
+                            </p>
+                            <h3 className="text-sm md:text-base font-medium text-foreground">Explore Full Case Study</h3>
+                            <p className="text-xs md:text-sm text-muted-foreground">
+                              Decisions, flows, tradeoffs, and what shipped.
+                            </p>
+                          </div>
+                          <Link
+                            href="/case-stories/hirello-ai/full"
+                            className="text-xs md:text-sm font-medium inline-flex items-center gap-1 rounded-full px-4 py-2 border border-transparent bg-foreground text-background hover:bg-background hover:text-foreground hover:border-foreground/40 transition-colors underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
+                          >
+                            Open system log →
+                          </Link>
+                        </div>
+                      </section>
+                    </div>
                   </WindowShell>
                 </div>
               </div>
