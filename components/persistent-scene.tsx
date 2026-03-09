@@ -10,7 +10,7 @@ import { useReadingStore } from "@/contexts/reading-store-context"
 // CONFIGURATION
 // ─────────────────────────────────────────────────────────────────────────────
 
-const PARTICLE_COUNT = 2500
+const PARTICLE_COUNT = 1500
 
 const CHAPTER_COLORS: [number, number, number][] = [
   [0.133, 0.827, 0.933], // 0 Prologue  — cyan
@@ -30,13 +30,13 @@ const CHAPTER_BG = [
 const CHAPTER_BLOOM = [0.75, 1.0, 1.2, 1.0, 0.9, 0.85, 0.65]
 
 const CAM_TARGETS: [number, number, number][] = [
-  [ 0.0,  0.0, 8.0],  // Prologue  — centered
-  [-1.5,  0.5, 7.5],  // Origin    — lean into the helix
-  [ 0.0,  1.0, 9.0],  // Shift     — pull back, see full torus
-  [ 1.5,  0.3, 7.5],  // Method    — lean into the knot
-  [ 0.5, -0.5, 8.0],  // Cases     — slightly below the lattice
-  [ 0.0,  0.8, 8.5],  // Notes     — elevated, serene
-  [ 0.0,  0.0, 10.0], // Epilogue  — far back, starburst fills view
+  [0.0, 0.0, 8.0],  // Prologue  — centered
+  [-1.5, 0.5, 7.5],  // Origin    — lean into the helix
+  [0.0, 1.0, 9.0],  // Shift     — pull back, see full torus
+  [1.5, 0.3, 7.5],  // Method    — lean into the knot
+  [0.5, -0.5, 8.0],  // Cases     — slightly below the lattice
+  [0.0, 0.8, 8.5],  // Notes     — elevated, serene
+  [0.0, 0.0, 10.0], // Epilogue  — far back, starburst fills view
 ]
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -488,11 +488,16 @@ export default function PersistentScene() {
 
   useEffect(() => {
     let rafId: number
+    let frame = 0
     const tick = () => {
-      setBloomIntensity((prev) => {
-        const next = Math.round(bloomRef.current * 100) / 100
-        return Math.abs(next - prev) > 0.01 ? next : prev
-      })
+      frame++
+      // Only update React state every 3rd frame — bloom changes are slow anyway
+      if (frame % 3 === 0) {
+        setBloomIntensity((prev) => {
+          const next = Math.round(bloomRef.current * 100) / 100
+          return Math.abs(next - prev) > 0.01 ? next : prev
+        })
+      }
       rafId = requestAnimationFrame(tick)
     }
     rafId = requestAnimationFrame(tick)
@@ -502,17 +507,17 @@ export default function PersistentScene() {
   return (
     <Canvas
       camera={{ position: [0, 0, 8], fov: 65 }}
-      dpr={[1, 2]}
-      gl={{ antialias: true }}
+      dpr={[1, 1.5]}
+      gl={{ antialias: false, powerPreference: "high-performance" }}
       style={{ width: "100%", height: "100%" }}
     >
       <MorphingScene chapterIndex={activeChapterIndex} bloomRef={bloomRef} />
       <EffectComposer>
         <Bloom
           intensity={bloomIntensity}
-          luminanceThreshold={0.12}
+          luminanceThreshold={0.15}
           luminanceSmoothing={0.9}
-          mipmapBlur
+          mipmapBlur={false}
         />
       </EffectComposer>
     </Canvas>

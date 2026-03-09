@@ -57,13 +57,13 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
 
           {/* Modal - scale and fade in */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-            className="fixed inset-4 md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-full md:max-w-2xl z-[70] flex items-center justify-center"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 16 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
+            className="fixed inset-4 md:inset-auto md:top-[5vh] md:left-1/2 md:-translate-x-1/2 md:w-full md:max-w-2xl md:h-[90vh] z-[70] flex flex-col"
           >
-            <div className="w-full max-h-[90vh] bg-slate-950 rounded-xl border border-white/8 shadow-[0_24px_80px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col">
+            <div className="w-full flex-1 min-h-0 bg-slate-950 rounded-xl border border-white/8 shadow-[0_24px_80px_rgba(0,0,0,0.8)] flex flex-col overflow-hidden">
               {/* Window title bar */}
               <div className="flex items-center justify-between px-4 py-3 bg-slate-900/80 border-b border-white/5 flex-shrink-0">
                 <div className="flex items-center gap-3">
@@ -83,7 +83,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                 </div>
               </div>
 
-              <div className="p-6 overflow-y-auto bg-slate-950 modal-scroll">
+              <div className="flex-1 min-h-0 p-6 overflow-y-auto bg-slate-950 modal-scroll">
                 <div className="w-full h-48 rounded-xl relative overflow-hidden mb-6 border border-white/8">
                   <Image
                     src={project.imagePath || "/images/hirello-mockup.jpg"}

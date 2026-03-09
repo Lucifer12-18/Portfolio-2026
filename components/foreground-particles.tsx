@@ -5,7 +5,7 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber"
 import * as THREE from "three"
 import { useReadingStore } from "@/contexts/reading-store-context"
 
-const FOREGROUND_PARTICLE_COUNT = 180
+const FOREGROUND_PARTICLE_COUNT = 80
 
 // Tunable feel constants
 const FG_PARALLAX_STRENGTH = 0.18
@@ -192,24 +192,24 @@ function ForegroundParticleCloud({ targetColor, scrollProgress }: ForegroundPart
   return (
     <group ref={groupRef}>
       <group ref={pointsRef}>
-      <points frustumCulled={false}>
-        <bufferGeometry>
-          {/* @ts-expect-error – R3F bufferAttribute args tuple */}
-          <bufferAttribute attach="attributes-position" args={[positions, 3]} />
-          {/* @ts-expect-error – R3F bufferAttribute args tuple */}
-          <bufferAttribute attach="attributes-aIndex" args={[indices, 1]} />
-          {/* @ts-expect-error – R3F bufferAttribute args tuple */}
-          <bufferAttribute attach="attributes-aRandom" args={[randoms, 3]} />
-        </bufferGeometry>
-        <shaderMaterial
-          vertexShader={fgVertexShader}
-          fragmentShader={fgFragmentShader}
-          uniforms={uniforms}
-          transparent
-          depthWrite={false}
-          blending={THREE.AdditiveBlending}
-        />
-      </points>
+        <points frustumCulled={false}>
+          <bufferGeometry>
+            {/* @ts-expect-error – R3F bufferAttribute args tuple */}
+            <bufferAttribute attach="attributes-position" args={[positions, 3]} />
+            {/* @ts-expect-error – R3F bufferAttribute args tuple */}
+            <bufferAttribute attach="attributes-aIndex" args={[indices, 1]} />
+            {/* @ts-expect-error – R3F bufferAttribute args tuple */}
+            <bufferAttribute attach="attributes-aRandom" args={[randoms, 3]} />
+          </bufferGeometry>
+          <shaderMaterial
+            vertexShader={fgVertexShader}
+            fragmentShader={fgFragmentShader}
+            uniforms={uniforms}
+            transparent
+            depthWrite={false}
+            blending={THREE.AdditiveBlending}
+          />
+        </points>
       </group>
     </group>
   )
@@ -253,8 +253,8 @@ export default function ForegroundParticles() {
   return (
     <Canvas
       camera={{ position: [0, 0, 4], fov: 60 }}
-      dpr={[1, 1.5]}
-      gl={{ antialias: true, alpha: true }}
+      dpr={1}
+      gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
       style={{ width: "100%", height: "100%", pointerEvents: "none" }}
     >
       <ForegroundParticlesInner />

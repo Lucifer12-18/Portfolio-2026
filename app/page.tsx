@@ -19,6 +19,8 @@ import { ViewModeProvider } from "@/contexts/view-mode-context"
 import { SystemLogProvider } from "@/contexts/system-log-context"
 import { ReadingStoreProvider, useReadingStore } from "@/contexts/reading-store-context"
 import { CHAPTERS } from "@/lib/chapters-config"
+import { ModalProvider, useModal } from "@/contexts/modal-context"
+import { ProjectModal } from "@/components/project-modal"
 
 const PersistentScene = dynamic(() => import("@/components/persistent-scene"), { ssr: false })
 const ForegroundParticles = dynamic(() => import("@/components/foreground-particles"), { ssr: false })
@@ -45,50 +47,23 @@ const CHAPTER_COMPONENTS: ComponentType[] = [
 
 const pageFlipVariants = {
   initial: (direction: number) => ({
-    rotateY: direction > 0 ? 85 : -85,
-    rotateX: direction > 0 ? 5 : -5,
-    skewY: direction > 0 ? -3 : 3,
-    scale: 0.88,
     opacity: 0,
-    x: direction > 0 ? "6%" : "-6%",
-    z: -80,
-    transformOrigin: direction > 0 ? "left center" : "right center",
+    y: direction > 0 ? 18 : -18,
   }),
   animate: {
-    rotateY: 0,
-    rotateX: 0,
-    skewY: 0,
-    scale: 1,
     opacity: 1,
-    x: "0%",
-    z: 0,
+    y: 0,
     transition: {
-      duration: 1.2,
+      duration: 0.35,
       ease: [0.16, 1, 0.3, 1] as const,
-      opacity: {
-        duration: 0.6,
-        delay: 1.8,
-        ease: "easeOut",
-      },
-      delay: 1.8,
     },
   },
   exit: (direction: number) => ({
-    rotateY: direction > 0 ? -85 : 85,
-    rotateX: direction > 0 ? -5 : 5,
-    skewY: direction > 0 ? 3 : -3,
-    scale: 0.88,
     opacity: 0,
-    x: direction > 0 ? "-6%" : "6%",
-    z: -80,
-    transformOrigin: direction > 0 ? "left center" : "right center",
+    y: direction > 0 ? -18 : 18,
     transition: {
-      duration: 0.9,
+      duration: 0.2,
       ease: [0.55, 0.06, 0.68, 0.19] as const,
-      opacity: {
-        duration: 0.3,
-        ease: "easeIn",
-      },
     },
   }),
 }
@@ -167,24 +142,19 @@ function PageFlipContainer() {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      <div className="absolute inset-0 overflow-hidden pt-3 pb-8">
-        <div style={{ perspective: "1800px" }} className="h-full">
-          <AnimatePresence mode="popLayout" custom={direction}>
-            <motion.div
-              key={activeChapterIndex}
-              custom={direction}
-              variants={pageFlipVariants}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              style={{ transformStyle: "preserve-3d" }}
-              className="h-full"
-            >
-              <ActiveComponent />
-            </motion.div>
-          </AnimatePresence>
-        </div>
-      </div>
+      <AnimatePresence mode="popLayout" custom={direction}>
+        <motion.div
+          key={activeChapterIndex}
+          custom={direction}
+          variants={pageFlipVariants}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          className="absolute inset-0 pt-3 pb-8"
+        >
+          <ActiveComponent />
+        </motion.div>
+      </AnimatePresence>
 
       {/* Page indicator dots (mobile) */}
       <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 lg:hidden z-20">
@@ -204,6 +174,11 @@ function PageFlipContainer() {
   )
 }
 
+function PageLevelModal() {
+  const { project, isOpen, closeModal } = useModal()
+  return <ProjectModal project={project} isOpen={isOpen} onClose={closeModal} />
+}
+
 export default function Home() {
   const [bootScreenDismissed, setBootScreenDismissed] = useState(false)
 
@@ -211,66 +186,71 @@ export default function Home() {
     <SystemLogProvider>
       <ReadingStoreProvider>
         <ViewModeProvider>
-          <OpeningHero onDismiss={() => setBootScreenDismissed(true)} />
+          <ModalProvider>
+            <OpeningHero onDismiss={() => setBootScreenDismissed(true)} />
 
-          <div
-            className={bootScreenDismissed ? "" : "invisible pointer-events-none fixed inset-0 overflow-hidden"}
-            aria-hidden={!bootScreenDismissed}
-          >
-            {/* Persistent 3D scene — fixed behind all content */}
             <div
-              className="fixed inset-0 pointer-events-none"
-              style={{ zIndex: 1 }}
+              className={bootScreenDismissed ? "" : "invisible pointer-events-none fixed inset-0 overflow-hidden"}
+              aria-hidden={!bootScreenDismissed}
             >
-              <PersistentScene />
-            </div>
-
-            {/* Index-reactive gradient overlay */}
-            <GradientOverlay />
-
-            {/* Foreground wisps — very subtle layer above content */}
-            <div
-              className="fixed inset-0 pointer-events-none"
-              style={{ zIndex: 3 }}
-            >
-              <ForegroundParticles />
-            </div>
-
-            {/* All content above the 3D background */}
-            <div className="relative bg-transparent h-screen overflow-hidden" style={{ zIndex: 2 }}>
-              <Navbar />
-              <main
-                className="mx-auto w-full max-w-[1440px] lg:max-w-[1680px] px-6 lg:px-4
-                 lg:grid lg:grid-cols-[220px_1fr_360px] lg:gap-7 h-[calc(100vh-160px)]"
+              {/* Persistent 3D scene — fixed behind all content */}
+              <div
+                className="fixed inset-0 pointer-events-none"
+                style={{ zIndex: 1 }}
               >
-                {/* Left column: sticky ChapterRail */}
-                <div className="hidden lg:block">
-                  <div className="sticky top-0 h-full min-h-0 flex items-center justify-center">
-                    <div className="w-full max-h-full overflow-y-auto pb-4">
-                      <ChapterRail />
+                <PersistentScene />
+              </div>
+
+              {/* Index-reactive gradient overlay */}
+              <GradientOverlay />
+
+              {/* Foreground wisps — very subtle layer above content */}
+              <div
+                className="fixed inset-0 pointer-events-none"
+                style={{ zIndex: 3 }}
+              >
+                <ForegroundParticles />
+              </div>
+
+              {/* All content above the 3D background */}
+              <div className="relative bg-transparent h-screen overflow-hidden" style={{ zIndex: 2 }}>
+                <Navbar />
+                <main
+                  className="mx-auto w-full max-w-[1440px] lg:max-w-[1680px] px-6 lg:px-4
+                 lg:grid lg:grid-cols-[220px_1fr_360px] lg:gap-7 h-[calc(100vh-160px)]"
+                >
+                  {/* Left column: sticky ChapterRail */}
+                  <div className="hidden lg:block">
+                    <div className="sticky top-0 h-full min-h-0 flex items-center justify-center">
+                      <div className="w-full max-h-full overflow-y-auto pb-4">
+                        <ChapterRail />
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Middle column: single page at a time with flip animation */}
-                <PageFlipContainer />
+                  {/* Middle column: single page at a time with flip animation */}
+                  <PageFlipContainer />
 
-                {/* Right column: SystemLogConsole */}
-                <div className="hidden lg:block min-w-0">
-                  <div className="sticky top-0 self-start z-40">
-                    <div className="pt-6 flex justify-end">
-                      <SystemLogConsole />
+                  {/* Right column: SystemLogConsole */}
+                  <div className="hidden lg:block min-w-0">
+                    <div className="sticky top-0 self-start z-40">
+                      <div className="pt-6 flex justify-end">
+                        <SystemLogConsole />
+                      </div>
                     </div>
                   </div>
-                </div>
-              </main>
+                </main>
 
-              {/* Footer pinned at bottom */}
-              <div className="absolute bottom-0 left-0 right-0">
-                <Footer />
+                {/* Footer pinned at bottom */}
+                <div className="absolute bottom-0 left-0 right-0">
+                  <Footer />
+                </div>
               </div>
             </div>
-          </div>
+
+            {/* Modal rendered at page-level, OUTSIDE the perspective container */}
+            <PageLevelModal />
+          </ModalProvider>
         </ViewModeProvider>
       </ReadingStoreProvider>
     </SystemLogProvider>

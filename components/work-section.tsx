@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+
 import { Card, CardContent } from "@/components/ui/card"
 import { ModuleBadge } from "@/components/module-badge"
 import { SectionWrapper } from "@/components/section-wrapper"
@@ -8,7 +8,7 @@ import { ArrowUpRight } from "lucide-react"
 import { motion } from "framer-motion"
 import { useViewMode } from "@/contexts/view-mode-context"
 import { useSystemLog } from "@/contexts/system-log-context"
-import { ProjectModal } from "@/components/project-modal"
+import { useModal } from "@/contexts/modal-context"
 import { TypewriterText } from "@/components/typewriter-text"
 import Image from "next/image"
 
@@ -123,13 +123,19 @@ const cardVariants = {
 export function WorkSection() {
   const { viewMode } = useViewMode()
   const { addLog } = useSystemLog()
-  const [selectedProject, setSelectedProject] = useState<(typeof projects)[0] | null>(null)
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const { openModal } = useModal()
 
   const handleProjectClick = (project: (typeof projects)[0]) => {
-    // All projects open inline modal snapshot; deeper links live inside the modal
-    setSelectedProject(project)
-    setIsModalOpen(true)
+    openModal({
+      title: project.title,
+      file: project.file,
+      tags: project.tags,
+      tools: project.tools,
+      problem: project.problem,
+      approach: project.approach,
+      outcome: project.outcome,
+      imagePath: project.imagePath,
+    })
     addLog(`> opened case study: ${project.title.split(" – ")[0]}`)
   }
 
@@ -168,14 +174,14 @@ export function WorkSection() {
         </div>
       )}
 
-      <p className="text-muted-foreground mb-16 max-w-2xl leading-relaxed">
+      <p className="text-muted-foreground mb-8 max-w-2xl leading-relaxed">
         Instead of a long list of projects, here are a few 'episodes' that show how I think—from AI hiring tools to
         dashboards and community redesigns.
       </p>
 
       {/* Featured Project - Separate section */}
       {featuredProject && (
-        <div className="mb-10">
+        <div className="mb-6">
           <motion.div
             initial="hidden"
             animate="visible"
@@ -186,8 +192,8 @@ export function WorkSection() {
               className="border-border shadow-sm group overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-md hover:-translate-y-1 hover:border-primary/20 py-0 rounded-[0.6rem]"
               onClick={() => handleProjectClick(featuredProject)}
             >
-              <div className="grid lg:grid-cols-2">
-                <div className="h-[220px] md:h-[260px] relative overflow-hidden bg-muted/60 border-b border-border/60">
+              <div className="grid md:grid-cols-2">
+                <div className="h-[180px] md:h-[220px] relative overflow-hidden bg-muted/60 border-b md:border-b-0 border-r md:border-r border-border/60">
                   <Image
                     src={featuredProject.imagePath || "/placeholder.svg"}
                     alt={featuredProject.title}
@@ -281,25 +287,6 @@ export function WorkSection() {
         ))}
       </div>
 
-      {/* Project Modal */}
-      <ProjectModal
-        project={
-          selectedProject
-            ? {
-              title: selectedProject.title,
-              file: selectedProject.file,
-              tags: selectedProject.tags,
-              tools: selectedProject.tools,
-              problem: selectedProject.problem,
-              approach: selectedProject.approach,
-              outcome: selectedProject.outcome,
-              imagePath: selectedProject.imagePath,
-            }
-            : null
-        }
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
     </SectionWrapper>
   )
 }
