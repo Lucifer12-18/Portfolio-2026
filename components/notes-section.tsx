@@ -7,50 +7,12 @@ import { SectionWrapper } from "@/components/section-wrapper"
 import { ArrowUpRight } from "lucide-react"
 import { motion } from "framer-motion"
 import Image from "next/image"
+import Link from "next/link"
+import { NOTES, type NoteMetadata } from "@/lib/notes-data"
 
 const filters = ["All", "UX", "AI", "Systems", "Career"]
 
-const notes = [
-  {
-    tag: "AI & Design",
-    category: "AI",
-    file: "ai_ux_balance.md",
-    title: "Designing with AI without overwhelming users",
-    excerpt:
-      "How to introduce AI features that augment rather than complicate the user experience. Lessons from recent projects on progressive disclosure and trust-building.",
-    date: "Nov 2024",
-    link: "#",
-    height: "tall",
-    imagePath: "/images/ai-article.jpg",
-    accentColor: "rgba(74, 123, 247, 0.6)",
-  },
-  {
-    tag: "Career",
-    category: "Career",
-    file: "is_to_ux.md",
-    title: "From engineering to UX: thinking in systems",
-    excerpt:
-      "My transition from Information Systems to Product Design, and why a technical background shapes how I approach design problems.",
-    date: "Oct 2024",
-    link: "#",
-    height: "short",
-    imagePath: "/images/systems-article.jpg",
-    accentColor: "rgba(167, 139, 250, 0.6)",
-  },
-  {
-    tag: "Process",
-    category: "UX",
-    file: "storytelling.md",
-    title: "Why complex tools need simple stories",
-    excerpt:
-      "On the importance of narrative in enterprise design—helping users understand not just what to do, but why it matters.",
-    date: "Sep 2024",
-    link: "#",
-    height: "medium",
-    imagePath: "/images/storytelling-article.jpg",
-    accentColor: "rgba(249, 115, 98, 0.6)",
-  },
-]
+const notes = NOTES
 
 const cardVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -65,7 +27,7 @@ const cardVariants = {
   }),
 }
 
-function NoteCard({ note, index }: { note: (typeof notes)[0]; index: number }) {
+function NoteCard({ note, index }: { note: NoteMetadata; index: number }) {
   const [hovered, setHovered] = useState(false)
 
   return (
@@ -150,16 +112,17 @@ function NoteCard({ note, index }: { note: (typeof notes)[0]; index: number }) {
           <p className="text-sm text-slate-400 leading-relaxed flex-grow mb-4">{note.excerpt}</p>
 
           <div className="flex items-center justify-end mt-auto">
-            <motion.a
-              href={note.link}
-              className="inline-flex items-center gap-1 text-xs font-semibold"
-              style={{ color: note.accentColor }}
-              animate={{ x: hovered ? 2 : 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              Read note
-              <ArrowUpRight className="h-3 w-3" />
-            </motion.a>
+            <Link href={`/notes/${note.slug}`}>
+              <motion.span
+                className="inline-flex items-center gap-1 text-xs font-semibold"
+                style={{ color: note.accentColor }}
+                animate={{ x: hovered ? 2 : 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                Read note
+                <ArrowUpRight className="h-3 w-3" />
+              </motion.span>
+            </Link>
           </div>
         </div>
       </div>

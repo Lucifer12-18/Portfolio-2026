@@ -529,3 +529,91 @@ html {
   color: inherit;
   margin-left: 1px;
 }
+
+/* Note prose — typography for individual note pages */
+.note-prose {
+  color: rgb(203, 213, 225);
+  line-height: 1.75;
+  font-size: 1rem;
+}
+
+.note-prose p {
+  margin-bottom: 1.5rem;
+  color: rgb(203, 213, 225);
+}
+
+.note-prose h2 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: rgb(226, 232, 240);
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  letter-spacing: -0.01em;
+}
+
+.note-prose h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: rgb(226, 232, 240);
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.note-prose ul,
+.note-prose ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.note-prose ul {
+  list-style-type: disc;
+}
+
+.note-prose ol {
+  list-style-type: decimal;
+}
+
+.note-prose li {
+  margin-bottom: 0.5rem;
+  color: rgb(203, 213, 225);
+}
+
+.note-prose blockquote {
+  border-left: 2px solid rgba(74, 123, 247, 0.5);
+  padding-left: 1.25rem;
+  margin: 1.75rem 0;
+  font-style: italic;
+  color: rgb(148, 163, 184);
+}
+
+.note-prose code {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.875em;
+  background: rgba(15, 23, 42, 0.8);
+  color: rgb(34, 211, 238);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.note-prose strong {
+  color: rgb(226, 232, 240);
+  font-weight: 600;
+}
+
+.note-prose em {
+  color: rgb(148, 163, 184);
+  font-style: italic;
+}
+
+.note-prose a {
+  color: rgb(74, 123, 247);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.note-prose hr {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  margin: 2rem 0;
+}
