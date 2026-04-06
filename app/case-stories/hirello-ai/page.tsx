@@ -12,18 +12,18 @@ import { ViewModeProvider } from "@/contexts/view-mode-context"
 
 const hirelloSnapshot = {
   title: "Hirello – AI Career Operating System",
-  tags: ["Product Design", "AI & UX"],
+  tags: ["Product Design", "AI & UX", "Systems Thinking"],
   tools: ["Figma", "FigJam", "Maze"],
   imagePath: "/hirello-hero.png",
   problem:
-    "Job search is chaotic: spreadsheets for outreach, generic LinkedIn messages, forgotten follow-ups, and interviews practiced without feedback. Most tools solve isolated tasks instead of the full system.",
+    "Job seekers rely on 3–5 fragmented tools with no system connecting them. User interviews revealed two core gaps: no structured flow for networking outreach, and no practice tool that gives detailed, diagnostic feedback. Existing platforms like LinkedIn handle messaging but offer no guided pipeline — and interview tools like Huru.ai work in isolation. No product combined both with a structured guide.",
   approach: [
-    "Framed Hirello as a career operating system instead of a single feature: networking, outreach, and interview prep connected end-to-end.",
-    "Designed a Networking Intelligence System that structures contacts, outreach, and opportunity pipeline into a repeatable workflow.",
-    "Created an AI Interview Gym that turns practice sessions into measurable, diagnostic feedback loops.",
+    "Designed a Networking Intelligence System with contact tiers, guided outreach wizards, and a visual opportunity pipeline — giving users the repeatable workflow they were missing.",
+    "Built an AI Interview Gym that delivers layered, diagnostic feedback: analysis on structure, pacing, STAR compliance, and clear 'what went wrong + how to fix it' loops — not just a score.",
+    "Connected both modules into one career operating system, so networking conversations directly inform interview prep — making practice contextual and high-stakes, not generic.",
   ],
   outcome:
-    "Both modules shipped into a live production platform, giving job seekers structured workflows and measurable feedback instead of ad‑hoc tools.",
+    "During early testing and demos, users consistently described the experience as 'something new we actually needed.' Structured outreach replaced ad-hoc spreadsheets, and interview prep gained measurable diagnostics for the first time. The product fills a gap no existing tool addresses: networking + interview coaching + a guided system in one place.",
 }
 
 export default function HirelloSnapshotPage() {

@@ -11,6 +11,7 @@ import { useSystemLog } from "@/contexts/system-log-context"
 import { useModal } from "@/contexts/modal-context"
 import { TypewriterText } from "@/components/typewriter-text"
 import Image from "next/image"
+import { useState } from "react"
 
 const projects = [
   {
@@ -124,6 +125,7 @@ export function WorkSection() {
   const { viewMode } = useViewMode()
   const { addLog } = useSystemLog()
   const { openModal } = useModal()
+  const [hoveredCard, setHoveredCard] = useState<string | null>(null)
 
   const handleProjectClick = (project: (typeof projects)[0]) => {
     openModal({
@@ -179,7 +181,7 @@ export function WorkSection() {
         dashboards and community redesigns.
       </p>
 
-      {/* Featured Project - Separate section */}
+      {/* Featured Project */}
       {featuredProject && (
         <div className="mb-6">
           <motion.div
@@ -188,49 +190,85 @@ export function WorkSection() {
             variants={cardVariants}
             custom={0}
           >
-            <Card
-              className="border-border shadow-sm group overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-md hover:-translate-y-1 hover:border-primary/20 py-0 rounded-[0.6rem]"
-              onClick={() => handleProjectClick(featuredProject)}
+            <motion.div
+              onHoverStart={() => setHoveredCard(featuredProject.title)}
+              onHoverEnd={() => setHoveredCard(null)}
+              whileHover={{ y: -4 }}
+              transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
             >
-              <div className="grid md:grid-cols-2">
-                <div className="h-[180px] md:h-[220px] relative overflow-hidden bg-muted/60 border-b md:border-b-0 border-r md:border-r border-border/60">
-                  <Image
-                    src={featuredProject.imagePath || "/placeholder.svg"}
-                    alt={featuredProject.title}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                    className="object-contain object-center transition-transform duration-500 group-hover:scale-[1.02]"
-                  />
-                </div>
+              <Card
+                className="border-border shadow-sm group overflow-hidden cursor-pointer py-0 rounded-xl relative"
+                style={{
+                  transition: "box-shadow 0.35s ease, border-color 0.35s ease",
+                  boxShadow: hoveredCard === featuredProject.title
+                    ? "0 0 0 1px rgba(74,123,247,0.3), 0 8px 32px rgba(74,123,247,0.12), 0 2px 8px rgba(0,0,0,0.3)"
+                    : "0 2px 8px rgba(0,0,0,0.15)",
+                  borderColor: hoveredCard === featuredProject.title ? "rgba(74,123,247,0.3)" : undefined,
+                }}
+                onClick={() => handleProjectClick(featuredProject)}
+              >
+                {/* Shimmer line at top */}
+                <motion.div
+                  className="absolute top-0 left-0 right-0 h-[1px] z-10"
+                  style={{
+                    background: "linear-gradient(90deg, transparent, rgba(74,123,247,0.8), transparent)",
+                    opacity: hoveredCard === featuredProject.title ? 1 : 0,
+                    transition: "opacity 0.3s ease",
+                  }}
+                />
+                <div className="grid md:grid-cols-2">
+                  <div className="h-[180px] md:h-[220px] relative overflow-hidden bg-muted/60 border-b md:border-b-0 md:border-r border-border/60">
+                    <Image
+                      src={featuredProject.imagePath || "/placeholder.svg"}
+                      alt={featuredProject.title}
+                      fill
+                      sizes="(max-width: 1024px) 100vw, 50vw"
+                      className="object-contain object-center transition-transform duration-500 group-hover:scale-[1.03]"
+                    />
+                    {/* Gradient overlay that lifts on hover */}
+                    <div
+                      className="absolute inset-0 transition-opacity duration-300"
+                      style={{
+                        background: "linear-gradient(to right, transparent 60%, rgba(74,123,247,0.06))",
+                        opacity: hoveredCard === featuredProject.title ? 1 : 0,
+                      }}
+                    />
+                  </div>
 
-                <CardContent className="p-7 flex flex-col justify-center">
-                  {featuredProject.role && featuredProject.context && featuredProject.year && (
-                    <p className="text-[11px] font-mono uppercase tracking-wide text-muted-foreground mb-3">
-                      role: {featuredProject.role} · context: {featuredProject.context} · year: {featuredProject.year}
+                  <CardContent className="p-7 flex flex-col justify-center">
+                    {featuredProject.role && featuredProject.context && featuredProject.year && (
+                      <p className="text-[11px] font-mono uppercase tracking-wide text-muted-foreground mb-3">
+                        role: {featuredProject.role} · context: {featuredProject.context} · year: {featuredProject.year}
+                      </p>
+                    )}
+
+                    <h3 className="text-2xl font-bold text-foreground mb-3 transition-colors duration-200"
+                      style={{ color: hoveredCard === featuredProject.title ? "rgb(74,123,247)" : undefined }}>
+                      {featuredProject.title}
+                    </h3>
+
+                    <p className="text-muted-foreground mb-5 leading-relaxed line-clamp-2">
+                      {featuredProject.hook}
                     </p>
-                  )}
 
-                  <h3 className="text-2xl font-bold text-foreground mb-3 group-hover:text-primary transition-colors">
-                    {featuredProject.title}
-                  </h3>
-
-                  <p className="text-muted-foreground mb-4 leading-relaxed line-clamp-1">
-                    {featuredProject.hook}
-                  </p>
-
-                  <span className="inline-flex items-center gap-1 text-xs font-medium text-foreground/70 hover:text-primary hover:underline underline-offset-4 w-fit">
-                    View case →
-                    <ArrowUpRight className="h-3 w-3" />
-                  </span>
-                </CardContent>
-              </div>
-            </Card>
+                    <motion.span
+                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary w-fit"
+                      animate={{ x: hoveredCard === featuredProject.title ? 3 : 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      View case study
+                      <ArrowUpRight className="h-3.5 w-3.5" />
+                    </motion.span>
+                  </CardContent>
+                </div>
+              </Card>
+            </motion.div>
           </motion.div>
         </div>
       )}
 
-      {/* Other Projects - Standardized grid */}
-      <div className="grid md:grid-cols-3 gap-6">
+      {/* Other Projects */}
+      <div className="grid md:grid-cols-2 gap-5">
         {otherProjects.map((project, i) => (
           <motion.div
             key={project.title}
@@ -239,50 +277,90 @@ export function WorkSection() {
             animate="visible"
             variants={cardVariants}
           >
-            <Card
-              className="h-full border-border shadow-sm group overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-md hover:-translate-y-1 hover:border-primary/20 flex flex-col py-0 rounded-[0.6rem]"
-              onClick={() => handleProjectClick(project)}
+            <motion.div
+              onHoverStart={() => setHoveredCard(project.title)}
+              onHoverEnd={() => setHoveredCard(null)}
+              whileHover={{ y: -4 }}
+              transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              className="h-full"
             >
-              <div className="h-[220px] md:h-[260px] relative overflow-hidden bg-muted/60 border-b border-border/60">
-                <Image
-                  src={project.imagePath || "/placeholder.svg"}
-                  alt={project.title}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                  className="object-contain object-center transition-transform duration-500 group-hover:scale-[1.02]"
+              <Card
+                className="h-full border-border group overflow-hidden cursor-pointer flex flex-col py-0 rounded-xl relative"
+                style={{
+                  transition: "box-shadow 0.35s ease, border-color 0.35s ease",
+                  boxShadow: hoveredCard === project.title
+                    ? "0 0 0 1px rgba(74,123,247,0.25), 0 8px 28px rgba(74,123,247,0.1), 0 2px 8px rgba(0,0,0,0.25)"
+                    : "0 1px 4px rgba(0,0,0,0.12)",
+                  borderColor: hoveredCard === project.title ? "rgba(74,123,247,0.25)" : undefined,
+                }}
+                onClick={() => handleProjectClick(project)}
+              >
+                {/* Shimmer top line */}
+                <div
+                  className="absolute top-0 left-0 right-0 h-[1px] z-10"
+                  style={{
+                    background: "linear-gradient(90deg, transparent, rgba(74,123,247,0.6), transparent)",
+                    opacity: hoveredCard === project.title ? 1 : 0,
+                    transition: "opacity 0.3s ease",
+                  }}
                 />
-              </div>
 
-              <CardContent className="p-6 md:p-7 flex flex-col h-full">
-                {project.role && project.context && project.year && (
-                  <p className="text-[11px] font-mono uppercase tracking-wide text-muted-foreground mb-3">
-                    role: {project.role} · context: {project.context} · year: {project.year}
-                  </p>
-                )}
-
-                <h3 className="text-lg font-bold text-foreground mb-2 group-hover:text-primary transition-colors line-clamp-2">
-                  {project.title}
-                </h3>
-
-                <div className="flex flex-wrap gap-1.5 text-[11px] font-mono text-muted-foreground mb-3">
-                  {project.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="px-2 py-0.5 rounded-full bg-muted/60 text-[10px] leading-none whitespace-nowrap"
-                    >
-                      {tag}
-                    </span>
-                  ))}
+                <div className="h-[180px] relative overflow-hidden bg-muted/60 border-b border-border/60">
+                  <Image
+                    src={project.imagePath || "/placeholder.svg"}
+                    alt={project.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-contain object-center transition-transform duration-500 group-hover:scale-[1.03]"
+                  />
+                  {/* Subtle gradient overlay */}
+                  <div
+                    className="absolute inset-0 transition-opacity duration-300"
+                    style={{
+                      background: "linear-gradient(to bottom, transparent 50%, rgba(74,123,247,0.04))",
+                      opacity: hoveredCard === project.title ? 1 : 0,
+                    }}
+                  />
                 </div>
 
-                <p className="text-muted-foreground mb-4 leading-relaxed text-sm line-clamp-2">{project.hook}</p>
+                <CardContent className="p-5 flex flex-col flex-1">
+                  {project.role && project.context && project.year && (
+                    <p className="text-[10px] font-mono uppercase tracking-wide text-muted-foreground mb-2">
+                      role: {project.role} · {project.year}
+                    </p>
+                  )}
 
-                <span className="mt-auto inline-flex items-center gap-1 text-xs font-medium text-foreground/70 hover:text-primary hover:underline underline-offset-4 w-fit">
-                  View case →
-                  <ArrowUpRight className="h-3 w-3" />
-                </span>
-              </CardContent>
-            </Card>
+                  <h3
+                    className="text-base font-bold mb-2 transition-colors duration-200 line-clamp-2"
+                    style={{ color: hoveredCard === project.title ? "rgb(74,123,247)" : "rgb(248,250,252)" }}
+                  >
+                    {project.title}
+                  </h3>
+
+                  <div className="flex flex-wrap gap-1.5 mb-3">
+                    {project.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="px-2 py-0.5 rounded-full bg-muted/60 text-[10px] font-mono text-muted-foreground leading-none whitespace-nowrap"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+
+                  <p className="text-muted-foreground text-sm leading-relaxed line-clamp-2 mb-4">{project.hook}</p>
+
+                  <motion.span
+                    className="mt-auto inline-flex items-center gap-1.5 text-xs font-semibold text-primary w-fit"
+                    animate={{ x: hoveredCard === project.title ? 3 : 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    View case
+                    <ArrowUpRight className="h-3.5 w-3.5" />
+                  </motion.span>
+                </CardContent>
+              </Card>
+            </motion.div>
           </motion.div>
         ))}
       </div>

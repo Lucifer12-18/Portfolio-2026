@@ -114,13 +114,18 @@ void main() {
 interface ForegroundParticleCloudProps {
   targetColor: [number, number, number]
   scrollProgress: number
+  chapterIndex: number
 }
 
-function ForegroundParticleCloud({ targetColor, scrollProgress }: ForegroundParticleCloudProps) {
+function ForegroundParticleCloud({ targetColor, scrollProgress, chapterIndex }: ForegroundParticleCloudProps) {
   const pointsRef = useRef<THREE.Points>(null!)
   const groupRef = useRef<THREE.Group>(null!)
   const mouseLerped = useRef<THREE.Vector2>(new THREE.Vector2(0, 0))
   const scrollLerped = useRef(0)
+
+  // Chapter-change burst: wisps rush outward then drift back to stillness
+  const prevChapterRef = useRef(chapterIndex)
+  const burstRef = useRef(0)  // 0 = idle, 1.0 = full burst, decays to 0
 
   const { positions, indices, randoms } = useMemo(() => {
     const count = FOREGROUND_PARTICLE_COUNT
@@ -156,12 +161,21 @@ function ForegroundParticleCloud({ targetColor, scrollProgress }: ForegroundPart
     uniforms.uTime.value = state.clock.elapsedTime
     uniforms.uPixelRatio.value = state.gl.getPixelRatio()
 
+    // Detect chapter change → trigger warp burst
+    if (chapterIndex !== prevChapterRef.current) {
+      prevChapterRef.current = chapterIndex
+      burstRef.current = 1.0
+    }
+
+    // Decay burst over ~2s — exponential so it snaps quickly then fades gently
+    if (burstRef.current > 0) {
+      burstRef.current = Math.max(0, burstRef.current - delta * 0.5)
+    }
+
     // Smoothly follow mouse for gentle parallax
     const mouse = state.mouse
-    const targetMouseX = mouse.x
-    const targetMouseY = mouse.y
-    mouseLerped.current.x += (targetMouseX - mouseLerped.current.x) * FG_PARALLAX_EASING
-    mouseLerped.current.y += (targetMouseY - mouseLerped.current.y) * FG_PARALLAX_EASING
+    mouseLerped.current.x += (mouse.x - mouseLerped.current.x) * FG_PARALLAX_EASING
+    mouseLerped.current.y += (mouse.y - mouseLerped.current.y) * FG_PARALLAX_EASING
 
     // Smooth scroll influence
     scrollLerped.current += (scrollProgress - scrollLerped.current) * 0.08
@@ -171,12 +185,16 @@ function ForegroundParticleCloud({ targetColor, scrollProgress }: ForegroundPart
     const scrollYOffset = scrollLerped.current * FG_SCROLL_Y_OFFSET
     const scrollZOffset = scrollLerped.current * FG_SCROLL_Z_OFFSET
 
-    // Slow global rotation so wisps feel like they're drifting around viewer,
-    // with just a hint of extra movement when the user scrolls.
+    // Rotation: base drift + scroll influence + burst spike when chapter changes
+    // Burst makes wisps feel like they're reacting to the world-shift
     if (pointsRef.current) {
       const baseRotSpeed = 0.025 + Math.abs(scrollLerped.current) * FG_SCROLL_INFLUENCE
-      pointsRef.current.rotation.y += delta * baseRotSpeed
+      const burstBoost = burstRef.current * burstRef.current * 0.35  // quadratic so burst is sharp
+      pointsRef.current.rotation.y += delta * (baseRotSpeed + burstBoost)
       pointsRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.025) * 0.05
+      // During burst, tilt slightly on Z for extra dimension
+      pointsRef.current.rotation.z = Math.sin(state.clock.elapsedTime * 0.018) * 0.03
+        + burstRef.current * 0.04
     }
 
     if (groupRef.current) {
@@ -186,7 +204,9 @@ function ForegroundParticleCloud({ targetColor, scrollProgress }: ForegroundPart
     }
 
     // Softly blend color toward current chapter accent
-    uniforms.uColor.value.lerp(targetColorVec, 0.08)
+    // Slightly faster during burst so color change is noticeable
+    const colorSpeed = 0.08 + burstRef.current * 0.12
+    uniforms.uColor.value.lerp(targetColorVec, colorSpeed)
   })
 
   return (
@@ -243,7 +263,11 @@ function ForegroundParticlesInner() {
     <>
       <ambientLight intensity={0.2} />
       <group position={[0, 0, 0]}>
-        <ForegroundParticleCloud targetColor={palette} scrollProgress={scrollProgress} />
+        <ForegroundParticleCloud
+          targetColor={palette}
+          scrollProgress={scrollProgress}
+          chapterIndex={activeChapterIndex}
+        />
       </group>
     </>
   )

@@ -1,6 +1,7 @@
 "use client"
 
 import { useRef, useMemo, useEffect, useState } from "react"
+import { formationWatchRef } from "@/lib/formation-state"
 import { Canvas, useFrame } from "@react-three/fiber"
 import { EffectComposer, Bloom } from "@react-three/postprocessing"
 import * as THREE from "three"
@@ -267,18 +268,20 @@ void main() {
   float t = smoothstep(0.0, 1.0, uTransition);
 
   // Spirit flow: turbulence peaks at transition midpoint
-  float turbulence = sin(t * PI) * 1.8;
-  vec3 noiseInput = mix(posA, posB, t) * 0.4 + uTime * 0.12;
+  // More dramatic scatter — particles visibly explode outward then reform
+  float turbulence = sin(t * PI) * 2.8;
+  vec3 noiseInput = mix(posA, posB, t) * 0.4 + uTime * 0.10;
   vec3 curl = curlNoise(noiseInput);
 
   vec3 finalPos = mix(posA, posB, t) + curl * turbulence;
 
-  // Gentle floating when settled (fades out during transitions)
+  // Held breath when settled: very slow, very subtle — almost still
+  // Fades out completely during transition so scatter feels pure
   float settled = 1.0 - sin(t * PI);
   finalPos += vec3(
-    sin(uTime * 0.15 + aRandom.x * TAU) * 0.05,
-    cos(uTime * 0.12 + aRandom.y * TAU) * 0.06,
-    sin(uTime * 0.10 + aRandom.z * TAU) * 0.04
+    sin(uTime * 0.07 + aRandom.x * TAU) * 0.04,
+    cos(uTime * 0.06 + aRandom.y * TAU) * 0.05,
+    sin(uTime * 0.05 + aRandom.z * TAU) * 0.03
   ) * settled;
 
   // Subtle mouse-driven parallax — closer points react more
@@ -290,17 +293,17 @@ void main() {
   vec4 mvPosition = modelViewMatrix * vec4(finalPos, 1.0);
   gl_Position = projectionMatrix * mvPosition;
 
-  // Size: swell during transition, subtle depth attenuation
+  // Size: swell dramatically during transition, subtle depth attenuation
   float baseSize = 2.0 + aRandom.x * 3.0;
-  float sizePulse = 1.0 + sin(t * PI) * 0.6;
+  float sizePulse = 1.0 + sin(t * PI) * 1.1;
   float depthScale = clamp(8.0 / -mvPosition.z, 0.5, 2.0);
   gl_PointSize = baseSize * sizePulse * uPixelRatio * depthScale;
 
-  // Color: blend palettes, brighten during transition
+  // Color: blend palettes, bloom brighter during transition
   vColor = mix(uColorFrom, uColorTo, t);
-  vColor += vec3(0.12, 0.15, 0.25) * sin(t * PI);
+  vColor += vec3(0.15, 0.18, 0.30) * sin(t * PI);
 
-  vAlpha = 0.5 + aRandom.y * 0.4 + sin(t * PI) * 0.1;
+  vAlpha = 0.5 + aRandom.y * 0.4 + sin(t * PI) * 0.22;
 }
 `
 
@@ -406,9 +409,10 @@ function MorphingScene({ chapterIndex, bloomRef }: MorphingSceneProps) {
 
     const tr = transitionRef.current
 
-    // Animate transition progress (~1.5 s total)
+    // Animate transition progress (~3.2 s total — slow enough to appreciate
+    // each shape morphing from one mathematical form into the next)
     if (tr.progress < 1.0) {
-      tr.progress = Math.min(1.0, tr.progress + delta * 0.65)
+      tr.progress = Math.min(1.0, tr.progress + delta * 0.31)
     }
 
     // ── Uniforms ──────────────────────────────────────────────────────────
@@ -428,10 +432,13 @@ function MorphingScene({ chapterIndex, bloomRef }: MorphingSceneProps) {
     uniforms.uColorTo.value.set(toColor[0], toColor[1], toColor[2])
 
     // ── Camera ────────────────────────────────────────────────────────────
+    // Camera sweeps decisively toward the new chapter, eases into place
     const camTarget = CAM_TARGETS[tr.to] ?? CAM_TARGETS[0]
-    camPos.current.x += (camTarget[0] - camPos.current.x) * 0.02
-    camPos.current.y += (camTarget[1] - camPos.current.y) * 0.02
-    camPos.current.z += (camTarget[2] - camPos.current.z) * 0.02
+    const camTransitionPeak = Math.sin(tr.progress * Math.PI)
+    const camSpeed = 0.028 + camTransitionPeak * 0.012  // faster during scatter peak
+    camPos.current.x += (camTarget[0] - camPos.current.x) * camSpeed
+    camPos.current.y += (camTarget[1] - camPos.current.y) * camSpeed
+    camPos.current.z += (camTarget[2] - camPos.current.z) * camSpeed
     state.camera.position.copy(camPos.current)
     state.camera.lookAt(0, 0, 0)
 
@@ -442,14 +449,28 @@ function MorphingScene({ chapterIndex, bloomRef }: MorphingSceneProps) {
     // ── Bloom (synced to PersistentScene via shared ref) ──────────────────
     const baseBloom = CHAPTER_BLOOM[tr.to] ?? CHAPTER_BLOOM[0]
     const transitionBoost = Math.sin(tr.progress * Math.PI)
-    const boostedBloom = baseBloom * (1.0 + 0.45 * transitionBoost)
+    // Bloom surges at transition peak, creating a brief luminous flash
+    const boostedBloom = baseBloom * (1.0 + 0.75 * transitionBoost)
     bloomRef.current += (boostedBloom - bloomRef.current) * 0.02
 
-    // ── Slow scene rotation ───────────────────────────────────────────────
+    // ── Rotation ──────────────────────────────────────────────────────────
     if (groupRef.current) {
-      groupRef.current.rotation.y += 0.06 * delta
-      groupRef.current.rotation.x =
-        Math.sin(state.clock.elapsedTime * 0.015) * 0.03
+      if (formationWatchRef.current) {
+        // Formation watch window: content is absent, the 3D shape is the
+        // entire experience. Rotate at a steady showcase speed — fast enough
+        // to clearly present the shape from all angles over 2.6 s, with a
+        // gentle tumble on X so it feels fully three-dimensional.
+        groupRef.current.rotation.y += 0.11 * delta
+        groupRef.current.rotation.x =
+          Math.sin(state.clock.elapsedTime * 0.045) * 0.14
+      } else {
+        // Normal operation: breath-hold slows rotation during the
+        // scatter peak so the turbulence reads as chaos, not spin.
+        const breathHold = 1.0 - Math.sin(tr.progress * Math.PI) * 0.82
+        groupRef.current.rotation.y += 0.055 * delta * breathHold
+        groupRef.current.rotation.x =
+          Math.sin(state.clock.elapsedTime * 0.015) * 0.03
+      }
     }
   })
 

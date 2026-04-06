@@ -123,57 +123,85 @@ export function ProcessSection() {
         {/* Pipeline Bar */}
         <div className="relative py-8 mb-10">
           {/* Tinted background band */}
-          <div className="absolute inset-0 bg-primary/5 rounded-2xl" />
-          
+          <div className="absolute inset-0 bg-primary/5 rounded-2xl border border-primary/8" />
+
           {/* Pipeline line with nodes */}
           <div className="relative h-20 flex items-center px-4">
-            {/* Horizontal line */}
-            <div className="absolute top-1/2 left-4 right-4 h-1 bg-primary/20 rounded-full" />
-            
+            {/* Base horizontal line */}
+            <div className="absolute top-1/2 left-4 right-4 h-[2px] bg-primary/15 rounded-full" />
+            {/* Animated progress fill */}
+            <motion.div
+              className="absolute top-1/2 left-4 h-[2px] rounded-full origin-left"
+              style={{
+                background: "linear-gradient(90deg, rgba(74,123,247,0.8), rgba(167,139,250,0.6))",
+                boxShadow: "0 0 6px rgba(74,123,247,0.4)",
+              }}
+              animate={{
+                width: `${(activeStep / (steps.length - 1)) * (100 - 6)}%`,
+              }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            />
+
             {/* Step nodes */}
             <div className="relative grid grid-cols-4 gap-0 w-full z-10">
               {steps.map((step, index) => {
                 const isActive = activeStep === index
+                const isPast = index < activeStep
                 return (
                   <motion.button
                     key={step.number}
                     onClick={() => setActiveStep(index)}
-                    className="flex flex-col items-center gap-2 group"
-                    whileHover={{ scale: 1.1 }}
+                    className="flex flex-col items-center gap-2 group relative"
+                    whileHover={{ scale: 1.08 }}
                     whileTap={{ scale: 0.95 }}
                   >
+                    {/* Hover tooltip */}
+                    <motion.div
+                      className="absolute -top-10 left-1/2 -translate-x-1/2 pointer-events-none"
+                      initial={{ opacity: 0, y: 4 }}
+                      whileHover={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.15 }}
+                    >
+                      <div className="bg-slate-800 border border-white/10 rounded-md px-2.5 py-1 text-[10px] font-mono text-slate-300 whitespace-nowrap shadow-lg">
+                        {step.title}
+                      </div>
+                    </motion.div>
+
                     {/* Node circle */}
                     <div className="relative flex flex-col items-center gap-2">
                       <motion.div
                         className={cn(
-                          "w-14 h-14 rounded-full flex flex-col items-center justify-center text-xs font-bold shadow-lg border-4 border-background transition-all relative group-hover:scale-110",
+                          "w-14 h-14 rounded-full flex flex-col items-center justify-center text-xs font-bold shadow-lg border-4 border-background transition-colors relative",
                           isActive
                             ? "bg-primary text-primary-foreground"
+                            : isPast
+                            ? "bg-primary/30 text-primary border-primary/20"
                             : "bg-background text-muted-foreground border-muted-foreground/30"
                         )}
                         animate={
                           isActive
                             ? {
                                 boxShadow: [
-                                  "0 0 0 0 rgba(74, 123, 247, 0.4)",
-                                  "0 0 0 12px rgba(74, 123, 247, 0)",
+                                  "0 0 0 0 rgba(74, 123, 247, 0.5)",
+                                  "0 0 0 14px rgba(74, 123, 247, 0)",
                                 ],
                               }
                             : {}
                         }
-                        transition={{ duration: 2, repeat: isActive ? Infinity : 0 }}
+                        transition={{ duration: 1.8, repeat: isActive ? Infinity : 0 }}
                         style={
                           isActive
-                            ? { filter: "drop-shadow(0 0 12px rgba(74, 123, 247, 0.6))" }
+                            ? { filter: "drop-shadow(0 0 14px rgba(74, 123, 247, 0.7))" }
+                            : isPast
+                            ? { filter: "drop-shadow(0 0 6px rgba(74, 123, 247, 0.25))" }
                             : {}
                         }
                       >
                         <span>{step.number}</span>
-                        {/* Icon below number */}
                         <step.icon
                           className={cn(
                             "h-3.5 w-3.5 mt-0.5 transition-colors",
-                            isActive ? "text-primary-foreground" : "text-muted-foreground/60"
+                            isActive ? "text-primary-foreground" : isPast ? "text-primary" : "text-muted-foreground/60"
                           )}
                         />
                       </motion.div>
@@ -181,7 +209,7 @@ export function ProcessSection() {
                       <span
                         className={cn(
                           "text-xs font-mono transition-colors text-center max-w-[90px] leading-tight",
-                          isActive ? "text-primary font-semibold" : "text-muted-foreground/60"
+                          isActive ? "text-primary font-semibold" : isPast ? "text-primary/60" : "text-muted-foreground/50"
                         )}
                       >
                         {step.title.split(" ")[0]}

@@ -21,6 +21,18 @@ import { ReadingStoreProvider, useReadingStore } from "@/contexts/reading-store-
 import { CHAPTERS } from "@/lib/chapters-config"
 import { ModalProvider, useModal } from "@/contexts/modal-context"
 import { ProjectModal } from "@/components/project-modal"
+import { formationWatchRef } from "@/lib/formation-state"
+
+// ── CRT module IDs shown during transition ────────────────────────────────────
+const MODULE_IDS = [
+  "MODULE_00_PROLOGUE",
+  "MODULE_01_ORIGIN",
+  "MODULE_02_SHIFT",
+  "MODULE_03_METHOD",
+  "MODULE_04_WORK",
+  "MODULE_05_NOTES",
+  "MODULE_06_EPILOGUE",
+]
 
 const PersistentScene = dynamic(() => import("@/components/persistent-scene"), { ssr: false })
 const ForegroundParticles = dynamic(() => import("@/components/foreground-particles"), { ssr: false })
@@ -45,27 +57,203 @@ const CHAPTER_COMPONENTS: ComponentType[] = [
   ContactSection,
 ]
 
+// ── Particle formation IDs — mirror the GLSL shape names ────────────────────
+// Using the actual formation names creates coherence: the status line speaks
+// the same language as the 3D engine. A detail only a designer would notice.
+const FORMATION_IDS = [
+  "fibonacci_sphere",
+  "double_helix",
+  "torus",
+  "trefoil_knot",
+  "crystal_lattice",
+  "wave_surface",
+  "starburst",
+]
+
+// ── Formation watch timing ────────────────────────────────────────────────────
+//
+// After the old content exits (~380ms), we open a "formation watch window"
+// before the new content enters. During this window the particle field is
+// completely exposed and the viewer can watch the 3D formation build itself.
+//
+// EXIT_DURATION_MS   — how long the exit animation takes (matches exit.transition.duration)
+// FORMATION_WATCH_MS — how long to hold the naked particle field
+// ENTER_DELAY_MS     — total delay from chapter-change to content-enter start
+//
+const EXIT_DURATION_MS   = 380
+const FORMATION_WATCH_MS = 2600
+const ENTER_DELAY_MS     = EXIT_DURATION_MS + FORMATION_WATCH_MS   // 2 980 ms
+
+// ── Luminous burst — the cinematic connector between 2D and 3D ───────────────
+//
+// When a chapter fires, this component erupts from the center of the viewport
+// as a radial surge in the target chapter's accent color — the same color the
+// 3D particle bloom is simultaneously surging to.
+//
+// For the first time, the content layer and the 3D layer are doing the same
+// thing, at the same moment. That synchronisation is what makes it feel like
+// ONE immersive system instead of two unrelated animations layered on top of
+// each other.
+//
+// The burst expands outward (scale 0.3 → 1.8) as it fades, like energy
+// radiating from an explosion rather than a static glow — this gives it
+// physical weight and direction.
+function LuminousBurst() {
+  const { activeChapterIndex } = useReadingStore()
+  const [color, setColor] = useState<{ r: number; g: number; b: number } | null>(null)
+  const [key, setKey] = useState(0)
+  const prevIdx = useRef(activeChapterIndex)
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => {
+    if (activeChapterIndex === prevIdx.current) return
+    prevIdx.current = activeChapterIndex
+    if (timer.current) clearTimeout(timer.current)
+
+    setColor(ACCENT_COLORS[activeChapterIndex] ?? ACCENT_COLORS[0])
+    setKey(k => k + 1)
+    timer.current = setTimeout(() => setColor(null), 1400)
+    return () => { if (timer.current) clearTimeout(timer.current) }
+  }, [activeChapterIndex])
+
+  if (!color) return null
+  const { r, g, b } = color
+
+  return (
+    <motion.div
+      key={key}
+      className="fixed inset-0 pointer-events-none"
+      style={{ zIndex: 8 }}
+      aria-hidden
+      initial={{ opacity: 0, scale: 0.3 }}
+      animate={{
+        opacity: [0, 0.55, 0.22, 0],
+        scale:   [0.3, 1.0, 1.4, 1.9],
+      }}
+      transition={{
+        duration: 1.4,
+        times: [0, 0.22, 0.55, 1],
+        ease: "easeOut",
+      }}
+    >
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: `radial-gradient(ellipse 75% 65% at 50% 52%,
+            rgba(${r},${g},${b},1)    0%,
+            rgba(${r},${g},${b},0.55) 28%,
+            rgba(${r},${g},${b},0.18) 55%,
+            transparent 72%)`,
+        }}
+      />
+    </motion.div>
+  )
+}
+
+// ── Particle system status — lives at the bottom of the content frame ────────
+// Reads the formation ID currently being computed in the 3D engine.
+// Never blocks anything; just a quiet pulse of system language.
+function ParticleSystemStatus() {
+  const { activeChapterIndex } = useReadingStore()
+  const [status, setStatus] = useState<string | null>(null)
+  const prevIdx = useRef(activeChapterIndex)
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([])
+
+  useEffect(() => {
+    if (activeChapterIndex === prevIdx.current) return
+    prevIdx.current = activeChapterIndex
+    timers.current.forEach(clearTimeout)
+
+    const formation = FORMATION_IDS[activeChapterIndex] ?? "fibonacci_sphere"
+    setStatus(`compiling.${formation}`)
+    // Switch to "render.complete" 680ms before the content enters so it
+    // reads as a countdown — then let it linger 400ms into the enter so
+    // it feels like the content is assembling from the completed formation.
+    const t1 = setTimeout(() => setStatus("render.complete"), ENTER_DELAY_MS - 680)
+    const t2 = setTimeout(() => setStatus(null),              ENTER_DELAY_MS + 400)
+    timers.current = [t1, t2]
+    return () => timers.current.forEach(clearTimeout)
+  }, [activeChapterIndex])
+
+  return (
+    <AnimatePresence mode="wait">
+      {status && (
+        <motion.div
+          key={status}
+          initial={{ opacity: 0, y: 4 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -2 }}
+          transition={{ duration: 0.2 }}
+          className="absolute bottom-5 left-0 right-0 flex justify-center z-20 pointer-events-none select-none"
+          aria-hidden
+        >
+          <span style={{
+            fontFamily: "'JetBrains Mono','Fira Code',monospace",
+            fontSize: 9,
+            letterSpacing: "0.13em",
+            color: status === "render.complete"
+              ? "rgba(34,211,238,0.6)"
+              : "rgba(34,211,238,0.28)",
+          }}>
+            ▸ {status}{status !== "render.complete" && <span className="crt-cursor" />}
+          </span>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
+}
+
+// ── Chapter transition variants ───────────────────────────────────────────────
+//
+// The design principle: content is made of the same energy as the particles.
+//
+// EXIT  (0.38s) — implosion:
+//   Content contracts toward its own center via clip-path while brightness
+//   flares to white. Reads as: "chapter energy returning to the field."
+//   The simultaneous LuminousBurst erupts from the same center point —
+//   visually the content IS collapsing INTO the particle burst.
+//
+// ENTER (0.72s) — emergence:
+//   Content expands outward from the center of the burst, starting completely
+//   desaturated (grey, like raw particle matter) and saturating into full
+//   color as it "compiles." The brightness starts high (2×) to blend with
+//   the fading burst, then resolves to 1. Content and burst feel continuous.
+//
+// Together: content implodes → light erupts → new content emerges from light.
+// The 3D morph happens through the whole sequence; both layers tell the same story.
 const pageFlipVariants = {
-  initial: (direction: number) => ({
+  initial: {
     opacity: 0,
-    y: direction > 0 ? 18 : -18,
-  }),
+    clipPath: "inset(32% 28% 32% 28% round 8px)",
+    filter: "blur(18px) brightness(3.2) saturate(0)",
+    scale: 1.02,
+  },
   animate: {
     opacity: 1,
-    y: 0,
+    clipPath: "inset(0% 0% 0% 0% round 0px)",
+    filter: "blur(0px) brightness(1) saturate(1)",
+    scale: 1,
     transition: {
-      duration: 0.35,
+      duration: 0.72,
       ease: [0.16, 1, 0.3, 1] as const,
+      clipPath: { duration: 0.68, ease: [0.22, 1, 0.36, 1] as const },
+      filter:   { duration: 0.62, delay: 0.06, ease: [0.25, 1, 0.4, 1] as const },
+      opacity:  { duration: 0.42, delay: 0.06 },
+      scale:    { duration: 0.72, ease: [0.16, 1, 0.3, 1] as const },
     },
   },
-  exit: (direction: number) => ({
+  exit: {
     opacity: 0,
-    y: direction > 0 ? -18 : 18,
+    clipPath: "inset(32% 28% 32% 28% round 8px)",
+    filter: "blur(14px) brightness(3.5) saturate(0)",
+    scale: 0.96,
     transition: {
-      duration: 0.2,
-      ease: [0.55, 0.06, 0.68, 0.19] as const,
+      duration: 0.38,
+      ease: [0.88, 0, 1, 0] as const,
+      clipPath: { duration: 0.34 },
     },
-  }),
+  },
 }
 
 function GradientOverlay() {
@@ -87,16 +275,67 @@ function GradientOverlay() {
 
 function PageFlipContainer() {
   const { activeChapterIndex, goToNextChapter, goToPrevChapter, setActiveChapterIndex } = useReadingStore()
-  const prevIndexRef = useRef(activeChapterIndex)
-  const direction =
-    activeChapterIndex > prevIndexRef.current ? 1
-      : activeChapterIndex < prevIndexRef.current ? -1
-        : 0
+
+  // ── Formation-watch pattern ───────────────────────────────────────────────
+  //
+  // displayedIndex    — which chapter's content is currently rendered.
+  //                     Lags behind activeChapterIndex during transitions.
+  //
+  // isWatching        — true during the formation-watch window.
+  //                     When true, the content motion.div is absent from the
+  //                     React tree, so AnimatePresence plays the exit animation
+  //                     and the viewport becomes entirely the 3D particle field.
+  //
+  // targetIndexRef    — always holds the latest activeChapterIndex so the
+  //                     setTimeout callback resolves rapid changes correctly.
+  //
+  // displayedIndexRef — ref mirror of displayedIndex state; used inside the
+  //                     effect to compare WITHOUT adding displayedIndex to deps
+  //                     (avoids feedback loops) and without stale-closure risk.
+  //                     This also correctly handles React Strict Mode's double-
+  //                     invoke: both runs see the same stale/equal indices so
+  //                     the guard fires and we skip — no phantom watch window
+  //                     on first mount.
+  //
+  const [displayedIndex, setDisplayedIndex] = useState(activeChapterIndex)
+  const [isWatching,     setIsWatching]     = useState(false)
+  const enterTimerRef      = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const targetIndexRef     = useRef(activeChapterIndex)
+  const displayedIndexRef  = useRef(activeChapterIndex)   // mirrors displayedIndex state
+
+  // Keep both refs live on every render
+  targetIndexRef.current    = activeChapterIndex
+  displayedIndexRef.current = displayedIndex
 
   useEffect(() => {
-    prevIndexRef.current = activeChapterIndex
-  })
+    // Guard: skip if there is no real chapter change.
+    // - Fires correctly on first mount  (displayedIndex === activeChapterIndex)
+    // - Fires correctly on React Strict Mode double-invoke (same values, same check)
+    // - Only runs the watch logic when the user actually navigates to a new chapter
+    if (displayedIndexRef.current === activeChapterIndex) return
 
+    // 1. Unmount current content → AnimatePresence fires the exit variant.
+    //    Signal the 3D scene to switch into showcase-rotation mode.
+    setIsWatching(true)
+    formationWatchRef.current = true
+
+    // 2. Clear any pending enter timer (handles rapid chapter-changes cleanly —
+    //    the timer always resolves to the LATEST targetIndexRef.current)
+    if (enterTimerRef.current) clearTimeout(enterTimerRef.current)
+
+    // 3. After exit (380ms) + formation-watch window (2600ms) → mount new content
+    enterTimerRef.current = setTimeout(() => {
+      formationWatchRef.current = false            // back to normal rotation before content enters
+      setDisplayedIndex(targetIndexRef.current)   // React 18 batches these two
+      setIsWatching(false)                         // into one render — no flash
+    }, ENTER_DELAY_MS)
+
+    return () => {
+      if (enterTimerRef.current) clearTimeout(enterTimerRef.current)
+    }
+  }, [activeChapterIndex])
+
+  // ── Keyboard navigation ───────────────────────────────────────────────────
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === "ArrowDown" || e.key === "ArrowRight") {
@@ -115,7 +354,7 @@ function PageFlipContainer() {
     return () => window.removeEventListener("keydown", handleKeyDown)
   }, [handleKeyDown])
 
-  // Swipe support for mobile
+  // ── Swipe support for mobile ──────────────────────────────────────────────
   const [touchStart, setTouchStart] = useState<number | null>(null)
 
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
@@ -134,7 +373,8 @@ function PageFlipContainer() {
     [touchStart, goToNextChapter, goToPrevChapter],
   )
 
-  const ActiveComponent = CHAPTER_COMPONENTS[activeChapterIndex]
+  // Render the chapter that is currently displayed (not the newly active one)
+  const DisplayedComponent = CHAPTER_COMPONENTS[displayedIndex]
 
   return (
     <div
@@ -142,18 +382,26 @@ function PageFlipContainer() {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      <AnimatePresence mode="popLayout" custom={direction}>
-        <motion.div
-          key={activeChapterIndex}
-          custom={direction}
-          variants={pageFlipVariants}
-          initial="initial"
-          animate="animate"
-          exit="exit"
-          className="absolute inset-0 pt-3 pb-8"
-        >
-          <ActiveComponent />
-        </motion.div>
+      {/* Particle system status — "▸ compiling.torus" → "▸ render.complete" */}
+      <ParticleSystemStatus />
+
+      <AnimatePresence mode="wait">
+        {/* Content is absent (isWatching=true) during the formation-watch window.
+            AnimatePresence sees the removal and fires the exit variant on the
+            outgoing motion.div, then holds the empty slot until isWatching flips
+            back and the new key mounts with the enter variant. */}
+        {!isWatching && (
+          <motion.div
+            key={displayedIndex}
+            variants={pageFlipVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            className="absolute inset-0 pt-3 pb-8"
+          >
+            <DisplayedComponent />
+          </motion.div>
+        )}
       </AnimatePresence>
 
       {/* Page indicator dots (mobile) */}
@@ -203,6 +451,9 @@ export default function Home() {
 
               {/* Index-reactive gradient overlay */}
               <GradientOverlay />
+
+              {/* Luminous burst — fires on chapter change, syncs with particle bloom */}
+              <LuminousBurst />
 
               {/* Foreground wisps — very subtle layer above content */}
               <div

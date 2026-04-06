@@ -173,15 +173,15 @@ export function OpeningHero({ onDismiss }: OpeningHeroProps) {
                     <div className="pl-6 space-y-1.5 text-cyan-200/80">
                       <div className="flex items-center gap-2">
                         <span className="text-cyan-400">{'>'}</span>
-                        <span>Juggling pixels and systems-designing views in the top tier</span>
+                        <span>Designing clarity inside complex systems.</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="text-cyan-400">{'>'}</span>
-                        <span>UI/UX Specialist | Product Designer</span>
+                        <span>Founding Product Designer → Hirello.ai</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="text-cyan-400">{'>'}</span>
-                        <span>Building pixel-perfect interfaces</span>
+                        <span>AI workflows · data-heavy tools · multi-step UX</span>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 pt-2">
@@ -195,7 +195,7 @@ export function OpeningHero({ onDismiss }: OpeningHeroProps) {
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                        <span className="text-green-400">Mode: DESIGNER</span>
+                        <span className="text-green-400">Mode: OPEN_TO_WORK</span>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 pt-1">
@@ -229,7 +229,7 @@ export function OpeningHero({ onDismiss }: OpeningHeroProps) {
                   transition={{ delay: 0.7, duration: 0.35 }}
                   className="text-xs font-mono text-cyan-400/50 text-center max-w-md"
                 >
-                  Navigation is chapter-based. Click to explore.
+                  Navigate by chapter · Arrow keys or click to move through the story.
                 </motion.p>
               </motion.div>
             </motion.div>

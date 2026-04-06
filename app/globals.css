@@ -165,8 +165,69 @@ html {
   100% { background-position: 16px 16px; }
 }
 
-/* Softer button hover with subtle brightness shift */
+/* Shimmer sweep — used on card hover accents */
+@keyframes shimmer-sweep {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* Gentle float — used on feature cards / mini windows */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-5px); }
+}
+
+/* Soft glow pulse — used on interactive highlights */
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(74, 123, 247, 0); }
+  50%       { box-shadow: 0 0 18px 4px rgba(74, 123, 247, 0.25); }
+}
+
+/* Chapter in — chapter content appears with a reveal */
+@keyframes chapter-reveal {
+  0%   { opacity: 0; clip-path: inset(0 0 100% 0); }
+  100% { opacity: 1; clip-path: inset(0 0 0% 0); }
+}
+
+/* Underline grow — animated underline for section titles */
+@keyframes underline-grow {
+  0%   { transform: scaleX(0); }
+  100% { transform: scaleX(1); }
+}
+
+/* Component utilities layer */
 @layer components {
+  /* Animated shimmer highlight */
+  .shimmer-line {
+    background: linear-gradient(90deg, transparent 0%, rgba(74,123,247,0.7) 50%, transparent 100%);
+    background-size: 200% 100%;
+    animation: shimmer-sweep 1.8s ease infinite;
+  }
+
+  /* Float animation utility */
+  .animate-float {
+    animation: float 4s ease-in-out infinite;
+  }
+
+  /* Glow pulse utility */
+  .animate-glow-pulse {
+    animation: glow-pulse 2.5s ease-in-out infinite;
+  }
+
+  /* Card with glowing border on hover */
+  .card-glow-hover {
+    transition: box-shadow 0.35s ease, border-color 0.35s ease, transform 0.25s ease;
+  }
+  .card-glow-hover:hover {
+    box-shadow:
+      0 0 0 1px rgba(74, 123, 247, 0.3),
+      0 8px 32px rgba(74, 123, 247, 0.12),
+      0 2px 8px rgba(0, 0, 0, 0.3);
+    border-color: rgba(74, 123, 247, 0.3) !important;
+    transform: translateY(-3px);
+  }
+
+  /* Softer button hover with subtle brightness shift */
   .btn-soft-hover {
     @apply transition-all duration-200;
   }
@@ -390,4 +451,81 @@ html {
     transform: translateY(-3px);
     box-shadow: 0 32px 80px rgba(15, 23, 42, 0.36);
   }
+}
+
+/* ── CRT Transition Effects ─────────────────────────────────────────────── */
+
+/* Horizontal scanline sweep — moves from top to bottom continuously */
+@keyframes crt-scanline-sweep {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+/* CRT static noise flicker */
+@keyframes crt-flicker {
+  0%,  100% { opacity: 1;    }
+  8%         { opacity: 0.92; }
+  22%        { opacity: 1;    }
+  35%        { opacity: 0.88; }
+  48%        { opacity: 1;    }
+  60%        { opacity: 0.94; }
+  75%        { opacity: 1;    }
+  88%        { opacity: 0.90; }
+}
+
+/* Terminal cursor blink */
+@keyframes cursor-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+/* CRT turn-on brightness flash */
+@keyframes crt-boot {
+  0%   { filter: brightness(3) blur(4px); opacity: 0.6; }
+  15%  { filter: brightness(1.6) blur(1px); opacity: 0.9; }
+  100% { filter: brightness(1) blur(0px); opacity: 1; }
+}
+
+/* CRT turn-off collapse */
+@keyframes crt-shutdown {
+  0%   { filter: brightness(1.4); opacity: 1;   transform: scaleY(1); }
+  30%  { filter: brightness(2.5); opacity: 1;   transform: scaleY(0.6); }
+  60%  { filter: brightness(1.8); opacity: 0.9; transform: scaleY(0.08); }
+  100% { filter: brightness(0.4); opacity: 0;   transform: scaleY(0.01); }
+}
+
+.crt-scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 3px,
+    rgba(0, 0, 0, 0.28) 3px,
+    rgba(0, 0, 0, 0.28) 4px
+  );
+  pointer-events: none;
+}
+
+.crt-sweep-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 120px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(100, 220, 255, 0.04) 30%,
+    rgba(100, 220, 255, 0.07) 50%,
+    rgba(100, 220, 255, 0.04) 70%,
+    transparent 100%
+  );
+  animation: crt-scanline-sweep 2.4s linear infinite;
+}
+
+.crt-cursor::after {
+  content: '█';
+  animation: cursor-blink 0.8s step-end infinite;
+  color: inherit;
+  margin-left: 1px;
 }

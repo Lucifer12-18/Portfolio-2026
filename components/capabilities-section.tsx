@@ -1,13 +1,12 @@
 "use client"
 
-import { Card, CardContent } from "@/components/ui/card"
+import { useState } from "react"
 import { ModuleBadge } from "@/components/module-badge"
 import { SectionWrapper } from "@/components/section-wrapper"
 import { Layers, Search, Cpu } from "lucide-react"
 import { motion } from "framer-motion"
 import type { Variants } from "framer-motion"
 import { useViewMode } from "@/contexts/view-mode-context"
-
 
 const capabilities = [
   {
@@ -21,6 +20,8 @@ const capabilities = [
       "Design systems & scalable components",
       "High-fidelity prototypes for validation",
     ],
+    accentColor: "rgba(74, 123, 247, 0.8)",
+    accentBg: "rgba(74, 123, 247, 0.08)",
   },
   {
     icon: Search,
@@ -33,6 +34,8 @@ const capabilities = [
       "Problem definition & prioritization",
       "Usability testing and iteration loops",
     ],
+    accentColor: "rgba(167, 139, 250, 0.8)",
+    accentBg: "rgba(167, 139, 250, 0.08)",
   },
   {
     icon: Cpu,
@@ -45,6 +48,8 @@ const capabilities = [
       "Simplifying complex data visualization",
       "Transparency and AI confidence patterns",
     ],
+    accentColor: "rgba(34, 211, 238, 0.8)",
+    accentBg: "rgba(34, 211, 238, 0.08)",
   },
 ]
 
@@ -65,11 +70,124 @@ const cardVariants: Variants = {
     y: 0,
     scale: 1,
     transition: {
-      delay: 0.05 + i * 0.06,
-      duration: 0.4,
+      delay: 0.05 + i * 0.07,
+      duration: 0.45,
       ease: [0.16, 1, 0.3, 1],
     },
   }),
+}
+
+function CapabilityCard({ capability, index }: { capability: (typeof capabilities)[0]; index: number }) {
+  const [hovered, setHovered] = useState(false)
+
+  return (
+    <motion.div
+      custom={index}
+      initial="hidden"
+      animate="visible"
+      variants={cardVariants}
+      onHoverStart={() => setHovered(true)}
+      onHoverEnd={() => setHovered(false)}
+      whileHover={{ y: -6 }}
+      transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+      className="h-full"
+    >
+      <div
+        className="relative h-full rounded-2xl overflow-hidden flex flex-col p-6"
+        style={{
+          background: hovered
+            ? `linear-gradient(135deg, rgba(8,15,40,0.85), rgba(8,15,40,0.70))`
+            : "rgba(8, 15, 40, 0.55)",
+          backdropFilter: "blur(16px)",
+          WebkitBackdropFilter: "blur(16px)",
+          border: hovered
+            ? `1px solid ${capability.accentColor}50`
+            : "1px solid rgba(255,255,255,0.07)",
+          boxShadow: hovered
+            ? `0 0 0 1px ${capability.accentColor}20, 0 12px 40px rgba(0,0,0,0.5), 0 0 60px ${capability.accentColor}08`
+            : "0 2px 8px rgba(0,0,0,0.2)",
+          transition: "all 0.35s ease",
+        }}
+      >
+        {/* Shimmer top line on hover */}
+        <div
+          className="absolute top-0 left-0 right-0 h-[2px] rounded-t-2xl"
+          style={{
+            background: `linear-gradient(90deg, transparent, ${capability.accentColor}, transparent)`,
+            opacity: hovered ? 1 : 0,
+            transition: "opacity 0.35s ease",
+          }}
+        />
+
+        {/* Filename */}
+        <div className="absolute top-3 right-3 text-[10px] font-mono text-slate-500 opacity-60">
+          {capability.file}
+        </div>
+
+        {/* Icon */}
+        <div className="flex items-center justify-center mb-5 mt-2">
+          <motion.div
+            className="p-4 rounded-2xl flex items-center justify-center"
+            style={{
+              background: hovered ? capability.accentBg : "rgba(15, 23, 42, 0.6)",
+              border: `1px solid ${hovered ? capability.accentColor + "30" : "rgba(255,255,255,0.06)"}`,
+              transition: "all 0.35s ease",
+            }}
+            animate={{
+              boxShadow: hovered
+                ? `0 0 20px ${capability.accentColor}30`
+                : "none",
+            }}
+          >
+            <capability.icon
+              className="h-8 w-8 transition-all duration-300"
+              style={{ color: hovered ? capability.accentColor : "rgba(148, 163, 184, 0.8)" }}
+            />
+          </motion.div>
+        </div>
+
+        {/* Title and subtitle */}
+        <div className="text-center mb-4">
+          <h3
+            className="text-lg font-semibold mb-1.5 transition-colors duration-300"
+            style={{ color: hovered ? capability.accentColor : "rgb(226, 232, 240)" }}
+          >
+            {capability.title}
+          </h3>
+          <p className="text-sm text-muted-foreground leading-snug italic">{capability.subtitle}</p>
+        </div>
+
+        {/* Divider */}
+        <div
+          className="w-full h-px mb-4"
+          style={{
+            background: hovered
+              ? `linear-gradient(90deg, transparent, ${capability.accentColor}40, transparent)`
+              : "rgba(255,255,255,0.06)",
+            transition: "background 0.35s ease",
+          }}
+        />
+
+        {/* Bullets */}
+        <ul className="space-y-2 mt-auto">
+          {capability.bullets.map((bullet, i) => (
+            <motion.li
+              key={bullet}
+              className="flex items-start gap-2 text-sm text-muted-foreground"
+              animate={{ x: hovered ? 2 : 0 }}
+              transition={{ delay: i * 0.04, duration: 0.2 }}
+            >
+              <span
+                className="h-1.5 w-1.5 rounded-full mt-1.5 flex-shrink-0 transition-colors duration-300"
+                style={{ background: hovered ? capability.accentColor : "rgba(74, 123, 247, 0.6)" }}
+              />
+              {bullet}
+            </motion.li>
+          ))}
+        </ul>
+      </div>
+    </motion.div>
+  )
 }
 
 export function CapabilitiesSection() {
@@ -84,11 +202,11 @@ export function CapabilitiesSection() {
       <div className="flex flex-col h-full gap-4">
         <ModuleBadge module="02" label="SHIFT" />
 
-        <div className="text-center mb-6">
+        <div className="text-center mb-4">
           <h2 className="text-2xl md:text-3xl font-semibold text-foreground mb-3">From Logic to Experience</h2>
 
           {viewMode === "recruiter" && (
-            <div className="flex flex-col gap-2 p-4 bg-primary/5 rounded-xl border border-primary/10 mb-6 max-w-lg mx-auto text-left">
+            <div className="flex flex-col gap-2 p-4 bg-primary/5 rounded-xl border border-primary/10 mb-5 max-w-lg mx-auto text-left">
               <span className="text-xs font-mono text-primary uppercase tracking-wide">Quick Summary</span>
               <ul className="space-y-1.5">
                 {capabilitiesContent.recruiter.bullets.map((bullet, i) => (
@@ -101,51 +219,17 @@ export function CapabilitiesSection() {
             </div>
           )}
 
-          <p className="text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+          <p className="text-sm text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             As my projects became more complex, I stopped separating engineering from design. I began seeing products as
-            systems - shaped by constraints, workflows, and decision logic. That shift shows up in three areas of my
-            work: structured product design, research-driven problem framing, and systems-aware interface thinking.
-            Cleaner. Sharper. More confident.
+            systems — shaped by constraints, workflows, and decision logic. That shift shows up in three areas:
+            structured product design, research-driven problem framing, and systems-aware interface thinking.
           </p>
         </div>
 
-        {/* Desktop layout - 3 cards that stretch to fill available height */}
-        <div className="hidden md:grid grid-cols-3 gap-6 flex-1 min-h-0">
+        {/* Desktop layout */}
+        <div className="hidden md:grid grid-cols-3 gap-5 flex-1 min-h-0">
           {capabilities.map((capability, i) => (
-            <motion.div
-              key={capability.title}
-              custom={i}
-              initial="hidden"
-              animate="visible"
-              variants={cardVariants}
-              whileHover={{ y: -8, rotate: 2 }}
-              className="h-full"
-            >
-              <Card className="h-full border-border shadow-sm hover:shadow-xl transition-all group rounded-2xl">
-                <CardContent className="h-full p-6 flex flex-col">
-                  <div className="flex items-center justify-center mb-3">
-                    <div className="p-4 rounded-2xl bg-primary/10 group-hover:bg-primary/20 transition-colors icon-container-glow">
-                      <capability.icon className="h-8 w-8 text-primary icon-glow" />
-                    </div>
-                  </div>
-
-                  <div className="text-center mb-3">
-                    <span className="text-xs font-mono text-muted-foreground">{capability.file}</span>
-                    <h3 className="text-xl font-semibold text-foreground mt-2 mb-2">{capability.title}</h3>
-                    <p className="text-sm text-foreground/85 italic">{capability.subtitle}</p>
-                  </div>
-
-                  <ul className="space-y-2 mt-auto">
-                    {capability.bullets.map((bullet) => (
-                      <li key={bullet} className="flex items-start gap-2 text-sm text-muted-foreground">
-                        <span className="h-1.5 w-1.5 rounded-full bg-primary mt-2 flex-shrink-0"></span>
-                        {bullet}
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            </motion.div>
+            <CapabilityCard key={capability.title} capability={capability} index={i} />
           ))}
         </div>
 
@@ -153,48 +237,17 @@ export function CapabilitiesSection() {
         <div className="md:hidden overflow-x-auto scrollbar-hide -mx-4 px-4">
           <div className="flex gap-4 snap-x snap-mandatory pb-4" style={{ width: "max-content" }}>
             {capabilities.map((capability, i) => (
-              <motion.div
+              <div
                 key={capability.title}
-                custom={i}
-                initial="hidden"
-                animate="visible"
-                variants={cardVariants}
                 className="snap-center"
                 style={{ width: "280px" }}
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.2 }}
               >
-                <Card className="h-full border-border shadow-sm hover:shadow-md transition-shadow group rounded-2xl">
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-center mb-4">
-                      <div className="p-4 rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors icon-container-glow">
-                        <capability.icon className="h-8 w-8 text-primary icon-glow" />
-                      </div>
-                    </div>
-
-                    <div className="text-center mb-3">
-                      <span className="text-xs font-mono text-muted-foreground">{capability.file}</span>
-                      <h3 className="text-base font-semibold text-foreground mt-1">{capability.title}</h3>
-                      <p className="text-xs text-foreground/85 mt-1 italic">{capability.subtitle}</p>
-                    </div>
-
-                    <ul className="space-y-3">
-                      {capability.bullets.map((bullet) => (
-                        <li key={bullet} className="flex items-start gap-2 text-xs text-muted-foreground">
-                          <span className="h-1 w-1 rounded-full bg-primary mt-1.5 flex-shrink-0"></span>
-                          {bullet}
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
-              </motion.div>
+                <CapabilityCard capability={capability} index={i} />
+              </div>
             ))}
           </div>
         </div>
-
-
-      </div> {/* end flex-col h-full wrapper */}
+      </div>
     </SectionWrapper>
   )
 }

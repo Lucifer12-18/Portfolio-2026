@@ -1,39 +1,10 @@
 "use client"
 
 import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { ModuleBadge } from "@/components/module-badge"
 import { SectionWrapper } from "@/components/section-wrapper"
-import { Users, Wrench } from "lucide-react"
 import { useViewMode } from "@/contexts/view-mode-context"
 import { motion } from "framer-motion"
-import Image from "next/image"
-
-const cardData = {
-  strengths: {
-    title: "What I bring",
-    file: "strengths.ts",
-    items: [
-      "Systems thinking & big-picture perspective",
-      "Structured problem-solving approach",
-      "Calm, clear communication style",
-    ],
-  },
-  comfortZone: {
-    title: "Where I'm most useful",
-    file: "preferences.ts",
-    items: [
-      "Cross-functional team collaboration",
-      "Navigating ambiguity with confidence",
-      "AI & analytics tool integration",
-    ],
-  },
-  tools: {
-    title: "Tools I reach for",
-    file: "toolkit.json",
-    items: ["Figma", "FigJam", "Miro", "Notion", "SQL", "Tableau"],
-  },
-}
 
 const aboutContent = {
   recruiter: {
@@ -104,30 +75,35 @@ const timeline = [
     milestone: "Computer Engineering Foundation",
     description:
       "Learning how systems are built, optimized, and constrained — from backend logic to scalable architecture.",
+    color: "rgba(74, 123, 247, 0.8)",
   },
   {
     year: "2022–2023",
     milestone: "Web Development Team Lead — Wipro",
     description:
       "Delivering enterprise product modules in sprint cycles, translating ambiguous business requirements into structured user stories and production-ready flows.",
+    color: "rgba(167, 139, 250, 0.8)",
   },
   {
     year: "2023",
     milestone: "Full Stack Development — DevTown",
     description:
       "Designing and developing production-ready web applications, strengthening product thinking through UI systems and backend integration.",
+    color: "rgba(34, 211, 238, 0.8)",
   },
   {
     year: "2024–2025",
-    milestone: "Master’s in Information Systems — UMBC",
+    milestone: "Master's in Information Systems — UMBC",
     description:
       "Shifting into workflows, data ecosystems, UX research, and decision-support systems.",
+    color: "rgba(249, 115, 98, 0.8)",
   },
   {
     year: "2025–Present",
     milestone: "Founding Product Designer — Hirello.ai",
     description:
       "Designing AI-driven career workflows, translating complex AI capabilities into clear, trustworthy user experiences.",
+    color: "rgba(74, 123, 247, 0.9)",
   },
 ]
 
@@ -140,8 +116,8 @@ export function AboutSection() {
       <ModuleBadge module="01" label="ORIGIN" />
 
       <div className="grid lg:grid-cols-2 gap-8 lg:gap-10">
-        {/* Left Column - Story Text + Pull Quote */}
-        <div className="space-y-6">
+        {/* Left Column - Story Text */}
+        <div className="space-y-5">
           <h2 className="text-2xl md:text-3xl font-semibold text-foreground">The Systems Background</h2>
 
           <motion.div
@@ -149,7 +125,7 @@ export function AboutSection() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
-            className="space-y-5"
+            className="space-y-4"
           >
             {viewMode === "recruiter" && content.bullets && (
               <div className="flex flex-col gap-2 p-4 bg-primary/5 rounded-xl border border-primary/10 mb-4">
@@ -164,48 +140,79 @@ export function AboutSection() {
                 </ul>
               </div>
             )}
+
             {viewMode === "recruiter" && (
-              <div className="text-muted-foreground text-lg leading-[1.7] [&>p]:mb-4 last:mb-0">
+              <div className="text-muted-foreground text-base leading-[1.7] [&>p]:mb-4 last:mb-0">
                 {content.paragraphs.map((p, i) => (
                   <p key={i}>{p}</p>
                 ))}
               </div>
             )}
+
             {viewMode === "designer" && content.blocks && (
-              <div className="text-muted-foreground text-sm leading-[1.6]">
+              <div className="text-muted-foreground text-sm leading-[1.7] space-y-3">
                 {content.blocks.map((block, i) => {
                   if (block.type === "paragraph") {
                     return (
-                      <p
+                      <motion.p
                         key={i}
-                        className={block.sectionBreak ? "mb-3" : "mb-2"}
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.04 + i * 0.04, duration: 0.3 }}
+                        className={block.sectionBreak ? "mb-1" : ""}
                       >
                         {block.text}
-                      </p>
+                      </motion.p>
                     )
                   }
                   if (block.type === "translation") {
                     return (
-                      <div key={i}>
-                        <p className="mb-4">{block.intro}</p>
-                        <ul className="mt-2 mb-3 flex flex-col gap-1.5 list-none pl-0">
+                      <motion.div
+                        key={i}
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.04 + i * 0.04, duration: 0.3 }}
+                        className="pl-4 border-l-2 border-primary/30 py-1 bg-primary/5 rounded-r-lg pr-3"
+                      >
+                        <p className="mb-2 text-foreground/80">{block.intro}</p>
+                        <ul className="flex flex-col gap-1.5 list-none pl-0">
                           {block.items.map((item, j) => (
                             <li key={j} className="flex items-center gap-2">
-                              <span className="h-1.5 w-1.5 rounded-full bg-primary flex-shrink-0 mt-[0.4em]" />
+                              <span className="h-1.5 w-1.5 rounded-full bg-primary flex-shrink-0" />
                               <span>{item}</span>
                             </li>
                           ))}
                         </ul>
-                      </div>
+                      </motion.div>
                     )
                   }
                   if (block.type === "poetic") {
                     return (
-                      <div key={i} className="mt-5 mb-4 leading-[1.8]">
+                      <motion.div
+                        key={i}
+                        initial={{ opacity: 0, x: -8 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.04 + i * 0.04, duration: 0.4 }}
+                        className="relative my-4 pl-5 border-l-2 border-accent/50 italic text-foreground/70 leading-[2]"
+                        style={{
+                          background: "linear-gradient(90deg, rgba(249,115,98,0.04), transparent)",
+                          borderRadius: "0 8px 8px 0",
+                          paddingTop: "8px",
+                          paddingBottom: "8px",
+                        }}
+                      >
                         {block.lines.map((line, j) => (
-                          <span key={j} className="block">{line}</span>
+                          <motion.span
+                            key={j}
+                            className="block"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.1 + i * 0.04 + j * 0.06, duration: 0.3 }}
+                          >
+                            {line}
+                          </motion.span>
                         ))}
-                      </div>
+                      </motion.div>
                     )
                   }
                   return null
@@ -213,40 +220,61 @@ export function AboutSection() {
               </div>
             )}
           </motion.div>
-
-          {/* Pull quote removed for density */}
         </div>
 
-        {/* Right Column - Timeline + Sketch */}
-        <div className="space-y-8">
-          {/* Vertical Timeline */}
-          <div className="relative">
-            <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-border" />
-            <div className="space-y-3">
-              {timeline.map((item, index) => (
-                <motion.div
-                  key={item.year}
-                  initial={{ opacity: 0, x: -20, scale: 0.97 }}
-                  animate={{ opacity: 1, x: 0, scale: 1 }}
-                  transition={{ delay: 0.04 + index * 0.05, duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                  className="relative pl-16"
-                >
-                  <div className="absolute left-3 top-2 w-6 h-6 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-xs font-bold shadow-lg z-10">
-                    {index + 1}
-                  </div>
-                  <Card className="border-border shadow-sm">
-                    <CardContent className="p-3">
-                      <div className="text-xs font-mono text-muted-foreground mb-0.5">{item.year}</div>
-                      <h3 className="font-semibold text-foreground text-sm mb-0.5">{item.milestone}</h3>
-                      <p className="text-xs text-muted-foreground">{item.description}</p>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
-          </div>
+        {/* Right Column - Timeline */}
+        <div className="relative">
+          {/* Gradient track line */}
+          <div
+            className="absolute left-[18px] top-3 bottom-3 w-0.5 rounded-full"
+            style={{
+              background: "linear-gradient(to bottom, rgba(74,123,247,0.6), rgba(167,139,250,0.4), rgba(74,123,247,0.2))",
+            }}
+          />
 
-          {/* Sketch image removed for density — timeline alone fills column */}
+          <div className="space-y-3">
+            {timeline.map((item, index) => (
+              <motion.div
+                key={item.year}
+                initial={{ opacity: 0, x: -16 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.06 + index * 0.07, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                className="relative pl-14"
+              >
+                {/* Numbered node with glow */}
+                <div
+                  className="absolute left-0 top-2.5 w-9 h-9 rounded-full flex items-center justify-center text-[11px] font-bold text-white shadow-md z-10"
+                  style={{
+                    background: `radial-gradient(circle, ${item.color}, ${item.color}88)`,
+                    boxShadow: `0 0 12px ${item.color}60, 0 2px 8px rgba(0,0,0,0.4)`,
+                    border: `2px solid ${item.color}44`,
+                  }}
+                >
+                  {index + 1}
+                </div>
+
+                <Card className="border-border shadow-sm hover:shadow-md transition-all group"
+                  style={{
+                    background: "rgba(8, 15, 40, 0.55)",
+                    borderColor: "rgba(255,255,255,0.07)",
+                  }}
+                >
+                  <CardContent className="p-3.5">
+                    <div
+                      className="text-[10px] font-mono mb-0.5"
+                      style={{ color: item.color }}
+                    >
+                      {item.year}
+                    </div>
+                    <h3 className="font-semibold text-foreground text-sm mb-1 group-hover:text-primary transition-colors">
+                      {item.milestone}
+                    </h3>
+                    <p className="text-xs text-muted-foreground leading-relaxed">{item.description}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
     </SectionWrapper>

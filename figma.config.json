@@ -1,0 +1,16 @@
+{
+  "codeConnect": {
+    "parser": "react",
+    "include": [
+      "components/**/*.figma.tsx"
+    ],
+    "importMappings": {
+      "@/components/ui/button":      "./components/ui/button.tsx",
+      "@/components/ui/badge":       "./components/ui/badge.tsx",
+      "@/components/ui/card":        "./components/ui/card.tsx",
+      "@/components/ui/list-item":   "./components/ui/list-item.tsx",
+      "@/components/ui/module-card": "./components/ui/module-card.tsx",
+      "@/components/ui/typography":  "./components/ui/typography.tsx"
+    }
+  }
+}

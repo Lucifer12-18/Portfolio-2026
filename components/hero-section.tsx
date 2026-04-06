@@ -232,7 +232,7 @@ export function HeroSection() {
             </motion.div>
           ))}
 
-          {/* SKILL.SET — comfortable spacing between heading, tags, and between tags */}
+          {/* SKILL.SET — staggered entrance with glow on hover */}
           <motion.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
@@ -242,14 +242,19 @@ export function HeroSection() {
             <h3 className="font-pixel text-[10px] tracking-[0.2em] uppercase text-slate-500 mb-4">
               SKILL.SET:
             </h3>
-            <div className="flex flex-wrap gap-3">
-              {skillSet.map((skill) => (
-                <span
+            <div className="flex flex-wrap gap-2.5">
+              {skillSet.map((skill, i) => (
+                <motion.span
                   key={skill.label}
-                  className={`inline-flex items-center rounded-md border-l-4 bg-slate-800/60 px-2.5 py-1.5 text-xs font-medium text-slate-300 shadow-sm border border-white/8 ${skill.borderClass}`}
+                  initial={{ opacity: 0, scale: 0.85, y: 6 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{ delay: 0.55 + i * 0.06, duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                  whileHover={{ y: -2, scale: 1.05 }}
+                  className={`inline-flex items-center rounded-md border-l-4 bg-slate-800/70 px-2.5 py-1.5 text-xs font-medium text-slate-300 shadow-sm border border-white/8 cursor-default transition-shadow duration-200 hover:bg-slate-700/70 hover:border-white/15 ${skill.borderClass}`}
+                  style={{ transitionProperty: "box-shadow, background, border-color" }}
                 >
                   {skill.label}
-                </span>
+                </motion.span>
               ))}
             </div>
           </motion.div>
