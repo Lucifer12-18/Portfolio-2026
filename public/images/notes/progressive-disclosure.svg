@@ -1,0 +1,72 @@
+<svg width="700" height="280" viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="topAccent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="transparent"/>
+      <stop offset="50%" stop-color="rgba(74,123,247,0.55)"/>
+      <stop offset="100%" stop-color="transparent"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="700" height="280" fill="#080f28" rx="12"/>
+
+  <!-- Section labels -->
+  <text x="155" y="24" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#3b4f6b" letter-spacing="2">BEFORE</text>
+  <text x="545" y="24" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#3b4f6b" letter-spacing="2">AFTER</text>
+
+  <!-- BEFORE panel -->
+  <rect x="18" y="34" width="270" height="216" rx="8" fill="#0b1221" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+  <text x="34" y="56" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#475569">Score</text>
+  <text x="220" y="56" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="13" fill="#e2e8f0" font-weight="600">47 / 100</text>
+  <line x1="34" y1="63" x2="272" y2="63" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+
+  <!-- Category bars -->
+  <rect x="34" y="71" width="52" height="5" rx="2.5" fill="rgba(74,123,247,0.35)"/>
+  <rect x="34" y="82" width="218" height="3.5" rx="1.75" fill="rgba(148,163,184,0.14)"/>
+  <rect x="34" y="89" width="178" height="3.5" rx="1.75" fill="rgba(148,163,184,0.09)"/>
+  <rect x="34" y="96" width="198" height="3.5" rx="1.75" fill="rgba(148,163,184,0.11)"/>
+
+  <rect x="34" y="110" width="62" height="5" rx="2.5" fill="rgba(167,139,250,0.35)"/>
+  <rect x="34" y="121" width="210" height="3.5" rx="1.75" fill="rgba(148,163,184,0.14)"/>
+  <rect x="34" y="128" width="172" height="3.5" rx="1.75" fill="rgba(148,163,184,0.09)"/>
+  <rect x="34" y="135" width="195" height="3.5" rx="1.75" fill="rgba(148,163,184,0.11)"/>
+
+  <rect x="34" y="149" width="48" height="5" rx="2.5" fill="rgba(249,115,98,0.35)"/>
+  <rect x="34" y="160" width="212" height="3.5" rx="1.75" fill="rgba(148,163,184,0.14)"/>
+  <rect x="34" y="167" width="168" height="3.5" rx="1.75" fill="rgba(148,163,184,0.09)"/>
+
+  <rect x="34" y="181" width="40" height="5" rx="2.5" fill="rgba(34,211,238,0.35)"/>
+  <rect x="34" y="192" width="215" height="3.5" rx="1.75" fill="rgba(148,163,184,0.14)"/>
+  <rect x="34" y="199" width="158" height="3.5" rx="1.75" fill="rgba(148,163,184,0.09)"/>
+
+  <line x1="34" y1="213" x2="272" y2="213" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+  <rect x="34" y="219" width="215" height="3.5" rx="1.75" fill="rgba(148,163,184,0.07)"/>
+  <rect x="34" y="226" width="170" height="3.5" rx="1.75" fill="rgba(148,163,184,0.05)"/>
+
+  <text x="153" y="263" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#2d3f57">12 data points — users glance away</text>
+
+  <!-- Arrow -->
+  <text x="350" y="152" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="18" fill="#1e2d44">→</text>
+
+  <!-- AFTER panel -->
+  <rect x="412" y="34" width="270" height="216" rx="8" fill="#0b1221" stroke="rgba(74,123,247,0.2)" stroke-width="1"/>
+  <rect x="412" y="34" width="270" height="1.5" rx="0.75" fill="url(#topAccent)"/>
+
+  <text x="428" y="60" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#3b4f6b">Most important right now</text>
+  <line x1="428" y1="67" x2="666" y2="67" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+
+  <text x="428" y="102" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="13" fill="#e2e8f0" font-weight="500">Your answer was missing</text>
+  <text x="428" y="120" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="13" fill="#e2e8f0" font-weight="500">a concrete example.</text>
+
+  <!-- Dots -->
+  <circle cx="428" cy="152" r="4" fill="#4a7bf7"/>
+  <circle cx="443" cy="152" r="4" fill="transparent" stroke="#2a3a55" stroke-width="1.5"/>
+  <circle cx="458" cy="152" r="4" fill="transparent" stroke="#2a3a55" stroke-width="1.5"/>
+  <text x="470" y="156" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#3b4f6b">2 more when ready</text>
+
+  <!-- Button -->
+  <rect x="428" y="172" width="138" height="26" rx="6" fill="rgba(74,123,247,0.1)" stroke="rgba(74,123,247,0.3)" stroke-width="1"/>
+  <text x="497" y="188" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="11" fill="#4a7bf7">Retry with this fix →</text>
+
+  <text x="547" y="263" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#2d4a6b">users read, act, come back for more</text>
+</svg>

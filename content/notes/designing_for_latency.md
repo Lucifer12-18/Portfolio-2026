@@ -1,51 +1,41 @@
-AI features have latency built in. That's not a bug—it's physics. LLM inference takes time. Resume parsing takes time. Generating structured feedback on a spoken answer takes time.
+The spinner was fine, honestly. Well-designed. Centered, clean, appropriate size.
 
-For Hirello's interview feedback screen, we were looking at 3 to 4 seconds from submission to results. For users who've just finished a high-stakes practice answer and are waiting to find out how they did, that's a long time.
+Users hated it.
 
-We put a spinner there first. Simple, clean, centered. Users hated it.
+Not in an "I have feedback" way — nobody said anything about it in testing. But the behavioral signal was hard to miss: submit an answer, watch the spinner, and within two seconds their body language shifted. Less engaged. Somewhere else. By the time the feedback loaded, they'd have to re-engage with something they'd mentally left.
 
-Not vocally—they didn't complain in testing. But the behavioral signal was clear: they'd submit an answer, watch the spinner, and by the time the feedback appeared, they'd already started disengaging. The wait had convinced them the system was working on something irrelevant to them.
+Hirello's interview feedback takes 3–4 seconds to generate. For someone who just finished a practice answer and wants to know how they did, that's a long time.
 
-## What the Wait Actually Is
+---
 
-A spinner communicates one thing: something is happening. It doesn't say what's happening, why it matters, or how close the user is to what they're waiting for.
+What I eventually figured out is that a spinner doesn't tell you what's happening, so your brain fills the gap. Under any kind of stress — and interview practice definitely qualifies — your brain fills it with something worse than the reality. The system is struggling. Something's wrong. Maybe I should refresh.
 
-That ambiguity is where anxiety lives.
+Not consciously. Just a low-level unease that shows up as disengagement.
 
-Users filling a vague wait with their own imagination will always fill it with something worse than the reality. They assume the delay means the system is struggling. They wonder if they should refresh. They start to regret submitting.
+The fix was almost embarrassingly simple. Three labeled steps, appearing in sequence:
 
-The wait isn't dead time. It's the moment when the user has your full, undivided attention. They're not scrolling. They're not multitasking. They're watching. That's rare. Most teams treat it as a gap to minimize. It's actually a surface to design.
+*Reading your response...*
 
-## What We Built Instead
+*Checking STAR structure...*
 
-We replaced the spinner with a three-step labeled progress sequence:
+*Calculating pacing...*
 
-*"Reading your response..."*
+Same actual processing time. We weren't speeding anything up. Just narrating the steps the system was already running.
 
-*"Checking STAR structure..."*
+![Spinner vs. labeled steps — same 3-second wait, completely different experience](/images/notes/latency-design.svg)
 
-*"Calculating pacing and delivery..."*
+Users in post-session interviews described the experience as the system working "with" them. One person said it felt like watching a coach take notes while she answered. Nobody mentioned the wait, even though the wait was identical.
 
-Each step appeared sequentially, with a brief animation between transitions. The total displayed time was the same—we weren't faking speed. We were narrating the actual steps the system was running.
+---
 
-The effect was immediate. Users reported in post-session interviews that the system felt like it was "working with them." One user said it felt like watching a coach take notes while they answered.
+Two things I've seen go wrong that are worth naming.
 
-Nobody mentioned the wait.
+Progress bars that lie — jumping to 99% and stalling. That's worse than a spinner. Specific violated expectations feel worse than vague ambiguity. Once users see the bar stuck, they start distrusting the feedback itself before they've even read it.
 
-## Three Patterns That Actually Work
+Optimistic UI in this context is similarly risky. Showing a preliminary score that updates when the full analysis arrives breaks trust in the number. Users don't know which version to believe.
 
-**Semantic skeleton screens.** Not generic loading placeholders, but labeled ones. "Analyzing answer structure" is more trustworthy than an anonymous grey block. It tells the user what they'll see when it loads.
+The only version of "make the wait feel shorter" that consistently works is semantic narration — plain-language descriptions of real steps, shown while they happen. Which is really just honesty, not a trick.
 
-**Progressive result streaming.** Show partial results as they arrive. If the STAR score is ready before the pacing analysis, show it. Partial information is better than no information—it proves the system is working and gives the user something to engage with.
+---
 
-**Redirect attention productively.** Ask the user something useful while they wait. For Hirello, we tested prompting users with "What role was this answer targeting?" during the wait—data we needed anyway, and a question that kept users mentally in the context of the feedback they were about to receive.
-
-## What Doesn't Work
-
-A progress bar that lies. Jumping to 99% and stalling is worse than a spinner—it introduces a specific, violated expectation.
-
-Optimistic UI that shows results before the model is confident. If you display a score that then changes when the full analysis completes, you've broken trust in the number itself.
-
-Generic copy. "Loading" is not a label. "Please wait" is not reassurance. If you can't say what you're doing, you haven't thought carefully enough about what you're doing.
-
-The wait is part of the product. Design it like you designed everything else.
+I keep coming back to the idea that the seconds a user waits are the seconds when they have your full attention. They're not scrolling. They're not multitasking. They're watching. That's rare. Most teams treat it as dead time to minimize. It's actually a surface to design — maybe one of the most available ones in the whole product.

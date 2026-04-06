@@ -1,41 +1,33 @@
-During the first round of usability testing for Hirello's AI Interview Gym, something unexpected happened. Users would submit a practice answer, wait for the AI to process it, and then—when the feedback panel appeared—do nothing. They didn't read it. They didn't act on it. They just moved on.
+The thing that tipped me off was the arm crossing.
 
-The feedback wasn't wrong. The AI was surfacing real issues: unclear structure, missing examples, pacing that was too fast. But users were ignoring it entirely.
+I was watching usability sessions for Hirello's interview feedback panel — the screen that appears after you practice an answer. User submits, AI processes, panel loads. Simple. In three separate sessions I watched users shift in their seat the moment it appeared. One crossed her arms. They'd look at the panel, then look away.
 
-At first we thought it was a trust problem. Maybe they didn't believe the AI was accurate. So we ran another round and asked directly: "Did you read the feedback?" Most of them said yes. When we dug in, the real answer was closer to: "I glanced at it."
+When I asked people to think aloud, I kept hearing "okay so there's a lot here" followed by silence. And then they'd move on.
 
-The panel was showing everything at once. Four diagnostic categories. Twelve individual data points. A score. Recommendations. All visible the moment feedback loaded.
+The feedback wasn't bad. The AI was catching real things — missing structure, no concrete examples, pacing way too fast. But users were skimming past it like terms and conditions.
 
-## The Pattern We Were Missing
+---
 
-AI surfaces that front-load all their intelligence trigger cognitive shutdown, not insight.
+For a while I assumed it was a trust problem. Maybe they didn't believe the AI was accurate. So I ran another round and asked directly: did you read the feedback? Most said yes. But when I sat with the session recordings, the eye tracking told a different story. They'd land on the score, look for context, hit four categories with a dozen data points each, and stop. Their eyes literally moved away from the screen.
 
-When a user sees twelve things to process simultaneously, their brain doesn't prioritize—it retreats. The mental load of deciding *what to look at first* is high enough that the easier path is to look at nothing.
+The panel was showing everything at once. Four sections. Twelve data points. A score. Recommendations. All visible the moment feedback loaded. We'd built this thing and we were proud of it and we'd put all of it right there because why would you hide information that's useful?
 
-This isn't unique to AI. It's the same reason a dense onboarding checklist gets skipped while a single tooltip gets acted on. But with AI, the temptation to show everything is stronger because the AI *knows* everything. You've done the hard work of generating the insight. Why wouldn't you surface it?
+Turns out showing everything is what made it useless.
 
-Because showing isn't the same as communicating.
+![Before and after: all-at-once feedback vs progressive disclosure](/images/notes/progressive-disclosure.svg)
 
-## What We Changed
+---
 
-We rebuilt the feedback experience around one principle: **show the most important signal first, then let users drill in.**
+The rebuild took two days. The panel now opens to one line — the most critical diagnostic. "Your answer was missing a concrete example." Below that, three dots. One lit, two dimmed. There's more, but you have to choose to go get it.
 
-The new flow:
-1. The panel opens to a single line—the most critical diagnostic. "Your answer lacked a clear structure."
-2. Below it, a visual indicator showing there are more signals (three dots, one lit, two dimmed).
-3. Users can tap into the next diagnostic at their own pace.
-4. The full breakdown is accessible, but it's a choice, not the default.
+That's it. That's the whole change.
 
-The change felt small. The impact wasn't.
+Users who'd been glossing over a full feedback panel started spending three or four times as long reading it. More importantly, they started doing something with it. Retrying their answer with the specific fix in mind. Then coming back for the second signal.
 
-Users who previously glanced at feedback and moved on started spending three to four times longer in the feedback panel. More importantly, they started doing something with it—retrying their answer with the specific fix in mind.
+---
 
-## What This Taught Me
+I've been sitting with why this wasn't obvious earlier. I think it's that when you build an AI product, there's this quiet pressure to demonstrate intelligence. The model worked hard to generate these insights. It feels wrong to hide them. Like you're shortchanging the user.
 
-AI features earn trust linearly. You get one insight per session until users learn to want more.
+But that's about the builder's confidence, not the user's capacity. The AI earns trust one correct insight at a time. You can show it all — just not all at once, before the user has any reason to care.
 
-The temptation in AI product design is to show the full depth of what the model knows. It feels like shortchanging the user to hide information they could benefit from. But depth without context is noise. Users need a foothold before they can climb.
-
-Progressive disclosure isn't a UX trick for managing complexity. It's a respect for how humans actually process new information—one thing at a time, in sequence, at their own pace.
-
-The goal isn't to show what the AI knows. It's to show the user what they can do next.
+I don't know that I have a clean rule for this. The closest I've gotten is: figure out what the user's actual next step is, and make that the only visible thing until they're ready for more.

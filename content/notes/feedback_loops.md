@@ -1,51 +1,33 @@
-During user testing for Hirello's AI Interview Gym, I ran a session where I deliberately varied how the AI framed the same underlying feedback.
+Something I noticed early in testing: the way feedback is framed determines whether someone can actually use it.
 
-In version A, the AI said: *"Your answer felt weak and lacked confidence."*
+During one session I deliberately varied how the AI phrased the same observation. Both versions were accurate. The reactions were completely different.
 
-In version B, it said: *"Your answer had one concrete example out of the four typically expected for this question type."*
+Version A: *"Your answer felt weak and lacked confidence."*
 
-Both statements were true. The responses they triggered were completely different.
+Version B: *"Your answer had one concrete example, where this question type typically expects three or four."*
 
-Users who received version A got quiet. Some crossed their arms. A few pushed back—"I thought I answered that well." None of them wrote anything down.
+Users who got version A got quiet. Some crossed their arms. A few pushed back. None of them wrote anything down.
 
-Users who received version B opened a notes app, re-read the question, and started asking follow-up questions: "What counts as a concrete example?" "Is one example always wrong, or is it situation-specific?"
+Users who got version B opened their notes app. Started asking follow-up questions — what counts as a concrete example, is one always wrong or does it depend on the question? They treated it like information they could do something with.
 
-Same feedback. Different framing. One shut the conversation down. One opened it.
+Same observation. One framing closed the conversation. The other opened it.
 
-## Why This Happens
+![Emotional framing vs. measurable framing — and what each triggers](/images/notes/feedback-framing.svg)
 
-Emotional framing triggers self-protection. Quantitative framing triggers problem-solving.
+---
 
-"Weak" and "lacking confidence" are judgments. They implicitly say something about the person, not just the answer. When someone hears a judgment, the instinct is to defend—either by accepting it (which creates shame) or rejecting it (which creates denial). Neither is useful.
+The distinction isn't really about tone. "Weak" and "lacking confidence" are judgments — they say something about the person, not just the answer. When you hear a judgment, the instinct is to defend or deflect. Neither is useful.
 
-"One example instead of four" is a gap. It tells you exactly where you are relative to where you need to be. There's no ambiguity about what to fix, and the framing doesn't imply anything about who you are as a person. It's information, not assessment.
+"One example instead of four" is a gap. It tells you exactly where you are relative to where you need to be, with no implication about who you are as a person. It's information, not assessment.
 
-This isn't just tone. It's information architecture. The structure of the feedback determines whether the user has anything to act on.
+This shaped everything about how we built Hirello's feedback panel. The metrics we track now: STAR compliance broken down by component, not just a score. Concrete example count, because recruiters flag this constantly and users can feel when they're giving a real example vs. a general statement. Pacing in actual words per minute with a target range. Filler word count — "you used 9 filler words" lands completely differently than "you say um a lot."
 
-## What This Looks Like in Practice
+Not ratings. Counts. The difference matters more than I expected.
 
-The Hirello interview feedback system uses four primary metrics:
+---
 
-**STAR compliance score** — Did the answer hit Situation, Task, Action, and Result? Not "was it structured," but specifically which components appeared and which didn't.
+Worth naming: some users pushed back on this. "I'm a person, not a rubric." That reaction is fair and I don't think it's wrong.
 
-**Concrete example count** — How many specific, named examples appeared versus general statements? Recruiters flag this constantly. Making it visible gives users something to count and control.
+What we found was that sequence mattered more than the metrics themselves. If the panel opened with numbers, it felt clinical. If it opened with something genuine about what landed well in the answer — and *then* went into measurements — users received the data differently. They weren't being reduced to a score. They were getting a diagnosis after someone had actually listened.
 
-**Pacing in words per minute** — Not "you spoke too fast," but the actual number alongside the target range for interview contexts. Users can feel the difference between 140 WPM and 180 WPM.
-
-**Filler word frequency** — Count, not characterization. "You used 11 filler words" lands differently than "you said 'um' a lot."
-
-These aren't ratings. They're measurements. The difference matters.
-
-## The Tension Worth Naming
-
-Quantitative feedback can feel cold. I've seen users respond to a STAR score with frustration—"I'm a person, not a rubric."
-
-The solution isn't to abandon measurement. It's sequencing.
-
-Show empathy first. *"Here's what landed well in your answer."* Then introduce the measurement. *"Here's what the data shows about structure."* Then close with the action. *"Here's one thing to try in your next attempt."*
-
-Empathy → Evidence → Action. In that order.
-
-The empathy doesn't soften the feedback. It creates the psychological safety for the user to actually receive it. Skip that step and even the most precise measurement feels like an attack.
-
-If your feedback can't be acted on, it's commentary. Good design surfaces the difference.
+The order we landed on: what worked → what the data shows → what to try next. We tested a few orderings. That one consistently felt right.

@@ -1,0 +1,58 @@
+<svg width="700" height="300" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="700" height="300" fill="#080f28" rx="12"/>
+
+  <!-- Column A header -->
+  <rect x="20" y="20" width="310" height="34" rx="6" fill="rgba(249,115,98,0.08)" stroke="rgba(249,115,98,0.18)" stroke-width="1"/>
+  <text x="175" y="42" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="12" fill="#f97362">&quot;Your answer felt weak&quot;</text>
+
+  <!-- Column B header -->
+  <rect x="370" y="20" width="310" height="34" rx="6" fill="rgba(34,211,238,0.08)" stroke="rgba(34,211,238,0.18)" stroke-width="1"/>
+  <text x="525" y="42" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="12" fill="#22d3ee">&quot;1 of 4 examples expected&quot;</text>
+
+  <!-- Column divider -->
+  <line x1="350" y1="20" x2="350" y2="195" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+
+  <!-- Column A: user reaction -->
+  <text x="175" y="88" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="28" fill="#334155">🤐</text>
+  <text x="175" y="112" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="11" fill="#475569">gets quiet</text>
+  <text x="175" y="128" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="11" fill="#3b4f6b">crosses arms</text>
+  <text x="175" y="144" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="11" fill="#3b4f6b">pushes back</text>
+  <text x="175" y="163" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#2d3a4d" font-style="italic">writes nothing down</text>
+
+  <!-- Column B: user reaction -->
+  <text x="525" y="88" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="28" fill="#164e63">📓</text>
+  <text x="525" y="112" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="11" fill="#22d3ee">opens notes app</text>
+  <text x="525" y="128" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="11" fill="#3b6b78">asks follow-up questions</text>
+  <text x="525" y="144" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="11" fill="#3b6b78">retries the answer</text>
+  <text x="525" y="163" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#164e63" font-style="italic">treats it as a gap, not a judgment</text>
+
+  <!-- Divider -->
+  <line x1="20" y1="195" x2="680" y2="195" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+  <text x="350" y="212" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="9" fill="#2d3a4d" letter-spacing="1.5">WHAT WE MEASURE INSTEAD</text>
+
+  <!-- 4 metric cards -->
+  <!-- STAR -->
+  <rect x="20" y="220" width="148" height="56" rx="6" fill="#0d1629" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <text x="34" y="238" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="9" fill="#475569" letter-spacing="1">STAR SCORE</text>
+  <text x="34" y="256" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="14" fill="#e2e8f0" font-weight="600">2 / 4</text>
+  <text x="34" y="269" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="9" fill="#3b4f6b">missing Task, Result</text>
+
+  <!-- Examples -->
+  <rect x="178" y="220" width="148" height="56" rx="6" fill="#0d1629" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <text x="192" y="238" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="9" fill="#475569" letter-spacing="1">EXAMPLES</text>
+  <text x="192" y="256" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="14" fill="#e2e8f0" font-weight="600">1 of 4</text>
+  <text x="192" y="269" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="9" fill="#3b4f6b">expected for this type</text>
+
+  <!-- WPM -->
+  <rect x="336" y="220" width="148" height="56" rx="6" fill="#0d1629" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <text x="350" y="238" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="9" fill="#475569" letter-spacing="1">PACING</text>
+  <text x="350" y="256" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="14" fill="#e2e8f0" font-weight="600">187 WPM</text>
+  <text x="350" y="269" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="9" fill="#3b4f6b">target: 130–160</text>
+
+  <!-- Fillers -->
+  <rect x="494" y="220" width="186" height="56" rx="6" fill="#0d1629" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <text x="508" y="238" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="9" fill="#475569" letter-spacing="1">FILLER WORDS</text>
+  <text x="508" y="256" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="14" fill="#e2e8f0" font-weight="600">9 words</text>
+  <text x="508" y="269" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="9" fill="#3b4f6b">not &quot;you said um a lot&quot;</text>
+</svg>

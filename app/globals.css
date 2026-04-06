@@ -617,3 +617,22 @@ html {
   border-top: 1px solid rgba(255, 255, 255, 0.07);
   margin: 2rem 0;
 }
+
+.note-prose img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  margin: 2rem 0;
+  display: block;
+}
+
+.note-prose img + em {
+  display: block;
+  text-align: center;
+  font-size: 0.8rem;
+  color: rgb(71, 85, 105);
+  margin-top: -1.25rem;
+  margin-bottom: 2rem;
+  font-style: normal;
+}

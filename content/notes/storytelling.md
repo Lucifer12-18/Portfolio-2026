@@ -1,45 +1,35 @@
-Hirello's networking pipeline has seven stages. From "identified" to "reached out" to "follow-up sent" to "response received"—all the way through to "offer extended."
+Six weeks into Hirello, the networking pipeline had a retention problem.
 
-The logic is sound. Each stage maps to a real moment in the job search process. Users understood it. They moved contacts through it during onboarding. And then, after day two, most of them stopped.
+People were logging in. They just weren't using the pipeline past the first two days. The data was clear: onboarding completion was solid, day-one logins looked fine, then a cliff at day three. I spent two days convinced it was a UX issue with the pipeline itself — too many stages, unclear labels, confusing entry flow. Redesigned three things. Shipped them. Checked the data. No change.
 
-Not because the pipeline was broken. Because it was silent.
+So I sat down with three users and watched them open the app.
 
-## The Missing Narrator
+Same pattern every time. They'd see the pipeline, see twelve contacts scattered across six stages, and just... pause. "I'm not sure what to do from here." Not confused exactly — they understood the pipeline. They just didn't know what it was telling them to do right now.
 
-A pipeline stage without consequence is just a form field. Users would look at their network, see twelve contacts spread across six stages, and have no idea what to do with that information. The system was organized. It wasn't telling them anything.
+---
 
-The fix was small enough that I almost didn't ship it: a single-sentence pipeline health summary, updated dynamically, always visible at the top of the networking view.
+The fix took about forty minutes to build.
 
-*"You have 3 contacts who haven't heard from you in 2 weeks."*
+One line of text at the top of the networking view, dynamically generated from what the pipeline actually showed:
 
-That's it. One sentence. And usage spiked.
+*3 contacts haven't heard from you in over 2 weeks.*
 
-Users who had logged in once and disappeared started returning. Not because the pipeline changed—because now the pipeline had stakes. The sentence made the system speak. It told users what the data meant, not just what the data was.
+Or: *You have 2 follow-ups due this week.*
 
-## What "Story" Actually Means in Product Design
+Or: *Your pipeline looks healthy — 4 contacts are actively engaged.*
 
-I don't mean narrative in the literary sense. I mean something more specific: the user needs to understand what world they're building by taking an action.
+That's it. Same stages, same data. But now the pipeline was saying something instead of just sitting there.
 
-A feature without consequence is a feature without meaning. Add a contact to your pipeline—so what? The contact is in your pipeline. That's a fact. The story is: *this person is one follow-up away from a referral that could change the direction of your search.* That's a reason to act.
+![Before and after: pipeline without context vs. pipeline with a summary sentence](/images/notes/pipeline-story.svg)
 
-Most enterprise tools are full of features that do things without explaining why those things matter. The data is there. The organization is there. The story is missing.
+Users who'd logged in once and disappeared started coming back. The stages had stakes now. The sentence told them what their network meant, not just what it contained.
 
-Notion understood this when they added the "recently visited" section. Linear understood this when they surfaced "what's blocking this cycle." The tools that get heavy adoption aren't always the most powerful—they're the ones with the clearest narrative about what the user is accomplishing.
+---
 
-## The Design Principle I Keep Coming Back To
+The thing I keep sitting with is that this wasn't really a UX problem in the normal sense. The flows were fine. What was missing was a narrator — something to tell the user what they were looking at and why it mattered *today*, not in general.
 
-Before I build any feature, I try to write the one sentence a user would say to explain it to a colleague.
+I see this a lot in tools built around organizing information. They're good at storing and structuring data. They're not good at explaining what the data means in the context of what you're trying to do right now. The interpretation is left entirely to the user, which is a bigger ask than most builders realize.
 
-Not the feature's function. The user's experience of it.
+I don't have a rule for when this becomes the critical bottleneck. It's one of those things you can only see by watching people actually use the thing. But "what should this screen *say* to the user?" has become a first question for me now, before I get anywhere near layout or hierarchy.
 
-If I can't write that sentence, the feature isn't done. Not because the implementation is wrong, but because I haven't figured out what it's for yet.
-
-*"It shows me who I should reach out to today."*
-
-*"It tells me when my answer is missing something specific."*
-
-*"It makes my pipeline feel like it's moving, not just sitting there."*
-
-These sentences are the design. The interface is just how you deliver them.
-
-Structure is not the story. Structure is what makes the story possible.
+If I can't answer it, the screen isn't done yet.

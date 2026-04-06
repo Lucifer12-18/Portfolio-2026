@@ -1,0 +1,70 @@
+<svg width="700" height="270" viewBox="0 0 700 270" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="stepActive" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="rgba(56,189,248,0.15)"/>
+      <stop offset="100%" stop-color="rgba(56,189,248,0.04)"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="700" height="270" fill="#080f28" rx="12"/>
+
+  <!-- Timeline axis labels -->
+  <text x="165" y="22" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="9" fill="#2d3a4d" letter-spacing="1">0s</text>
+  <text x="335" y="22" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="9" fill="#2d3a4d" letter-spacing="1">1.5s</text>
+  <text x="505" y="22" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="9" fill="#2d3a4d" letter-spacing="1">3s — results</text>
+  <line x1="90" y1="26" x2="660" y2="26" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+
+  <!-- Row labels -->
+  <text x="20" y="82" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="9" fill="#3b4f6b" letter-spacing="1">SPINNER</text>
+  <text x="20" y="180" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="9" fill="#38bdf8" letter-spacing="1">LABELED</text>
+
+  <!-- Horizontal divider between rows -->
+  <line x1="20" y1="128" x2="680" y2="128" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+
+  <!-- === SPINNER ROW === -->
+  <!-- Spinner box -->
+  <rect x="90" y="38" width="240" height="76" rx="6" fill="#0d1629" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <text x="210" y="82" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="22" fill="#2d3a4d">⟳</text>
+  <text x="210" y="100" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#2d3a4d">loading...</text>
+
+  <!-- User thoughts: spinner -->
+  <rect x="350" y="44" width="142" height="28" rx="4" fill="#0d1629" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+  <text x="421" y="62" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#3b4f6b" font-style="italic">is it broken?</text>
+
+  <rect x="502" y="55" width="158" height="28" rx="4" fill="#0d1629" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+  <text x="581" y="73" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#2d3a4d" font-style="italic">should I refresh?</text>
+
+  <!-- Already disengaged label -->
+  <text x="670" y="82" text-anchor="end" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#2d3a4d">checked out</text>
+  <text x="670" y="96" text-anchor="end" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#2d3a4d">before results load</text>
+
+  <!-- === LABELED ROW === -->
+  <!-- Step 1 -->
+  <rect x="90" y="138" width="170" height="70" rx="6" fill="url(#stepActive)" stroke="rgba(56,189,248,0.2)" stroke-width="1"/>
+  <text x="175" y="163" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="11" fill="#94a3b8">Reading your</text>
+  <text x="175" y="178" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="11" fill="#94a3b8">response...</text>
+  <circle cx="175" cy="196" r="3" fill="#38bdf8"/>
+
+  <!-- Step 2 -->
+  <rect x="270" y="138" width="170" height="70" rx="6" fill="rgba(56,189,248,0.04)" stroke="rgba(56,189,248,0.12)" stroke-width="1"/>
+  <text x="355" y="163" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="11" fill="#64748b">Checking STAR</text>
+  <text x="355" y="178" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="11" fill="#64748b">structure...</text>
+  <circle cx="355" cy="196" r="3" fill="rgba(56,189,248,0.3)"/>
+
+  <!-- Step 3 -->
+  <rect x="450" y="138" width="170" height="70" rx="6" fill="rgba(56,189,248,0.02)" stroke="rgba(56,189,248,0.08)" stroke-width="1"/>
+  <text x="535" y="163" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="11" fill="#475569">Calculating</text>
+  <text x="535" y="178" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="11" fill="#475569">pacing...</text>
+  <circle cx="535" cy="196" r="3" fill="rgba(56,189,248,0.15)"/>
+
+  <!-- Connector dots -->
+  <line x1="260" y1="173" x2="270" y2="173" stroke="rgba(56,189,248,0.2)" stroke-width="1" stroke-dasharray="2,2"/>
+  <line x1="440" y1="173" x2="450" y2="173" stroke="rgba(56,189,248,0.1)" stroke-width="1" stroke-dasharray="2,2"/>
+
+  <!-- User reaction: engaged -->
+  <text x="350" y="245" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#1e4a5c" font-style="italic">feels like a coach taking notes — nobody mentions the wait</text>
+
+  <!-- Caption -->
+  <text x="350" y="262" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#1e2d3d">same 3-second wait, completely different experience</text>
+</svg>

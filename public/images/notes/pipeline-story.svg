@@ -1,0 +1,77 @@
+<svg width="700" height="280" viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sentenceGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="rgba(249,115,98,0.0)"/>
+      <stop offset="10%" stop-color="rgba(249,115,98,0.15)"/>
+      <stop offset="90%" stop-color="rgba(249,115,98,0.15)"/>
+      <stop offset="100%" stop-color="rgba(249,115,98,0.0)"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="700" height="280" fill="#080f28" rx="12"/>
+
+  <!-- Row labels -->
+  <text x="20" y="52" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#3b4f6b" letter-spacing="1.5">BEFORE</text>
+  <text x="20" y="172" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#3b4f6b" letter-spacing="1.5">AFTER</text>
+
+  <!-- Stage boxes - BEFORE row (no context, just stages) -->
+  <!-- Stage 1 -->
+  <rect x="20" y="60" width="95" height="36" rx="5" fill="#0d1629" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+  <text x="67" y="82" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#475569">Identified</text>
+  <!-- Arrow -->
+  <text x="120" y="82" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#1e2d44">→</text>
+  <!-- Stage 2 -->
+  <rect x="128" y="60" width="95" height="36" rx="5" fill="#0d1629" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+  <text x="175" y="82" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#475569">Reached Out</text>
+  <!-- Arrow -->
+  <text x="228" y="82" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#1e2d44">→</text>
+  <!-- Stage 3 -->
+  <rect x="236" y="60" width="95" height="36" rx="5" fill="#0d1629" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+  <text x="283" y="82" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#475569">Waiting</text>
+  <!-- Arrow -->
+  <text x="336" y="82" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#1e2d44">→</text>
+  <!-- Stage 4 -->
+  <rect x="344" y="60" width="95" height="36" rx="5" fill="#0d1629" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+  <text x="391" y="82" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#475569">Responded</text>
+  <!-- Arrow -->
+  <text x="444" y="82" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#1e2d44">→</text>
+  <!-- Stage 5 -->
+  <rect x="452" y="60" width="95" height="36" rx="5" fill="#0d1629" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+  <text x="499" y="82" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#475569">Following Up</text>
+
+  <!-- User confused label -->
+  <text x="614" y="75" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="11" fill="#2d3f57">😶</text>
+  <text x="636" y="85" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="9" fill="#2d3f57">now what?</text>
+
+  <!-- Divider + down arrow -->
+  <line x1="20" y1="120" x2="680" y2="120" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+  <text x="350" y="138" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#2a3a55">added one sentence ↓</text>
+
+  <!-- AFTER row: summary sentence first -->
+  <rect x="20" y="150" width="580" height="24" rx="5" fill="url(#sentenceGrad)" stroke="rgba(249,115,98,0.2)" stroke-width="1"/>
+  <text x="310" y="166" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="11" fill="#f97362">3 contacts haven&apos;t heard from you in 2 weeks. Reach out →</text>
+
+  <!-- Same stage boxes - AFTER row -->
+  <rect x="20" y="184" width="95" height="36" rx="5" fill="#0d1629" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+  <text x="67" y="206" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#475569">Identified</text>
+  <text x="120" y="206" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#1e2d44">→</text>
+  <rect x="128" y="184" width="95" height="36" rx="5" fill="#0d1629" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+  <text x="175" y="206" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#475569">Reached Out</text>
+  <text x="228" y="206" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#1e2d44">→</text>
+  <rect x="236" y="184" width="95" height="36" rx="5" fill="#0d1629" stroke="rgba(249,115,98,0.4)" stroke-width="1"/>
+  <text x="283" y="206" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#f97362">Waiting ×3</text>
+  <text x="336" y="206" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#1e2d44">→</text>
+  <rect x="344" y="184" width="95" height="36" rx="5" fill="#0d1629" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+  <text x="391" y="206" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#475569">Responded</text>
+  <text x="444" y="206" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#1e2d44">→</text>
+  <rect x="452" y="184" width="95" height="36" rx="5" fill="#0d1629" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+  <text x="499" y="206" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#475569">Following Up</text>
+
+  <!-- User purposeful -->
+  <text x="614" y="198" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="11" fill="#f97362">🎯</text>
+  <text x="636" y="208" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="9" fill="#f97362">on it</text>
+
+  <!-- Caption -->
+  <text x="350" y="255" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#2d3f57">same pipeline, same data — one sentence changed what users did next</text>
+</svg>

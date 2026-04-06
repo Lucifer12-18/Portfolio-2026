@@ -1,0 +1,31 @@
+<svg width="700" height="270" viewBox="0 0 700 270" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="700" height="270" fill="#080f28" rx="12"/>
+
+  <!-- Engineering circle -->
+  <circle cx="248" cy="132" r="115" fill="rgba(167,139,250,0.05)" stroke="rgba(167,139,250,0.22)" stroke-width="1.5"/>
+  <!-- UX circle -->
+  <circle cx="452" cy="132" r="115" fill="rgba(74,123,247,0.05)" stroke="rgba(74,123,247,0.22)" stroke-width="1.5"/>
+
+  <!-- Engineering label + items (left side, avoiding overlap zone) -->
+  <text x="148" y="102" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="13" fill="#a78bfa" font-weight="600">Engineering</text>
+  <text x="148" y="122" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="11" fill="#4a5c78">data flows</text>
+  <text x="148" y="138" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="11" fill="#4a5c78">system constraints</text>
+  <text x="148" y="154" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="11" fill="#4a5c78">build tradeoffs</text>
+  <text x="148" y="170" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="11" fill="#4a5c78">latency, state</text>
+
+  <!-- UX label + items (right side, avoiding overlap zone) -->
+  <text x="552" y="102" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="13" fill="#4a7bf7" font-weight="600">UX Design</text>
+  <text x="552" y="122" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="11" fill="#3b5070">mental models</text>
+  <text x="552" y="138" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="11" fill="#3b5070">user goals</text>
+  <text x="552" y="154" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="11" fill="#3b5070">friction points</text>
+  <text x="552" y="170" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="11" fill="#3b5070">behavior patterns</text>
+
+  <!-- Intersection text -->
+  <text x="350" y="122" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="11" fill="#64748b">where</text>
+  <text x="350" y="138" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="14" fill="#e2e8f0" font-weight="700">I work</text>
+  <text x="350" y="156" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#475569">the seam</text>
+
+  <!-- Bottom caption -->
+  <text x="350" y="242" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#2d3f57">where a user's mental model collides with how the system actually works</text>
+</svg>
