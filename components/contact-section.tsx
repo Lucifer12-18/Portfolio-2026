@@ -1,7 +1,6 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { ModuleBadge } from "@/components/module-badge"
 import { SectionWrapper } from "@/components/section-wrapper"
 import { WindowShell } from "@/components/window-shell"
 import { Mail, Linkedin, MapPin, Wifi } from "lucide-react"
@@ -19,33 +18,38 @@ const interests = [
 export function ContactSection() {
   return (
     <SectionWrapper id="epilogue" windowTitle="EPILOGUE · OPEN CHANNEL">
-      <div className="flex justify-center mb-5">
-        <ModuleBadge module="06" label="EPILOGUE" />
+      {/* Decorative chapter numeral */}
+      <div aria-hidden="true" className="absolute top-4 right-6 md:right-10 marquee-num select-none">
+        06
       </div>
 
       {/* Centered dialog-style window */}
       <WindowShell title="EPILOGUE · OPEN CHANNEL">
-        <div className="grid lg:grid-cols-2 gap-8 h-full">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 h-full">
           {/* Left Column - Text */}
-          <div className="space-y-5 flex flex-col justify-center">
+          <div className="space-y-6 flex flex-col justify-center">
             <motion.div
-              initial={{ opacity: 0, y: 12 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              className="space-y-4"
             >
-              <h2 className="text-2xl md:text-3xl font-semibold text-foreground mb-4">
-                What I'm Looking For Next
+              <span className="eyebrow">Chapter 06 · Epilogue · Open Channel</span>
+
+              <h2 className="display-lg text-slate-50 leading-[1.04]">
+                What I'm looking{" "}
+                <em className="not-italic text-gradient-warm">for next.</em>
               </h2>
 
-              <div className="space-y-3 text-muted-foreground leading-relaxed text-sm">
-                <p>
-                  I'm looking for teams who are building tools that matter — especially where there's complexity under the
-                  hood and a need for calm, trustworthy interfaces on the surface.
-                </p>
-                <p>
-                  If you're a recruiter, PM, founder, or designer and any of this resonates, I'd love to talk.
-                </p>
-              </div>
+              <p className="lede">
+                I'm looking for teams building tools that matter — especially where there's
+                complexity under the hood and a need for calm, trustworthy interfaces on the surface.
+              </p>
+
+              <p className="text-sm text-muted-foreground leading-[1.7]">
+                If you're a recruiter, PM, founder, or designer and any of this resonates,
+                I'd love to talk.
+              </p>
             </motion.div>
 
             {/* Interest tags */}

@@ -23,6 +23,7 @@ import { ModalProvider, useModal } from "@/contexts/modal-context"
 import { ProjectModal } from "@/components/project-modal"
 import { CursorEffect } from "@/components/cursor-effect"
 import { FilmGrain } from "@/components/film-grain"
+import { CinematicIntro } from "@/components/cinematic-intro"
 import { formationWatchRef } from "@/lib/formation-state"
 
 // ── CRT module IDs shown during transition ────────────────────────────────────
@@ -430,6 +431,10 @@ function PageLevelModal() {
 }
 
 export default function Home() {
+  // Skip intro if already seen this session (avoids flash on back-navigation)
+  const [cinematicDone, setCinematicDone] = useState(() =>
+    typeof window !== "undefined" && !!sessionStorage.getItem("cinematic_seen")
+  )
   const [bootScreenDismissed, setBootScreenDismissed] = useState(false)
 
   return (
@@ -437,7 +442,15 @@ export default function Home() {
       <ReadingStoreProvider>
         <ViewModeProvider>
           <ModalProvider>
-            <OpeningHero onDismiss={() => setBootScreenDismissed(true)} />
+            {/* ── Cinematic intro — plays once per session before the boot screen ── */}
+            {!cinematicDone && (
+              <CinematicIntro onComplete={() => setCinematicDone(true)} />
+            )}
+
+            {/* Boot screen — only mounts after cinematic is done */}
+            {cinematicDone && (
+              <OpeningHero onDismiss={() => setBootScreenDismissed(true)} />
+            )}
 
             <div
               className={bootScreenDismissed ? "" : "invisible pointer-events-none fixed inset-0 overflow-hidden"}

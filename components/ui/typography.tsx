@@ -6,12 +6,15 @@ import { cn } from "@/lib/utils"
 // All components forward refs and accept standard HTML element props.
 // Usage mirrors the rest of the project: className overrides are always allowed.
 
-// Page-level heading — used once per page
+// Page-level heading — editorial display, Syne, oversized
 const H1 = React.forwardRef<HTMLHeadingElement, React.HTMLAttributes<HTMLHeadingElement>>(
   ({ className, ...props }, ref) => (
     <h1
       ref={ref}
-      className={cn("text-2xl md:text-3xl font-semibold tracking-wide text-foreground", className)}
+      className={cn(
+        "font-display text-[2.25rem] md:text-[3.25rem] font-bold leading-[1.02] tracking-[-0.035em] text-foreground",
+        className
+      )}
       {...props}
     />
   )
@@ -23,7 +26,10 @@ const H2 = React.forwardRef<HTMLHeadingElement, React.HTMLAttributes<HTMLHeading
   ({ className, ...props }, ref) => (
     <h2
       ref={ref}
-      className={cn("text-base md:text-lg font-semibold text-foreground", className)}
+      className={cn(
+        "font-display text-xl md:text-2xl font-semibold tracking-[-0.02em] text-foreground leading-tight",
+        className
+      )}
       {...props}
     />
   )
@@ -35,7 +41,10 @@ const H3 = React.forwardRef<HTMLHeadingElement, React.HTMLAttributes<HTMLHeading
   ({ className, ...props }, ref) => (
     <h3
       ref={ref}
-      className={cn("text-sm font-semibold text-foreground", className)}
+      className={cn(
+        "font-display text-lg md:text-xl font-semibold tracking-[-0.015em] text-foreground leading-snug",
+        className
+      )}
       {...props}
     />
   )
@@ -66,12 +75,15 @@ const P = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagr
 )
 P.displayName = "P"
 
-// Emphasis paragraph — bold body, used for key takeaways
+// Emphasis paragraph — editorial lede, lighter weight, larger size
 const Lead = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
   ({ className, ...props }, ref) => (
     <p
       ref={ref}
-      className={cn("text-sm md:text-base font-semibold text-foreground/90 leading-relaxed", className)}
+      className={cn(
+        "text-base md:text-lg font-light leading-[1.55] tracking-[-0.005em] text-foreground/90",
+        className
+      )}
       {...props}
     />
   )
@@ -84,7 +96,7 @@ const Label = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLPa
     <p
       ref={ref}
       className={cn(
-        "text-[10px] md:text-[11px] font-mono uppercase tracking-[0.18em] text-muted-foreground",
+        "text-[10px] md:text-[11px] font-mono uppercase tracking-[0.28em] text-muted-foreground",
         className
       )}
       {...props}

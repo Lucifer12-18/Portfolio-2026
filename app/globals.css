@@ -406,6 +406,19 @@ p, li, blockquote {
   100% { background-position: 16px 16px; }
 }
 
+/* ── Cinematic intro — "press anywhere" pulsing line ─────────────────────── */
+@keyframes cinematic-pulse {
+  0%, 100% { opacity: 0.25; transform: scaleX(1);   }
+  50%       { opacity: 0.55; transform: scaleX(1.45); }
+}
+.cinematic-pulse-line {
+  width: 48px;
+  height: 1px;
+  background: rgba(255,255,255,0.4);
+  transform-origin: center;
+  animation: cinematic-pulse 2.6s ease-in-out infinite;
+}
+
 /* Film grain drift — steps() gives the classic pixel-shift flicker */
 @keyframes film-grain-drift {
   0%   { transform: translate(0, 0); }
