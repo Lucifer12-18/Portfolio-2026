@@ -1,7 +1,6 @@
 "use client"
 
 import { Card, CardContent } from "@/components/ui/card"
-import { ModuleBadge } from "@/components/module-badge"
 import { SectionWrapper } from "@/components/section-wrapper"
 import { useViewMode } from "@/contexts/view-mode-context"
 import { motion } from "framer-motion"
@@ -107,18 +106,62 @@ const timeline = [
   },
 ]
 
+type RecruiterAbout = { paragraphs: string[]; bullets: string[] }
+type DesignerAbout = {
+  blocks: {
+    type: string
+    text?: string
+    sectionBreak?: boolean
+    intro?: string
+    items?: string[]
+    lines?: string[]
+  }[]
+}
+
 export function AboutSection() {
   const { viewMode } = useViewMode()
-  const content = aboutContent[viewMode]
+  const content = aboutContent[viewMode as keyof typeof aboutContent]
+  const recruiterContent = content as RecruiterAbout
+  const designerContent = content as DesignerAbout
 
   return (
     <SectionWrapper id="chapter-1" windowTitle="ORIGIN · THE SYSTEMS BACKGROUND" moduleLabel="ORIGIN · THE SYSTEMS BACKGROUND">
-      <ModuleBadge module="01" label="ORIGIN" />
+      {/* Decorative chapter numeral */}
+      <div aria-hidden="true" className="absolute top-4 right-6 md:right-10 marquee-num select-none">
+        01
+      </div>
 
-      <div className="grid lg:grid-cols-2 gap-8 lg:gap-10">
+      <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
         {/* Left Column - Story Text */}
         <div className="space-y-5">
-          <h2 className="text-2xl md:text-3xl font-semibold text-foreground">The Systems Background</h2>
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <span className="eyebrow">Chapter 01 · Origin · Systems Background</span>
+          </motion.div>
+
+          <motion.h2
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+            className="display-lg text-slate-50 leading-[1.04]"
+          >
+            The{" "}
+            <em
+              className="not-italic"
+              style={{
+                background: "linear-gradient(135deg, #a78bfa 0%, #818cf8 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              systems
+            </em>{" "}
+            background.
+          </motion.h2>
 
           <motion.div
             key={viewMode}
@@ -127,11 +170,11 @@ export function AboutSection() {
             transition={{ duration: 0.3 }}
             className="space-y-4"
           >
-            {viewMode === "recruiter" && content.bullets && (
+            {viewMode === "recruiter" && recruiterContent.bullets && (
               <div className="flex flex-col gap-2 p-4 bg-primary/5 rounded-xl border border-primary/10 mb-4">
                 <span className="text-xs font-mono text-primary uppercase tracking-wide">Quick Summary</span>
                 <ul className="space-y-1.5">
-                  {content.bullets.map((bullet, i) => (
+                  {recruiterContent.bullets.map((bullet: string, i: number) => (
                     <li key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
                       <span className="h-1.5 w-1.5 rounded-full bg-primary flex-shrink-0" />
                       {bullet}
@@ -143,15 +186,15 @@ export function AboutSection() {
 
             {viewMode === "recruiter" && (
               <div className="text-muted-foreground text-base leading-[1.7] [&>p]:mb-4 last:mb-0">
-                {content.paragraphs.map((p, i) => (
+                {recruiterContent.paragraphs?.map((p: string, i: number) => (
                   <p key={i}>{p}</p>
                 ))}
               </div>
             )}
 
-            {viewMode === "designer" && content.blocks && (
+            {viewMode === "designer" && designerContent.blocks && (
               <div className="text-muted-foreground text-sm leading-[1.7] space-y-3">
-                {content.blocks.map((block, i) => {
+                {designerContent.blocks.map((block: DesignerAbout["blocks"][0], i: number) => {
                   if (block.type === "paragraph") {
                     return (
                       <motion.p
@@ -176,7 +219,7 @@ export function AboutSection() {
                       >
                         <p className="mb-2 text-foreground/80">{block.intro}</p>
                         <ul className="flex flex-col gap-1.5 list-none pl-0">
-                          {block.items.map((item, j) => (
+                          {(block.items ?? []).map((item: string, j: number) => (
                             <li key={j} className="flex items-center gap-2">
                               <span className="h-1.5 w-1.5 rounded-full bg-primary flex-shrink-0" />
                               <span>{item}</span>
@@ -201,7 +244,7 @@ export function AboutSection() {
                           paddingBottom: "8px",
                         }}
                       >
-                        {block.lines.map((line, j) => (
+                        {(block.lines ?? []).map((line: string, j: number) => (
                           <motion.span
                             key={j}
                             className="block"
@@ -264,6 +307,7 @@ export function AboutSection() {
                       className="text-[10px] font-mono mb-0.5"
                       style={{ color: item.color }}
                     >
+ 
                       {item.year}
                     </div>
                     <h3 className="font-semibold text-foreground text-sm mb-1 group-hover:text-primary transition-colors">

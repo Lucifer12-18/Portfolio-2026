@@ -66,15 +66,15 @@ export default async function NotePage({
       >
         <Link
           href="/#chapter-5"
-          className="inline-flex items-center gap-2 text-sm font-medium transition-colors"
+          className="inline-flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.24em] transition-colors hover:text-slate-200"
           style={{ color: "rgb(148, 163, 184)" }}
         >
-          <ArrowLeft className="h-4 w-4" />
+          <ArrowLeft className="h-3.5 w-3.5" />
           Back to Notes
         </Link>
 
         <span
-          className="text-xs font-mono px-2 py-1 rounded border"
+          className="text-[10px] font-mono uppercase tracking-[0.24em] px-2.5 py-1 rounded border"
           style={{
             color: note.accentColor,
             background: `${note.accentColor}14`,
@@ -85,36 +85,59 @@ export default async function NotePage({
         </span>
       </header>
 
-      <main className="mx-auto w-full max-w-2xl px-6 py-12">
-        {/* Article header */}
-        <header className="mb-10">
-          <div className="flex items-center gap-4 mb-5 text-xs font-mono" style={{ color: "rgb(100, 116, 139)" }}>
-            <span className="inline-flex items-center gap-1.5">
-              <Calendar className="h-3 w-3" />
-              <time dateTime={note.isoDate}>{note.date}</time>
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <Clock className="h-3 w-3" />
-              {note.readingTime} min read
-            </span>
-            <span className="font-mono opacity-60">{note.file}</span>
-          </div>
+      <main className="mx-auto w-full max-w-3xl px-6 py-16 md:py-20">
+        {/* Article header — editorial */}
+        <header className="mb-12 space-y-6">
+          <span
+            className="eyebrow"
+            style={{ color: note.accentColor }}
+          >
+            Note · {note.category}
+          </span>
 
           <h1
-            className="text-2xl md:text-3xl font-semibold leading-snug mb-4"
-            style={{ color: "rgb(226, 232, 240)" }}
+            className="font-display font-bold leading-[1.02] tracking-[-0.035em]"
+            style={{
+              fontSize: "clamp(2.25rem, 5vw, 3.75rem)",
+              color: "rgb(240, 244, 252)",
+            }}
           >
             {note.title}
           </h1>
 
-          <p className="text-base leading-relaxed" style={{ color: "rgb(148, 163, 184)" }}>
+          <p
+            className="font-light leading-[1.55] tracking-[-0.005em]"
+            style={{
+              fontSize: "clamp(1.0625rem, 1.35vw, 1.25rem)",
+              color: "rgba(203, 213, 225, 0.92)",
+              maxWidth: "42ch",
+            }}
+          >
             {note.excerpt}
           </p>
+
+          {/* Meta row */}
+          <div
+            className="flex flex-wrap items-center gap-x-5 gap-y-2 pt-2 text-[11px] font-mono uppercase tracking-[0.2em]"
+            style={{ color: "rgb(100, 116, 139)" }}
+          >
+            <span className="inline-flex items-center gap-1.5">
+              <Calendar className="h-3 w-3" />
+              <time dateTime={note.isoDate}>{note.date}</time>
+            </span>
+            <span style={{ color: "rgb(51, 65, 85)" }}>·</span>
+            <span className="inline-flex items-center gap-1.5">
+              <Clock className="h-3 w-3" />
+              {note.readingTime} min read
+            </span>
+            <span style={{ color: "rgb(51, 65, 85)" }}>·</span>
+            <span className="opacity-80">{note.file}</span>
+          </div>
         </header>
 
-        {/* Hero image */}
+        {/* Hero image — cinematic wide ratio */}
         <div
-          className="relative w-full h-52 md:h-64 rounded-xl overflow-hidden mb-10 border"
+          className="relative w-full aspect-[21/10] rounded-2xl overflow-hidden mb-12 border"
           style={{ borderColor: "rgba(255,255,255,0.08)" }}
         >
           <Image
@@ -122,16 +145,15 @@ export default async function NotePage({
             alt={note.title}
             fill
             className="object-cover"
-            sizes="(max-width: 768px) 100vw, 672px"
+            sizes="(max-width: 768px) 100vw, 768px"
             priority
           />
           <div
             className="absolute inset-0"
             style={{
-              background: `linear-gradient(to bottom, transparent 40%, rgba(2,6,23,0.5))`,
+              background: `linear-gradient(to bottom, transparent 35%, rgba(2,6,23,0.55))`,
             }}
           />
-          {/* Accent top border */}
           <div
             className="absolute top-0 left-0 right-0 h-[2px]"
             style={{
@@ -140,7 +162,7 @@ export default async function NotePage({
           />
         </div>
 
-        {/* Note body */}
+        {/* Note body — drop cap on first paragraph applied via .note-prose */}
         <article
           className="note-prose"
           dangerouslySetInnerHTML={{ __html: note.contentHtml }}
@@ -148,19 +170,22 @@ export default async function NotePage({
 
         {/* Footer */}
         <footer
-          className="mt-14 pt-6 border-t flex items-center justify-between"
+          className="mt-16 pt-6 border-t flex items-center justify-between"
           style={{ borderColor: "rgba(255,255,255,0.07)" }}
         >
           <Link
             href="/#chapter-5"
-            className="inline-flex items-center gap-2 text-sm transition-colors"
+            className="inline-flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.24em] transition-colors hover:text-slate-200"
             style={{ color: "rgb(148, 163, 184)" }}
           >
-            <ArrowLeft className="h-4 w-4" />
+            <ArrowLeft className="h-3.5 w-3.5" />
             All notes
           </Link>
 
-          <span className="text-xs font-mono" style={{ color: "rgb(71, 85, 105)" }}>
+          <span
+            className="text-[10px] font-mono uppercase tracking-[0.2em]"
+            style={{ color: "rgb(71, 85, 105)" }}
+          >
             Vishal Deshmukh · {note.date}
           </span>
         </footer>

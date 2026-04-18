@@ -1,30 +1,145 @@
 "use client"
 
 import { useState } from "react"
-import { Badge } from "@/components/ui/badge"
-import { ModuleBadge } from "@/components/module-badge"
 import { SectionWrapper } from "@/components/section-wrapper"
 import { ArrowUpRight } from "lucide-react"
 import { motion } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
 import { NOTES, type NoteMetadata } from "@/lib/notes-data"
+import { Spotlight } from "@/components/spotlight"
+
+/** Convert an #rrggbb hex into "r, g, b" for Spotlight's `color` prop. */
+function hexToRgb(hex: string): string {
+  const h = hex.replace("#", "")
+  const full = h.length === 3 ? h.split("").map((c) => c + c).join("") : h
+  const r = parseInt(full.slice(0, 2), 16)
+  const g = parseInt(full.slice(2, 4), 16)
+  const b = parseInt(full.slice(4, 6), 16)
+  return `${r}, ${g}, ${b}`
+}
 
 const filters = ["All", "UX", "AI", "Systems", "Career"]
 
-const notes = NOTES
+const ease = [0.16, 1, 0.3, 1] as [number, number, number, number]
 
 const cardVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
-    transition: {
-      delay: i * 0.06,
-      duration: 0.35,
-      ease: [0.16, 1, 0.3, 1],
-    },
+    transition: { delay: i * 0.06, duration: 0.45, ease },
   }),
+}
+
+/**
+ * Featured note — oversized editorial treatment for the first article.
+ */
+function FeaturedNote({ note }: { note: NoteMetadata }) {
+  const [hovered, setHovered] = useState(false)
+
+  return (
+    <motion.div
+      custom={0}
+      initial="hidden"
+      animate="visible"
+      variants={cardVariants}
+      onHoverStart={() => setHovered(true)}
+      onHoverEnd={() => setHovered(false)}
+    >
+      <Link href={`/notes/${note.slug}`}>
+        <Spotlight size={420} color={hexToRgb(note.accentColor)} intensity={0.13} className="rounded-2xl">
+        <motion.article
+          whileHover={{ y: -4 }}
+          transition={{ duration: 0.3, ease }}
+          className="relative rounded-2xl overflow-hidden group cursor-pointer"
+          style={{
+            background: "rgba(8, 15, 40, 0.65)",
+            backdropFilter: "blur(16px)",
+            WebkitBackdropFilter: "blur(16px)",
+            border: hovered
+              ? `1px solid ${note.accentColor}`
+              : "1px solid rgba(255, 255, 255, 0.07)",
+            boxShadow: hovered
+              ? `0 0 0 1px ${note.accentColor}22, 0 16px 48px rgba(0,0,0,0.5)`
+              : "0 2px 12px rgba(0,0,0,0.25)",
+            transition: "box-shadow 0.4s ease, border-color 0.4s ease",
+          }}
+        >
+          <div
+            className="absolute top-0 left-0 right-0 h-[1px] z-10"
+            style={{
+              background: `linear-gradient(90deg, transparent, ${note.accentColor}, transparent)`,
+              opacity: hovered ? 1 : 0,
+              transition: "opacity 0.35s ease",
+            }}
+          />
+
+          <div className="grid md:grid-cols-5 gap-0">
+            <div className="md:col-span-2 relative aspect-[4/3] md:aspect-auto overflow-hidden">
+              <Image
+                src={note.imagePath}
+                alt={note.title}
+                fill
+                sizes="(max-width: 768px) 100vw, 40vw"
+                className="object-cover transition-transform duration-700 group-hover:scale-[1.05]"
+              />
+              <div
+                className="absolute inset-0"
+                style={{
+                  background: `linear-gradient(to right, transparent 60%, rgba(8,15,40,0.5))`,
+                }}
+              />
+            </div>
+
+            <div className="md:col-span-3 p-7 md:p-10 flex flex-col justify-between gap-6">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span
+                    className="text-[10px] font-mono uppercase tracking-[0.28em]"
+                    style={{ color: note.accentColor }}
+                  >
+                    Featured Note · {note.tag}
+                  </span>
+                  <span className="text-[11px] font-mono text-slate-500">{note.date}</span>
+                </div>
+
+                <h3
+                  className="font-display font-bold leading-[1.08] tracking-[-0.025em] transition-colors duration-300"
+                  style={{
+                    fontSize: "clamp(1.5rem, 2.6vw, 2rem)",
+                    color: hovered ? note.accentColor : "rgb(240, 244, 252)",
+                  }}
+                >
+                  {note.title}
+                </h3>
+
+                <p className="text-[15px] text-slate-400 leading-[1.65] max-w-xl">
+                  {note.excerpt}
+                </p>
+              </div>
+
+              <div className="flex items-center justify-between pt-4 border-t border-white/5">
+                <span className="text-[10px] font-mono text-slate-500 uppercase tracking-[0.2em]">
+                  {note.file}
+                </span>
+                <motion.span
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold"
+                  style={{ color: note.accentColor }}
+                  animate={{ x: hovered ? 3 : 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  Read note
+                  <ArrowUpRight className="h-3.5 w-3.5" />
+                </motion.span>
+              </div>
+            </div>
+          </div>
+        </motion.article>
+        </Spotlight>
+      </Link>
+    </motion.div>
+  )
 }
 
 function NoteCard({ note, index }: { note: NoteMetadata; index: number }) {
@@ -39,93 +154,93 @@ function NoteCard({ note, index }: { note: NoteMetadata; index: number }) {
       onHoverStart={() => setHovered(true)}
       onHoverEnd={() => setHovered(false)}
       whileHover={{ y: -4 }}
-      transition={{ duration: 0.2 }}
+      transition={{ duration: 0.25, ease }}
     >
-      <div
-        className="relative rounded-xl overflow-hidden group"
-        style={{
-          background: "rgba(8, 15, 40, 0.65)",
-          backdropFilter: "blur(16px)",
-          WebkitBackdropFilter: "blur(16px)",
-          border: hovered
-            ? `1px solid ${note.accentColor}`
-            : "1px solid rgba(255, 255, 255, 0.07)",
-          boxShadow: hovered
-            ? `0 0 0 1px ${note.accentColor}22, 0 8px 32px rgba(0,0,0,0.4)`
-            : "0 2px 8px rgba(0,0,0,0.2)",
-          transition: "box-shadow 0.35s ease, border-color 0.35s ease",
-        }}
-      >
-        {/* Shimmer top accent on hover */}
-        <div
-          className="absolute top-0 left-0 right-0 h-[1px] z-10"
+      <Link href={`/notes/${note.slug}`}>
+        <Spotlight size={300} color={hexToRgb(note.accentColor)} intensity={0.13} className="rounded-xl h-full block">
+        <article
+          className="relative rounded-xl overflow-hidden group cursor-pointer h-full flex flex-col"
           style={{
-            background: `linear-gradient(90deg, transparent, ${note.accentColor}, transparent)`,
-            opacity: hovered ? 1 : 0,
-            transition: "opacity 0.3s ease",
+            background: "rgba(8, 15, 40, 0.65)",
+            backdropFilter: "blur(16px)",
+            WebkitBackdropFilter: "blur(16px)",
+            border: hovered
+              ? `1px solid ${note.accentColor}`
+              : "1px solid rgba(255, 255, 255, 0.07)",
+            boxShadow: hovered
+              ? `0 0 0 1px ${note.accentColor}22, 0 10px 36px rgba(0,0,0,0.4)`
+              : "0 2px 8px rgba(0,0,0,0.2)",
+            transition: "box-shadow 0.4s ease, border-color 0.4s ease",
           }}
-        />
+        >
+          <div
+            className="absolute top-0 left-0 right-0 h-[1px] z-10"
+            style={{
+              background: `linear-gradient(90deg, transparent, ${note.accentColor}, transparent)`,
+              opacity: hovered ? 1 : 0,
+              transition: "opacity 0.3s ease",
+            }}
+          />
 
-        {/* Filename badge */}
-        <div className="absolute top-3 right-3 px-2 py-1 bg-slate-900/80 backdrop-blur-sm rounded text-[10px] font-mono text-slate-400 border border-white/8 z-20">
-          {note.file}
-        </div>
-
-        <div className="p-5 flex flex-col h-full">
-          {/* Image */}
-          <div className="w-full h-28 rounded-lg relative overflow-hidden flex-shrink-0 mb-4 border border-white/8">
+          <div className="w-full aspect-[16/9] relative overflow-hidden">
             <Image
               src={note.imagePath || "/placeholder.svg"}
               alt={note.title}
               fill
               sizes="(max-width: 768px) 100vw, 50vw"
-              className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+              className="object-cover transition-transform duration-700 group-hover:scale-[1.05]"
             />
             <div
-              className="absolute inset-0 transition-opacity duration-300"
+              className="absolute inset-0"
               style={{
-                background: `linear-gradient(to bottom, transparent 50%, rgba(8,15,40,0.4))`,
+                background: `linear-gradient(to bottom, transparent 55%, rgba(8,15,40,0.5))`,
               }}
             />
           </div>
 
-          <div className="flex items-center justify-between mb-3">
-            <Badge
-              className="border-0 text-xs px-2 py-0.5"
+          <div className="p-6 flex flex-col flex-1 gap-3">
+            <div className="flex items-center justify-between">
+              <span
+                className="text-[10px] font-mono uppercase tracking-[0.24em]"
+                style={{ color: note.accentColor }}
+              >
+                {note.tag}
+              </span>
+              <span className="text-[10px] font-mono text-slate-500">{note.date}</span>
+            </div>
+
+            <h3
+              className="font-display font-semibold leading-[1.15] tracking-[-0.02em] transition-colors duration-300"
               style={{
-                background: `${note.accentColor}18`,
-                color: note.accentColor,
+                fontSize: "1.1875rem",
+                color: hovered ? note.accentColor : "rgb(232, 238, 248)",
               }}
             >
-              {note.tag}
-            </Badge>
-            <span className="text-xs text-slate-500 font-mono">{note.date}</span>
-          </div>
+              {note.title}
+            </h3>
 
-          <h3
-            className="text-base font-semibold mb-2 leading-snug transition-colors duration-200"
-            style={{ color: hovered ? note.accentColor : "rgb(226, 232, 240)" }}
-          >
-            {note.title}
-          </h3>
+            <p className="text-[13.5px] text-slate-400 leading-[1.65] line-clamp-3 flex-grow">
+              {note.excerpt}
+            </p>
 
-          <p className="text-sm text-slate-400 leading-relaxed flex-grow mb-4">{note.excerpt}</p>
-
-          <div className="flex items-center justify-end mt-auto">
-            <Link href={`/notes/${note.slug}`}>
+            <div className="flex items-center justify-between pt-3 border-t border-white/5">
+              <span className="text-[10px] font-mono text-slate-600 uppercase tracking-[0.18em]">
+                {note.file}
+              </span>
               <motion.span
                 className="inline-flex items-center gap-1 text-xs font-semibold"
                 style={{ color: note.accentColor }}
                 animate={{ x: hovered ? 2 : 0 }}
                 transition={{ duration: 0.2 }}
               >
-                Read note
+                Read
                 <ArrowUpRight className="h-3 w-3" />
               </motion.span>
-            </Link>
+            </div>
           </div>
-        </div>
-      </div>
+        </article>
+        </Spotlight>
+      </Link>
     </motion.div>
   )
 }
@@ -135,8 +250,10 @@ export function NotesSection() {
 
   const filteredNotes =
     activeFilter === "All"
-      ? notes
-      : notes.filter((note) => note.category === activeFilter || note.tag.includes(activeFilter))
+      ? NOTES
+      : NOTES.filter((note) => note.category === activeFilter || note.tag.includes(activeFilter))
+
+  const [featured, ...rest] = filteredNotes
 
   return (
     <SectionWrapper
@@ -144,68 +261,83 @@ export function NotesSection() {
       windowTitle="NOTES · OBSERVATIONS FROM THE FIELD"
       moduleLabel="NOTES · OBSERVATIONS FROM THE FIELD"
     >
-      <ModuleBadge module="05" label="NOTES" />
+      {/* Decorative chapter numeral */}
+      <div aria-hidden="true" className="absolute top-4 right-6 md:right-10 marquee-num select-none">
+        05
+      </div>
 
-      <h2 className="text-3xl md:text-4xl font-semibold text-foreground mb-4">Observations from the Field</h2>
+      <div className="relative space-y-6">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease }}
+          className="space-y-4 max-w-3xl"
+        >
+          <span className="eyebrow">Chapter 05 · Notes from the Field</span>
 
-      <p className="text-muted-foreground mb-6 max-w-2xl leading-relaxed">
-        Between big projects, I keep short notes—little system logs on what I'm learning about UX, AI, and working with
-        teams. Not polished essays, just honest snapshots of how I think.
-      </p>
-
-      {/* Filter pills */}
-      <div className="flex flex-wrap gap-2 mb-8">
-        {filters.map((filter) => (
-          <motion.button
-            key={filter}
-            onClick={() => setActiveFilter(filter)}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-4 py-1.5 rounded-full text-sm font-medium transition-all"
-            style={{
-              background:
-                activeFilter === filter
-                  ? "rgba(74, 123, 247, 0.2)"
-                  : "rgba(15, 23, 42, 0.6)",
-              border:
-                activeFilter === filter
-                  ? "1px solid rgba(74, 123, 247, 0.5)"
-                  : "1px solid rgba(255,255,255,0.07)",
-              color: activeFilter === filter ? "rgb(74, 123, 247)" : "rgb(148, 163, 184)",
-              boxShadow: activeFilter === filter ? "0 0 10px rgba(74,123,247,0.15)" : "none",
-            }}
+          <motion.h2
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, delay: 0.08, ease }}
+            className="display-lg text-slate-50"
           >
-            {filter}
-          </motion.button>
-        ))}
-      </div>
+            Short dispatches{" "}
+            <em className="not-italic text-gradient">from in-between work.</em>
+          </motion.h2>
 
-      {/* Desktop masonry layout */}
-      <div className="hidden md:grid grid-cols-2 gap-5">
-        {/* Left column */}
-        <div className="space-y-5">
-          {filteredNotes
-            .filter((_, i) => i % 2 === 0)
-            .map((note, i) => (
-              <NoteCard key={note.title} note={note} index={i} />
+          <p className="lede">
+            Between big projects I keep short notes — little system logs on what I'm learning
+            about UX, AI, and working with teams. Not polished essays. Honest snapshots of
+            how I think.
+          </p>
+        </motion.div>
+
+        {/* Filter pills */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4, delay: 0.25 }}
+          className="flex flex-wrap gap-2"
+        >
+          {filters.map((filter) => (
+            <motion.button
+              key={filter}
+              onClick={() => setActiveFilter(filter)}
+              whileHover={{ y: -1 }}
+              whileTap={{ scale: 0.97 }}
+              className="px-3.5 py-1.5 rounded-full text-[11px] font-mono uppercase tracking-[0.2em] transition-all"
+              style={{
+                background:
+                  activeFilter === filter
+                    ? "rgba(74, 123, 247, 0.18)"
+                    : "rgba(15, 23, 42, 0.5)",
+                border:
+                  activeFilter === filter
+                    ? "1px solid rgba(74, 123, 247, 0.5)"
+                    : "1px solid rgba(255,255,255,0.07)",
+                color: activeFilter === filter ? "rgb(147, 197, 253)" : "rgb(148, 163, 184)",
+                boxShadow: activeFilter === filter ? "0 0 14px rgba(74,123,247,0.18)" : "none",
+              }}
+            >
+              {filter}
+            </motion.button>
+          ))}
+        </motion.div>
+
+        <div className="rule-tick" />
+
+        {/* Featured note */}
+        {featured && <FeaturedNote note={featured} />}
+
+        {/* Supporting grid */}
+        {rest.length > 0 && (
+          <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-5">
+            {rest.map((note, i) => (
+              <NoteCard key={note.slug} note={note} index={i + 1} />
             ))}
-        </div>
-
-        {/* Right column — offset for masonry effect */}
-        <div className="space-y-5 pt-10">
-          {filteredNotes
-            .filter((_, i) => i % 2 === 1)
-            .map((note, i) => (
-              <NoteCard key={note.title} note={note} index={i + 1} />
-            ))}
-        </div>
-      </div>
-
-      {/* Mobile layout */}
-      <div className="md:hidden space-y-4">
-        {filteredNotes.map((note, i) => (
-          <NoteCard key={note.title} note={note} index={i} />
-        ))}
+          </div>
+        )}
       </div>
     </SectionWrapper>
   )

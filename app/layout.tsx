@@ -1,11 +1,29 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter, JetBrains_Mono, Press_Start_2P } from "next/font/google"
+import { DM_Sans, Syne, JetBrains_Mono, Press_Start_2P } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 
-const inter = Inter({ subsets: ["latin"] })
-const _jetbrainsMono = JetBrains_Mono({ subsets: ["latin"] })
+// Body font — DM Sans: clean, modern, slightly more character than Inter
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+  variable: "--font-sans",
+})
+
+// Display font — Syne: variable weight, geometric editorial, great on dark
+const syne = Syne({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-display",
+})
+
+// Monospace — kept as-is, it's perfect for the system labels
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+})
+
 const pixel = Press_Start_2P({
   subsets: ["latin"],
   weight: "400",
@@ -43,7 +61,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} ${pixel.variable} font-sans antialiased`}>
+      <body className={`${dmSans.variable} ${syne.variable} ${jetbrainsMono.variable} ${pixel.variable} font-sans antialiased`}>
         {children}
         <Analytics />
       </body>

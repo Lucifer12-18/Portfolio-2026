@@ -1,0 +1,131 @@
+<svg width="850" height="380" viewBox="0 0 850 380" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="bg3" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+      <circle cx="10" cy="10" r="0.6" fill="rgba(255,255,255,0.025)"/>
+    </pattern>
+  </defs>
+
+  <rect width="850" height="380" fill="#070e1c"/>
+  <rect width="850" height="380" fill="url(#bg3)"/>
+
+  <!-- Title bar -->
+  <text x="20" y="22" font-family="monospace" font-size="9" fill="#1e3350" letter-spacing="2">REDDIT REDESIGN · INFORMATION ARCHITECTURE · CONCEPT 2023</text>
+  <line x1="20" y1="28" x2="830" y2="28" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+
+  <!-- BEFORE label -->
+  <text x="190" y="48" text-anchor="middle" font-family="monospace" font-size="9" fill="#3b4f6b" letter-spacing="2">BEFORE · current state</text>
+  <!-- AFTER label -->
+  <text x="640" y="48" text-anchor="middle" font-family="monospace" font-size="9" fill="#f97362" letter-spacing="2">AFTER · redesigned</text>
+
+  <!-- Center divider -->
+  <line x1="420" y1="36" x2="420" y2="360" stroke="rgba(255,255,255,0.05)" stroke-width="1" stroke-dasharray="4,4"/>
+  <text x="420" y="200" text-anchor="middle" font-family="monospace" font-size="18" fill="#1e2d44" writing-mode="vertical-lr">→</text>
+
+  <!-- ===== BEFORE: Chaotic feed ===== -->
+  <!-- Top nav bar: cluttered -->
+  <rect x="20" y="54" width="388" height="28" rx="4" fill="#0d1629" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+  <rect x="28" y="62" width="60" height="12" rx="3" fill="rgba(249,115,98,0.3)"/>
+  <rect x="96" y="62" width="80" height="12" rx="3" fill="rgba(255,255,255,0.07)"/>
+  <rect x="184" y="62" width="50" height="12" rx="3" fill="rgba(255,255,255,0.07)"/>
+  <rect x="242" y="62" width="70" height="12" rx="3" fill="rgba(255,255,255,0.07)"/>
+  <rect x="320" y="62" width="40" height="12" rx="3" fill="rgba(255,255,255,0.07)"/>
+  <rect x="368" y="62" width="30" height="12" rx="3" fill="rgba(255,255,255,0.07)"/>
+
+  <!-- Post cards: varying sizes, cluttered -->
+  <!-- Post 1: big -->
+  <rect x="20" y="90" width="388" height="70" rx="4" fill="#0b1322" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <rect x="28" y="98" width="180" height="8" rx="2" fill="rgba(255,255,255,0.12)"/>
+  <rect x="28" y="110" width="280" height="6" rx="2" fill="rgba(255,255,255,0.06)"/>
+  <rect x="28" y="120" width="240" height="6" rx="2" fill="rgba(255,255,255,0.05)"/>
+  <rect x="28" y="132" width="50" height="14" rx="3" fill="rgba(249,115,98,0.15)"/>
+  <rect x="86" y="132" width="40" height="14" rx="3" fill="rgba(255,255,255,0.05)"/>
+  <rect x="134" y="132" width="55" height="14" rx="3" fill="rgba(255,255,255,0.05)"/>
+  <rect x="300" y="98" width="100" height="54" rx="3" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+
+  <!-- Post 2: small -->
+  <rect x="20" y="168" width="185" height="50" rx="4" fill="#0b1322" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <rect x="28" y="176" width="120" height="7" rx="2" fill="rgba(255,255,255,0.1)"/>
+  <rect x="28" y="187" width="160" height="5" rx="2" fill="rgba(255,255,255,0.05)"/>
+  <rect x="28" y="196" width="130" height="5" rx="2" fill="rgba(255,255,255,0.04)"/>
+  <rect x="28" y="206" width="35" height="10" rx="2" fill="rgba(249,115,98,0.15)"/>
+
+  <!-- Post 3: small -->
+  <rect x="213" y="168" width="195" height="50" rx="4" fill="#0b1322" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <rect x="221" y="176" width="100" height="7" rx="2" fill="rgba(255,255,255,0.1)"/>
+  <rect x="221" y="187" width="170" height="5" rx="2" fill="rgba(255,255,255,0.05)"/>
+  <rect x="221" y="196" width="140" height="5" rx="2" fill="rgba(255,255,255,0.04)"/>
+  <rect x="221" y="206" width="35" height="10" rx="2" fill="rgba(249,115,98,0.15)"/>
+
+  <!-- Many more posts piling up -->
+  <rect x="20" y="226" width="388" height="40" rx="4" fill="#0b1322" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+  <rect x="28" y="234" width="150" height="6" rx="2" fill="rgba(255,255,255,0.09)"/>
+  <rect x="28" y="244" width="340" height="5" rx="2" fill="rgba(255,255,255,0.04)"/>
+  <rect x="28" y="257" width="40" height="8" rx="2" fill="rgba(249,115,98,0.1)"/>
+
+  <rect x="20" y="274" width="185" height="36" rx="4" fill="#0a1020" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+  <rect x="28" y="282" width="110" height="6" rx="2" fill="rgba(255,255,255,0.07)"/>
+  <rect x="28" y="292" width="160" height="5" rx="2" fill="rgba(255,255,255,0.03)"/>
+  <rect x="213" y="274" width="195" height="36" rx="4" fill="#0a1020" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+  <rect x="221" y="282" width="130" height="6" rx="2" fill="rgba(255,255,255,0.07)"/>
+  <rect x="221" y="292" width="150" height="5" rx="2" fill="rgba(255,255,255,0.03)"/>
+
+  <rect x="20" y="318" width="388" height="30" rx="4" fill="#090e1a" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+  <rect x="28" y="326" width="140" height="6" rx="2" fill="rgba(255,255,255,0.05)"/>
+
+  <!-- Overwhelm label -->
+  <text x="209" y="360" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="10" fill="#2d3a4d">infinite scroll · no hierarchy · same density everywhere</text>
+
+  <!-- ===== AFTER: 3 user modes ===== -->
+  <!-- Mode switcher tabs -->
+  <rect x="432" y="54" width="398" height="28" rx="4" fill="#0d1629" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+  <rect x="438" y="59" width="100" height="18" rx="3" fill="rgba(249,115,98,0.15)" stroke="rgba(249,115,98,0.3)" stroke-width="1"/>
+  <text x="488" y="71" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="#f97362" font-weight="500">Browsing</text>
+  <rect x="546" y="59" width="90" height="18" rx="3" fill="rgba(255,255,255,0.04)"/>
+  <text x="591" y="71" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="#475569">Seeking</text>
+  <rect x="644" y="59" width="100" height="18" rx="3" fill="rgba(255,255,255,0.04)"/>
+  <text x="694" y="71" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="#475569">Participating</text>
+
+  <!-- Featured/hero post -->
+  <rect x="432" y="90" width="398" height="80" rx="5" fill="#0b1322" stroke="rgba(249,115,98,0.2)" stroke-width="1"/>
+  <rect x="432" y="90" width="398" height="1.5" rx="0.75" fill="rgba(249,115,98,0.4)"/>
+  <text x="448" y="108" font-family="monospace" font-size="8" fill="#f97362" letter-spacing="1">TOP OF FEED</text>
+  <rect x="448" y="114" width="200" height="9" rx="2" fill="rgba(255,255,255,0.15)"/>
+  <rect x="448" y="127" width="280" height="6" rx="2" fill="rgba(255,255,255,0.07)"/>
+  <rect x="448" y="137" width="240" height="6" rx="2" fill="rgba(255,255,255,0.05)"/>
+  <rect x="448" y="150" width="60" height="14" rx="3" fill="rgba(249,115,98,0.15)" stroke="rgba(249,115,98,0.3)" stroke-width="1"/>
+  <text x="478" y="161" text-anchor="middle" font-family="monospace" font-size="8" fill="#f97362">r/design</text>
+  <rect x="700" y="98" width="120" height="62" rx="4" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+
+  <!-- 2-column compact posts below -->
+  <rect x="432" y="178" width="190" height="52" rx="5" fill="#0b1322" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <rect x="442" y="186" width="140" height="7" rx="2" fill="rgba(255,255,255,0.11)"/>
+  <rect x="442" y="197" width="170" height="5" rx="2" fill="rgba(255,255,255,0.05)"/>
+  <rect x="442" y="206" width="130" height="5" rx="2" fill="rgba(255,255,255,0.04)"/>
+  <rect x="442" y="217" width="40" height="10" rx="2" fill="rgba(249,115,98,0.12)"/>
+
+  <rect x="630" y="178" width="200" height="52" rx="5" fill="#0b1322" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <rect x="640" y="186" width="150" height="7" rx="2" fill="rgba(255,255,255,0.11)"/>
+  <rect x="640" y="197" width="180" height="5" rx="2" fill="rgba(255,255,255,0.05)"/>
+  <rect x="640" y="206" width="140" height="5" rx="2" fill="rgba(255,255,255,0.04)"/>
+  <rect x="640" y="217" width="40" height="10" rx="2" fill="rgba(249,115,98,0.12)"/>
+
+  <rect x="432" y="238" width="190" height="52" rx="5" fill="#0b1322" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <rect x="442" y="246" width="120" height="7" rx="2" fill="rgba(255,255,255,0.09)"/>
+  <rect x="442" y="257" width="160" height="5" rx="2" fill="rgba(255,255,255,0.04)"/>
+  <rect x="442" y="266" width="120" height="5" rx="2" fill="rgba(255,255,255,0.03)"/>
+  <rect x="442" y="277" width="35" height="10" rx="2" fill="rgba(249,115,98,0.1)"/>
+
+  <rect x="630" y="238" width="200" height="52" rx="5" fill="#0b1322" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <rect x="640" y="246" width="130" height="7" rx="2" fill="rgba(255,255,255,0.09)"/>
+  <rect x="640" y="257" width="170" height="5" rx="2" fill="rgba(255,255,255,0.04)"/>
+  <rect x="640" y="266" width="140" height="5" rx="2" fill="rgba(255,255,255,0.03)"/>
+  <rect x="640" y="277" width="35" height="10" rx="2" fill="rgba(249,115,98,0.1)"/>
+
+  <!-- Focus mode teaser -->
+  <rect x="432" y="300" width="398" height="44" rx="5" fill="rgba(249,115,98,0.04)" stroke="rgba(249,115,98,0.12)" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="631" y="322" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="10" fill="#f97362">Focus Mode — deep read without infinite scroll</text>
+  <text x="631" y="336" text-anchor="middle" font-family="monospace" font-size="9" fill="#3b4f6b">adaptive density · 3 user modes · no endless scroll</text>
+
+  <!-- After label -->
+  <text x="631" y="360" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="10" fill="#2d4a36">hierarchy · context · intentional browsing</text>
+</svg>

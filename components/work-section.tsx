@@ -2,14 +2,13 @@
 
 
 import { Card, CardContent } from "@/components/ui/card"
-import { ModuleBadge } from "@/components/module-badge"
 import { SectionWrapper } from "@/components/section-wrapper"
 import { ArrowUpRight } from "lucide-react"
 import { motion } from "framer-motion"
 import { useViewMode } from "@/contexts/view-mode-context"
 import { useSystemLog } from "@/contexts/system-log-context"
 import { useModal } from "@/contexts/modal-context"
-import { TypewriterText } from "@/components/typewriter-text"
+import { Spotlight } from "@/components/spotlight"
 import Image from "next/image"
 import { useState } from "react"
 
@@ -23,7 +22,7 @@ const projects = [
     context: "AI hiring platform",
     year: "2024",
     featured: true,
-    imagePath: "/images/hirello-mockup.jpg",
+    imagePath: "/images/hirello-mockup.svg",
     description: {
       recruiter: "Led end-to-end design for AI recruiting platform. Reduced recruiter screening time by 40%.",
       designer:
@@ -50,7 +49,7 @@ const projects = [
     context: "Content ecosystem concept",
     year: "2023",
     featured: false,
-    imagePath: "/images/reddit-mockup.jpg",
+    imagePath: "/images/reddit-mockup.svg",
     description: {
       recruiter: "Speculative redesign exploring simplified information architecture while maintaining engagement.",
       designer:
@@ -77,7 +76,7 @@ const projects = [
     context: "Data systems dashboard",
     year: "2024",
     featured: false,
-    imagePath: "/images/dashboard-mockup.jpg",
+    imagePath: "/images/dashboard-mockup.svg",
     description: {
       recruiter: "Built interactive dashboard helping students understand AI's impact on job markets.",
       designer:
@@ -107,17 +106,14 @@ const workContent = {
   },
 }
 
+const ease = [0.16, 1, 0.3, 1] as [number, number, number, number]
+
 const cardVariants = {
-  hidden: { opacity: 0, y: 28, scale: 0.97 },
+  hidden: { opacity: 0, y: 28 },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
-    scale: 1,
-    transition: {
-      delay: 0.05 + i * 0.06,
-      duration: 0.4,
-      ease: [0.16, 1, 0.3, 1],
-    },
+    transition: { delay: 0.05 + i * 0.08, duration: 0.55, ease },
   }),
 }
 
@@ -151,39 +147,57 @@ export function WorkSection() {
       moduleLabel="WORK · CASE STORIES IN PRACTICE"
       className="py-20 md:py-20"
     >
-      <ModuleBadge module="04" label="WORK" />
+      {/* Decorative chapter numeral */}
+      <div aria-hidden="true" className="absolute top-4 right-6 md:right-10 marquee-num select-none">
+        04
+      </div>
 
-      <h2 className="mb-4">
-        <TypewriterText
-          text="Case Stories"
-          speed={32}
-          loop={false}
-          className="text-3xl md:text-4xl font-semibold text-foreground"
-        />
-      </h2>
+      <div className="relative space-y-6">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease }}
+          className="space-y-4 max-w-3xl"
+        >
+          <span className="eyebrow">Chapter 04 · Work · Case Stories</span>
 
-      {viewMode === "recruiter" && (
-        <div className="flex flex-col gap-2 p-4 bg-primary/5 rounded-xl border border-primary/10 mb-6 max-w-lg">
-          <span className="text-xs font-mono text-primary uppercase tracking-wide">Quick Summary</span>
-          <ul className="space-y-1.5">
-            {workContent.recruiter.bullets.map((bullet, i) => (
-              <li key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
-                <span className="h-1.5 w-1.5 rounded-full bg-primary flex-shrink-0" />
-                {bullet}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+          <motion.h2
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, delay: 0.08, ease }}
+            className="display-lg text-slate-50"
+          >
+            Case stories, not a{" "}
+            <em className="not-italic text-gradient">résumé gallery.</em>
+          </motion.h2>
 
-      <p className="text-muted-foreground mb-8 max-w-2xl leading-relaxed">
-        Instead of a long list of projects, here are a few 'episodes' that show how I think—from AI hiring tools to
-        dashboards and community redesigns.
-      </p>
+          {viewMode === "recruiter" && (
+            <div className="flex flex-col gap-2 p-4 bg-primary/5 rounded-xl border border-primary/10 max-w-lg">
+              <span className="eyebrow" style={{ color: "rgba(74, 123, 247, 0.9)" }}>
+                Quick Summary
+              </span>
+              <ul className="space-y-1.5 mt-2">
+                {workContent.recruiter.bullets.map((bullet, i) => (
+                  <li key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <span className="h-1.5 w-1.5 rounded-full bg-primary flex-shrink-0" />
+                    {bullet}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
-      {/* Featured Project */}
-      {featuredProject && (
-        <div className="mb-6">
+          <p className="lede">
+            Instead of a long list of projects, here are a few episodes that show how I think —
+            from AI hiring tools to dashboards and community redesigns.
+          </p>
+        </motion.div>
+
+        <div className="rule-tick" />
+
+        {/* Featured Project — cinematic treatment */}
+        {featuredProject && (
           <motion.div
             initial="hidden"
             animate="visible"
@@ -194,15 +208,16 @@ export function WorkSection() {
               onHoverStart={() => setHoveredCard(featuredProject.title)}
               onHoverEnd={() => setHoveredCard(null)}
               whileHover={{ y: -4 }}
-              transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.3, ease }}
             >
+              <Spotlight size={420} color="74, 123, 247" intensity={0.12} className="rounded-2xl">
               <Card
-                className="border-border shadow-sm group overflow-hidden cursor-pointer py-0 rounded-xl relative"
+                className="border-border shadow-sm group overflow-hidden cursor-pointer py-0 rounded-2xl relative"
                 style={{
-                  transition: "box-shadow 0.35s ease, border-color 0.35s ease",
+                  transition: "box-shadow 0.4s ease, border-color 0.4s ease",
                   boxShadow: hoveredCard === featuredProject.title
-                    ? "0 0 0 1px rgba(74,123,247,0.3), 0 8px 32px rgba(74,123,247,0.12), 0 2px 8px rgba(0,0,0,0.3)"
-                    : "0 2px 8px rgba(0,0,0,0.15)",
+                    ? "0 0 0 1px rgba(74,123,247,0.3), 0 16px 48px rgba(74,123,247,0.14), 0 2px 8px rgba(0,0,0,0.4)"
+                    : "0 2px 12px rgba(0,0,0,0.2)",
                   borderColor: hoveredCard === featuredProject.title ? "rgba(74,123,247,0.3)" : undefined,
                 }}
                 onClick={() => handleProjectClick(featuredProject)}
@@ -216,155 +231,181 @@ export function WorkSection() {
                     transition: "opacity 0.3s ease",
                   }}
                 />
-                <div className="grid md:grid-cols-2">
-                  <div className="h-[180px] md:h-[220px] relative overflow-hidden bg-muted/60 border-b md:border-b-0 md:border-r border-border/60">
+                <div className="grid md:grid-cols-5">
+                  {/* Image — 3 cols, cinematic aspect */}
+                  <div className="md:col-span-3 h-[200px] md:h-[260px] relative overflow-hidden bg-muted/60 border-b md:border-b-0 md:border-r border-border/60">
                     <Image
                       src={featuredProject.imagePath || "/placeholder.svg"}
                       alt={featuredProject.title}
                       fill
-                      sizes="(max-width: 1024px) 100vw, 50vw"
-                      className="object-contain object-center transition-transform duration-500 group-hover:scale-[1.03]"
+                      sizes="(max-width: 1024px) 100vw, 60vw"
+                      className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.04]"
                     />
-                    {/* Gradient overlay that lifts on hover */}
+                    {/* Oversized project numeral overlay */}
                     <div
-                      className="absolute inset-0 transition-opacity duration-300"
+                      aria-hidden="true"
+                      className="absolute bottom-3 left-4 marquee-num select-none"
+                      style={{ fontSize: "clamp(3.5rem, 6vw, 6rem)", opacity: 0.7 }}
+                    >
+                      01
+                    </div>
+                    <div
+                      className="absolute inset-0 transition-opacity duration-500 pointer-events-none"
                       style={{
-                        background: "linear-gradient(to right, transparent 60%, rgba(74,123,247,0.06))",
+                        background: "linear-gradient(to right, transparent 60%, rgba(74,123,247,0.08))",
                         opacity: hoveredCard === featuredProject.title ? 1 : 0,
                       }}
                     />
                   </div>
 
-                  <CardContent className="p-7 flex flex-col justify-center">
-                    {featuredProject.role && featuredProject.context && featuredProject.year && (
-                      <p className="text-[11px] font-mono uppercase tracking-wide text-muted-foreground mb-3">
-                        role: {featuredProject.role} · context: {featuredProject.context} · year: {featuredProject.year}
+                  {/* Text — 2 cols, editorial */}
+                  <CardContent className="md:col-span-2 p-7 md:p-9 flex flex-col justify-between gap-6">
+                    <div>
+                      <p className="eyebrow mb-5">
+                        Featured · {featuredProject.year}
                       </p>
-                    )}
 
-                    <h3 className="text-2xl font-bold text-foreground mb-3 transition-colors duration-200"
-                      style={{ color: hoveredCard === featuredProject.title ? "rgb(74,123,247)" : undefined }}>
-                      {featuredProject.title}
-                    </h3>
+                      <h3
+                        className="display-md text-slate-50 mb-3 transition-colors duration-300 leading-[1.05]"
+                        style={{ color: hoveredCard === featuredProject.title ? "rgb(147, 197, 253)" : undefined }}
+                      >
+                        {featuredProject.title.split(" – ")[0]}
+                      </h3>
+                      <p className="text-[15px] text-muted-foreground leading-relaxed">
+                        {featuredProject.hook}
+                      </p>
+                    </div>
 
-                    <p className="text-muted-foreground mb-5 leading-relaxed line-clamp-2">
-                      {featuredProject.hook}
-                    </p>
+                    <div className="space-y-3">
+                      <p className="text-[11px] font-mono uppercase tracking-[0.18em] text-slate-500">
+                        {featuredProject.role} · {featuredProject.context}
+                      </p>
 
-                    <motion.span
-                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary w-fit"
-                      animate={{ x: hoveredCard === featuredProject.title ? 3 : 0 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      View case study
-                      <ArrowUpRight className="h-3.5 w-3.5" />
-                    </motion.span>
+                      <motion.span
+                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary w-fit"
+                        animate={{ x: hoveredCard === featuredProject.title ? 3 : 0 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        View case study
+                        <ArrowUpRight className="h-3.5 w-3.5" />
+                      </motion.span>
+                    </div>
                   </CardContent>
                 </div>
               </Card>
+              </Spotlight>
             </motion.div>
           </motion.div>
-        </div>
-      )}
+        )}
 
-      {/* Other Projects */}
-      <div className="grid md:grid-cols-2 gap-5">
-        {otherProjects.map((project, i) => (
-          <motion.div
-            key={project.title}
-            custom={i + 1}
-            initial="hidden"
-            animate="visible"
-            variants={cardVariants}
-          >
-            <motion.div
-              onHoverStart={() => setHoveredCard(project.title)}
-              onHoverEnd={() => setHoveredCard(null)}
-              whileHover={{ y: -4 }}
-              transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-              className="h-full"
-            >
-              <Card
-                className="h-full border-border group overflow-hidden cursor-pointer flex flex-col py-0 rounded-xl relative"
-                style={{
-                  transition: "box-shadow 0.35s ease, border-color 0.35s ease",
-                  boxShadow: hoveredCard === project.title
-                    ? "0 0 0 1px rgba(74,123,247,0.25), 0 8px 28px rgba(74,123,247,0.1), 0 2px 8px rgba(0,0,0,0.25)"
-                    : "0 1px 4px rgba(0,0,0,0.12)",
-                  borderColor: hoveredCard === project.title ? "rgba(74,123,247,0.25)" : undefined,
-                }}
-                onClick={() => handleProjectClick(project)}
+        {/* Other Projects */}
+        <div className="grid md:grid-cols-2 gap-6">
+          {otherProjects.map((project, i) => {
+            const numeral = String(i + 2).padStart(2, "0")
+            return (
+              <motion.div
+                key={project.title}
+                custom={i + 1}
+                initial="hidden"
+                animate="visible"
+                variants={cardVariants}
               >
-                {/* Shimmer top line */}
-                <div
-                  className="absolute top-0 left-0 right-0 h-[1px] z-10"
-                  style={{
-                    background: "linear-gradient(90deg, transparent, rgba(74,123,247,0.6), transparent)",
-                    opacity: hoveredCard === project.title ? 1 : 0,
-                    transition: "opacity 0.3s ease",
-                  }}
-                />
-
-                <div className="h-[180px] relative overflow-hidden bg-muted/60 border-b border-border/60">
-                  <Image
-                    src={project.imagePath || "/placeholder.svg"}
-                    alt={project.title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    className="object-contain object-center transition-transform duration-500 group-hover:scale-[1.03]"
-                  />
-                  {/* Subtle gradient overlay */}
-                  <div
-                    className="absolute inset-0 transition-opacity duration-300"
+                <motion.div
+                  onHoverStart={() => setHoveredCard(project.title)}
+                  onHoverEnd={() => setHoveredCard(null)}
+                  whileHover={{ y: -4 }}
+                  transition={{ duration: 0.3, ease }}
+                  className="h-full"
+                >
+                  <Spotlight size={320} color="74, 123, 247" intensity={0.11} className="rounded-2xl h-full">
+                  <Card
+                    className="h-full border-border group overflow-hidden cursor-pointer flex flex-col py-0 rounded-2xl relative"
                     style={{
-                      background: "linear-gradient(to bottom, transparent 50%, rgba(74,123,247,0.04))",
-                      opacity: hoveredCard === project.title ? 1 : 0,
+                      transition: "box-shadow 0.4s ease, border-color 0.4s ease",
+                      boxShadow: hoveredCard === project.title
+                        ? "0 0 0 1px rgba(74,123,247,0.25), 0 12px 36px rgba(74,123,247,0.12), 0 2px 8px rgba(0,0,0,0.3)"
+                        : "0 1px 6px rgba(0,0,0,0.15)",
+                      borderColor: hoveredCard === project.title ? "rgba(74,123,247,0.25)" : undefined,
                     }}
-                  />
-                </div>
-
-                <CardContent className="p-5 flex flex-col flex-1">
-                  {project.role && project.context && project.year && (
-                    <p className="text-[10px] font-mono uppercase tracking-wide text-muted-foreground mb-2">
-                      role: {project.role} · {project.year}
-                    </p>
-                  )}
-
-                  <h3
-                    className="text-base font-bold mb-2 transition-colors duration-200 line-clamp-2"
-                    style={{ color: hoveredCard === project.title ? "rgb(74,123,247)" : "rgb(248,250,252)" }}
+                    onClick={() => handleProjectClick(project)}
                   >
-                    {project.title}
-                  </h3>
+                    <div
+                      className="absolute top-0 left-0 right-0 h-[1px] z-10"
+                      style={{
+                        background: "linear-gradient(90deg, transparent, rgba(74,123,247,0.6), transparent)",
+                        opacity: hoveredCard === project.title ? 1 : 0,
+                        transition: "opacity 0.3s ease",
+                      }}
+                    />
 
-                  <div className="flex flex-wrap gap-1.5 mb-3">
-                    {project.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-2 py-0.5 rounded-full bg-muted/60 text-[10px] font-mono text-muted-foreground leading-none whitespace-nowrap"
+                    <div className="h-[170px] relative overflow-hidden bg-muted/60 border-b border-border/60">
+                      <Image
+                        src={project.imagePath || "/placeholder.svg"}
+                        alt={project.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.04]"
+                      />
+                      {/* Project numeral overlay */}
+                      <div
+                        aria-hidden="true"
+                        className="absolute bottom-2 left-3 marquee-num select-none"
+                        style={{ fontSize: "clamp(2.75rem, 4.5vw, 4.5rem)", opacity: 0.65 }}
                       >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
+                        {numeral}
+                      </div>
+                      <div
+                        className="absolute inset-0 transition-opacity duration-500 pointer-events-none"
+                        style={{
+                          background: "linear-gradient(to bottom, transparent 50%, rgba(74,123,247,0.05))",
+                          opacity: hoveredCard === project.title ? 1 : 0,
+                        }}
+                      />
+                    </div>
 
-                  <p className="text-muted-foreground text-sm leading-relaxed line-clamp-2 mb-4">{project.hook}</p>
+                    <CardContent className="p-6 flex flex-col flex-1 gap-3">
+                      <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-slate-500">
+                        {project.role} · {project.year}
+                      </p>
 
-                  <motion.span
-                    className="mt-auto inline-flex items-center gap-1.5 text-xs font-semibold text-primary w-fit"
-                    animate={{ x: hoveredCard === project.title ? 3 : 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    View case
-                    <ArrowUpRight className="h-3.5 w-3.5" />
-                  </motion.span>
-                </CardContent>
-              </Card>
-            </motion.div>
-          </motion.div>
-        ))}
+                      <h3
+                        className="display-md text-slate-50 transition-colors duration-300 line-clamp-2 leading-[1.08]"
+                        style={{
+                          fontSize: "1.375rem",
+                          color: hoveredCard === project.title ? "rgb(147, 197, 253)" : undefined,
+                        }}
+                      >
+                        {project.title.split(" – ")[0]}
+                      </h3>
+
+                      <p className="text-muted-foreground text-sm leading-relaxed line-clamp-2">{project.hook}</p>
+
+                      <div className="flex flex-wrap gap-x-3 gap-y-1 text-[10px] font-mono uppercase tracking-[0.16em] text-slate-500 mt-auto pt-3 border-t border-white/5">
+                        {project.tags.map((tag, idx) => (
+                          <span key={tag} className="inline-flex items-center gap-2">
+                            {idx > 0 && <span className="text-slate-700">·</span>}
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+
+                      <motion.span
+                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary w-fit"
+                        animate={{ x: hoveredCard === project.title ? 3 : 0 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        View case
+                        <ArrowUpRight className="h-3.5 w-3.5" />
+                      </motion.span>
+                    </CardContent>
+                  </Card>
+                  </Spotlight>
+                </motion.div>
+              </motion.div>
+            )
+          })}
+        </div>
       </div>
-
     </SectionWrapper>
   )
 }

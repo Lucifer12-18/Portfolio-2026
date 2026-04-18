@@ -228,7 +228,7 @@ export default function HirelloInterviewPage() {
                           an action.
                         </P>
 
-                        <List spacing="loose" marker="numbered">
+                        <List spacing="loose">
                           <ListItem marker="numbered">
                             <div>
                               <span className="font-medium text-foreground">Issue identified</span>

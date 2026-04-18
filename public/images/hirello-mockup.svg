@@ -1,0 +1,129 @@
+<svg width="850" height="380" viewBox="0 0 850 380" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="bgDots" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+      <circle cx="10" cy="10" r="0.6" fill="rgba(255,255,255,0.025)"/>
+    </pattern>
+    <linearGradient id="accentBar" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="rgba(74,123,247,0.8)"/>
+      <stop offset="100%" stop-color="rgba(74,123,247,0.2)"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="850" height="380" fill="#070e1c"/>
+  <rect width="850" height="380" fill="url(#bgDots)"/>
+
+  <!-- ===== LEFT PANEL: Networking Pipeline ===== -->
+  <rect x="20" y="20" width="380" height="340" rx="8" fill="#0b1322" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+
+  <!-- Panel header -->
+  <rect x="20" y="20" width="380" height="36" rx="8" fill="#0d1629" stroke="rgba(255,255,255,0.07)" stroke-width="0"/>
+  <rect x="20" y="44" width="380" height="12" rx="0" fill="#0d1629"/>
+  <text x="36" y="43" font-family="monospace" font-size="9" fill="#475569" letter-spacing="1">MY NETWORK</text>
+  <text x="360" y="43" text-anchor="end" font-family="monospace" font-size="9" fill="#22d3ee">● 24 contacts</text>
+  <line x1="20" y1="56" x2="400" y2="56" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+
+  <!-- Pipeline health summary sentence -->
+  <rect x="30" y="63" width="360" height="24" rx="5" fill="rgba(74,123,247,0.08)" stroke="rgba(74,123,247,0.2)" stroke-width="1"/>
+  <text x="40" y="79" font-family="-apple-system,sans-serif" font-size="10" fill="#4a7bf7">3 contacts haven&apos;t heard from you in 2 weeks →</text>
+
+  <!-- Contact rows -->
+  <!-- Contact 1: warm -->
+  <rect x="30" y="96" width="360" height="44" rx="5" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+  <circle cx="50" cy="118" r="12" fill="#1a2840" stroke="rgba(74,123,247,0.3)" stroke-width="1"/>
+  <text x="50" y="122" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="10" fill="#4a7bf7" font-weight="600">JD</text>
+  <text x="70" y="113" font-family="-apple-system,sans-serif" font-size="11" fill="#e2e8f0" font-weight="500">Jamie D.</text>
+  <text x="70" y="127" font-family="-apple-system,sans-serif" font-size="10" fill="#475569">Product Lead @ Stripe</text>
+  <rect x="300" y="109" width="74" height="18" rx="4" fill="rgba(249,115,98,0.1)" stroke="rgba(249,115,98,0.3)" stroke-width="1"/>
+  <text x="337" y="121" text-anchor="middle" font-family="monospace" font-size="8" fill="#f97362">follow up</text>
+
+  <!-- Contact 2 -->
+  <rect x="30" y="148" width="360" height="44" rx="5" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+  <circle cx="50" cy="170" r="12" fill="#1a2840" stroke="rgba(167,139,250,0.3)" stroke-width="1"/>
+  <text x="50" y="174" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="10" fill="#a78bfa" font-weight="600">SR</text>
+  <text x="70" y="165" font-family="-apple-system,sans-serif" font-size="11" fill="#e2e8f0" font-weight="500">Sarah R.</text>
+  <text x="70" y="179" font-family="-apple-system,sans-serif" font-size="10" fill="#475569">EM @ Figma · responded</text>
+  <rect x="300" y="161" width="74" height="18" rx="4" fill="rgba(34,211,238,0.08)" stroke="rgba(34,211,238,0.2)" stroke-width="1"/>
+  <text x="337" y="173" text-anchor="middle" font-family="monospace" font-size="8" fill="#22d3ee">warm</text>
+
+  <!-- Contact 3 -->
+  <rect x="30" y="200" width="360" height="44" rx="5" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+  <circle cx="50" cy="222" r="12" fill="#1a2840" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+  <text x="50" y="226" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="10" fill="#64748b" font-weight="600">TK</text>
+  <text x="70" y="217" font-family="-apple-system,sans-serif" font-size="11" fill="#94a3b8" font-weight="500">Tom K.</text>
+  <text x="70" y="231" font-family="-apple-system,sans-serif" font-size="10" fill="#334155">Designer @ Notion</text>
+  <rect x="300" y="213" width="74" height="18" rx="4" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+  <text x="337" y="225" text-anchor="middle" font-family="monospace" font-size="8" fill="#475569">cold</text>
+
+  <!-- Contact 4 -->
+  <rect x="30" y="252" width="360" height="44" rx="5" fill="rgba(255,255,255,0.015)" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+  <circle cx="50" cy="274" r="12" fill="#1a2840" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+  <text x="50" y="278" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="10" fill="#334155" font-weight="600">AM</text>
+  <text x="70" y="269" font-family="-apple-system,sans-serif" font-size="11" fill="#64748b" font-weight="500">Alex M.</text>
+  <text x="70" y="283" font-family="-apple-system,sans-serif" font-size="10" fill="#2d3f57">Engineer @ Linear</text>
+  <rect x="300" y="265" width="74" height="18" rx="4" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <text x="337" y="277" text-anchor="middle" font-family="monospace" font-size="8" fill="#334155">cold</text>
+
+  <!-- Pipeline stages footer -->
+  <line x1="30" y1="312" x2="390" y2="312" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+  <text x="36" y="328" font-family="monospace" font-size="8" fill="#1e3350" letter-spacing="1">IDENTIFIED → REACHED OUT → WAITING → RESPONDED → FOLLOWING UP</text>
+
+  <!-- ===== RIGHT PANEL: Interview Feedback ===== -->
+  <rect x="420" y="20" width="410" height="340" rx="8" fill="#0b1322" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+
+  <!-- Feedback header -->
+  <rect x="420" y="20" width="410" height="36" rx="8" fill="#0d1629" stroke="rgba(255,255,255,0.07)" stroke-width="0"/>
+  <rect x="420" y="44" width="410" height="12" rx="0" fill="#0d1629"/>
+  <text x="436" y="43" font-family="monospace" font-size="9" fill="#475569" letter-spacing="1">INTERVIEW GYM · LAST SESSION</text>
+  <text x="820" y="43" text-anchor="end" font-family="monospace" font-size="9" fill="#a78bfa">Product Designer Role</text>
+  <line x1="420" y1="56" x2="830" y2="56" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+
+  <!-- Priority feedback (top signal) -->
+  <rect x="430" y="63" width="390" height="50" rx="6" fill="rgba(167,139,250,0.06)" stroke="rgba(167,139,250,0.2)" stroke-width="1"/>
+  <text x="446" y="80" font-family="monospace" font-size="8" fill="#a78bfa" letter-spacing="1">PRIORITY SIGNAL</text>
+  <text x="446" y="98" font-family="-apple-system,sans-serif" font-size="12" fill="#e2e8f0" font-weight="500">Your answer had 1 concrete example — expected 3–4.</text>
+  <!-- Dots -->
+  <circle cx="446" cy="107" r="3.5" fill="#a78bfa"/>
+  <circle cx="457" cy="107" r="3.5" fill="transparent" stroke="#2d3a55" stroke-width="1.5"/>
+  <circle cx="468" cy="107" r="3.5" fill="transparent" stroke="#2d3a55" stroke-width="1.5"/>
+
+  <!-- 4 metric cards -->
+  <text x="436" y="135" font-family="monospace" font-size="8" fill="#1e3350" letter-spacing="1.5">MEASUREMENTS</text>
+
+  <!-- STAR -->
+  <rect x="430" y="142" width="90" height="52" rx="5" fill="#0d1629" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <text x="440" y="158" font-family="monospace" font-size="8" fill="#334155" letter-spacing="1">STAR</text>
+  <text x="440" y="175" font-family="-apple-system,sans-serif" font-size="16" fill="#e2e8f0" font-weight="700">2/4</text>
+  <text x="440" y="187" font-family="monospace" font-size="8" fill="#1e3350">S ✓  T ✗  A ✓  R ✗</text>
+
+  <!-- Examples -->
+  <rect x="530" y="142" width="90" height="52" rx="5" fill="#0d1629" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <text x="540" y="158" font-family="monospace" font-size="8" fill="#334155" letter-spacing="1">EXAMPLES</text>
+  <text x="540" y="175" font-family="-apple-system,sans-serif" font-size="16" fill="#e2e8f0" font-weight="700">1/4</text>
+  <text x="540" y="187" font-family="monospace" font-size="8" fill="#1e3350">expected: 3–4</text>
+
+  <!-- WPM -->
+  <rect x="630" y="142" width="90" height="52" rx="5" fill="#0d1629" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <text x="640" y="158" font-family="monospace" font-size="8" fill="#334155" letter-spacing="1">PACING</text>
+  <text x="640" y="175" font-family="-apple-system,sans-serif" font-size="16" fill="#f97362" font-weight="700">187</text>
+  <text x="640" y="187" font-family="monospace" font-size="8" fill="#1e3350">target: 130–160</text>
+
+  <!-- Fillers -->
+  <rect x="730" y="142" width="90" height="52" rx="5" fill="#0d1629" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <text x="740" y="158" font-family="monospace" font-size="8" fill="#334155" letter-spacing="1">FILLERS</text>
+  <text x="740" y="175" font-family="-apple-system,sans-serif" font-size="16" fill="#e2e8f0" font-weight="700">9</text>
+  <text x="740" y="187" font-family="monospace" font-size="8" fill="#1e3350">um, like, so</text>
+
+  <!-- Answer transcript preview -->
+  <rect x="430" y="205" width="390" height="80" rx="5" fill="rgba(255,255,255,0.015)" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+  <text x="440" y="220" font-family="monospace" font-size="8" fill="#1e3350" letter-spacing="1">ANSWER TRANSCRIPT</text>
+  <line x1="430" y1="226" x2="820" y2="226" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+  <text x="440" y="242" font-family="-apple-system,sans-serif" font-size="10" fill="#334155" font-style="italic">&quot;In my last role, I um, worked on a design project where... like... I had to coordinate</text>
+  <text x="440" y="256" font-family="-apple-system,sans-serif" font-size="10" fill="#334155" font-style="italic">with a team. So the outcome was, I think, pretty good. People were happy with it.&quot;</text>
+  <!-- Highlighted problem words -->
+  <rect x="472" y="237" width="18" height="11" rx="2" fill="rgba(249,115,98,0.2)" stroke="rgba(249,115,98,0.3)" stroke-width="0.5"/>
+  <rect x="521" y="237" width="16" height="11" rx="2" fill="rgba(249,115,98,0.2)" stroke="rgba(249,115,98,0.3)" stroke-width="0.5"/>
+
+  <!-- Retry button -->
+  <rect x="430" y="296" width="130" height="32" rx="6" fill="rgba(167,139,250,0.1)" stroke="rgba(167,139,250,0.35)" stroke-width="1"/>
+  <text x="495" y="316" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="11" fill="#a78bfa" font-weight="500">Try again → fix examples</text>
+</svg>

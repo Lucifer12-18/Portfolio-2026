@@ -1,0 +1,63 @@
+<svg width="600" height="220" viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sentLine" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="rgba(249,115,98,0.0)"/>
+      <stop offset="10%" stop-color="rgba(249,115,98,0.5)"/>
+      <stop offset="90%" stop-color="rgba(249,115,98,0.5)"/>
+      <stop offset="100%" stop-color="rgba(249,115,98,0.0)"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="220" fill="#060d1a"/>
+
+  <!-- The sentence line (narrator) -->
+  <rect x="30" y="50" width="540" height="28" rx="5" fill="rgba(249,115,98,0.07)" stroke="rgba(249,115,98,0.25)" stroke-width="1"/>
+  <text x="300" y="68" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="11" fill="#f97362">3 contacts haven&apos;t heard from you in 2 weeks →</text>
+
+  <!-- Arrow down to pipeline -->
+  <line x1="300" y1="78" x2="300" y2="96" stroke="rgba(249,115,98,0.3)" stroke-width="1"/>
+  <polygon points="300,96 296,90 304,90" fill="rgba(249,115,98,0.4)"/>
+
+  <!-- Pipeline stages -->
+  <!-- Stage 1 -->
+  <rect x="30" y="100" width="82" height="36" rx="4" fill="#0d1629" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+  <text x="71" y="115" text-anchor="middle" font-family="monospace" font-size="7" fill="#334155">01</text>
+  <text x="71" y="128" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="#475569">Identified</text>
+  <!-- Arrow -->
+  <text x="118" y="121" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="10" fill="#1e2d44">→</text>
+  <!-- Stage 2 -->
+  <rect x="122" y="100" width="82" height="36" rx="4" fill="#0d1629" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+  <text x="163" y="115" text-anchor="middle" font-family="monospace" font-size="7" fill="#334155">02</text>
+  <text x="163" y="128" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="#475569">Reached Out</text>
+  <!-- Arrow -->
+  <text x="210" y="121" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="10" fill="#1e2d44">→</text>
+  <!-- Stage 3: highlighted (3 waiting) -->
+  <rect x="214" y="100" width="82" height="36" rx="4" fill="#0d1629" stroke="rgba(249,115,98,0.4)" stroke-width="1"/>
+  <text x="255" y="115" text-anchor="middle" font-family="monospace" font-size="7" fill="#f97362">03</text>
+  <text x="255" y="128" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="#f97362">Waiting ×3</text>
+  <!-- Arrow -->
+  <text x="302" y="121" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="10" fill="#1e2d44">→</text>
+  <!-- Stage 4 -->
+  <rect x="306" y="100" width="82" height="36" rx="4" fill="#0d1629" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+  <text x="347" y="115" text-anchor="middle" font-family="monospace" font-size="7" fill="#334155">04</text>
+  <text x="347" y="128" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="#475569">Responded</text>
+  <!-- Arrow -->
+  <text x="394" y="121" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="10" fill="#1e2d44">→</text>
+  <!-- Stage 5 -->
+  <rect x="398" y="100" width="82" height="36" rx="4" fill="#0d1629" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+  <text x="439" y="115" text-anchor="middle" font-family="monospace" font-size="7" fill="#334155">05</text>
+  <text x="439" y="128" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="#475569">Following Up</text>
+  <!-- Arrow -->
+  <text x="486" y="121" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="10" fill="#1e2d44">→</text>
+  <!-- Stage 6 -->
+  <rect x="490" y="100" width="82" height="36" rx="4" fill="#0d1629" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+  <text x="531" y="115" text-anchor="middle" font-family="monospace" font-size="7" fill="#334155">06</text>
+  <text x="531" y="128" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="#475569">Offer Stage</text>
+
+  <!-- Impact label -->
+  <text x="300" y="175" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="10" fill="#2d3a4d">40 min fix · day-2 retention recovered · same pipeline</text>
+
+  <!-- Top accent -->
+  <rect x="0" y="0" width="600" height="2" rx="1" fill="rgba(249,115,98,0.4)"/>
+
+  <text x="300" y="200" text-anchor="middle" font-family="monospace" font-size="8" fill="#1e2d44" letter-spacing="2">STRUCTURE IS NOT THE STORY</text>
+</svg>

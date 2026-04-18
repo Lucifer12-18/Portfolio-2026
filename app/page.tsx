@@ -21,6 +21,8 @@ import { ReadingStoreProvider, useReadingStore } from "@/contexts/reading-store-
 import { CHAPTERS } from "@/lib/chapters-config"
 import { ModalProvider, useModal } from "@/contexts/modal-context"
 import { ProjectModal } from "@/components/project-modal"
+import { CursorEffect } from "@/components/cursor-effect"
+import { FilmGrain } from "@/components/film-grain"
 import { formationWatchRef } from "@/lib/formation-state"
 
 // ── CRT module IDs shown during transition ────────────────────────────────────
@@ -501,6 +503,12 @@ export default function Home() {
 
             {/* Modal rendered at page-level, OUTSIDE the perspective container */}
             <PageLevelModal />
+
+            {/* Custom cursor — always on top, chapter-color reactive */}
+            <CursorEffect />
+
+            {/* Cinematic film grain — sits above scene, below cursor */}
+            <FilmGrain />
           </ModalProvider>
         </ViewModeProvider>
       </ReadingStoreProvider>

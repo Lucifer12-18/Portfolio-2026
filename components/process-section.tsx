@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
-import { ModuleBadge } from "@/components/module-badge"
 import { SectionWrapper } from "@/components/section-wrapper"
 import { Ear, Map, PenTool, Rocket } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
@@ -74,46 +73,70 @@ export function ProcessSection() {
 
   return (
     <SectionWrapper id="chapter-3" windowTitle="METHOD · THE DESIGN RHYTHM" moduleLabel="METHOD · THE DESIGN RHYTHM">
-      <ModuleBadge module="03" label="METHOD" />
+      {/* Decorative chapter numeral */}
+      <div aria-hidden="true" className="absolute top-4 right-6 md:right-10 marquee-num select-none">
+        03
+      </div>
 
-      <h2 className="text-3xl md:text-4xl font-semibold text-foreground mb-4">The Design Rhythm</h2>
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        className="relative space-y-5 max-w-3xl mb-8"
+      >
+        <span className="eyebrow">Chapter 03 · Method · The Design Rhythm</span>
 
-      {viewMode === "recruiter" && (
-        <div className="flex flex-col gap-2 p-4 bg-primary/5 rounded-xl border border-primary/10 mb-6 max-w-lg">
-          <span className="text-xs font-mono text-primary uppercase tracking-wide">Quick Summary</span>
-          <ul className="space-y-1.5">
-            {processContent.recruiter.bullets.map((bullet, i) => (
-              <li key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
-                <span className="h-1.5 w-1.5 rounded-full bg-primary flex-shrink-0" />
-                {bullet}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+        <motion.h2
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+          className="display-lg text-slate-50"
+        >
+          The design{" "}
+          <em
+            className="not-italic"
+            style={{
+              background: "linear-gradient(135deg, #fbbf24 0%, #f97316 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}
+          >
+            rhythm.
+          </em>
+        </motion.h2>
 
-      <div className="max-w-2xl mb-6">
-        <p className="text-muted-foreground leading-relaxed mb-2">
-          Most of my work follows a structured loop.
+        {viewMode === "recruiter" && (
+          <div className="flex flex-col gap-2 p-4 bg-primary/5 rounded-xl border border-primary/10 max-w-lg">
+            <span className="eyebrow" style={{ color: "rgba(74, 123, 247, 0.9)" }}>
+              Quick Summary
+            </span>
+            <ul className="space-y-1.5 mt-2">
+              {processContent.recruiter.bullets.map((bullet, i) => (
+                <li key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary flex-shrink-0" />
+                  {bullet}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <p className="lede">
+          Most of my work follows a structured loop. Not because design is linear —
+          but because complex systems require discipline.
         </p>
-        <p className="text-muted-foreground leading-relaxed mb-4">
-          Not because design is linear - but because complex systems require discipline.
-        </p>
+
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.4 }}
-          className="border-l-2 border-primary/30 bg-primary/5 pl-4 py-2.5 pr-4 rounded-r-md text-base font-medium tracking-wide leading-snug text-foreground/90"
+          transition={{ duration: 0.4, delay: 0.2 }}
+          className="pull-quote"
+          style={{ borderLeftColor: "rgba(251, 191, 36, 0.6)" }}
         >
-          Understand the system.
-          <br />
-          Map the constraints.
-          <br />
-          Prototype with intent.
-          <br />
-          Ship, measure, refine.
+          Understand the system. Map the constraints. Prototype with intent. Ship, measure, refine.
         </motion.div>
-      </div>
+      </motion.div>
 
       {/* Desktop/Tablet: Interactive Pipeline */}
       <div className="hidden md:block">

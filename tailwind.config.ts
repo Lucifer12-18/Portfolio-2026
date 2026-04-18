@@ -18,7 +18,7 @@
 import type { Config } from "tailwindcss"
 
 const config: Config = {
-  darkMode: ["class"],
+  darkMode: "class",
   content: [
     "./app/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
@@ -107,9 +107,10 @@ const config: Config = {
 
       // ─── Font families ────────────────────────────────────────────────────
       fontFamily: {
-        sans:    ["Inter", "system-ui", "sans-serif"],
-        mono:    ["JetBrains Mono", "monospace"],
-        display: ["'Press Start 2P'", "monospace"],
+        sans:    ["var(--font-sans)", "DM Sans", "system-ui", "sans-serif"],
+        mono:    ["var(--font-mono)", "JetBrains Mono", "monospace"],
+        display: ["var(--font-display)", "Syne", "system-ui", "sans-serif"],
+        pixel:   ["var(--font-pixel)", "'Press Start 2P'", "monospace"],
       },
 
       // ─── Max widths ───────────────────────────────────────────────────────

@@ -1,0 +1,53 @@
+<svg width="600" height="220" viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="stepGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="rgba(56,189,248,0.2)"/>
+      <stop offset="100%" stop-color="rgba(56,189,248,0.04)"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="220" fill="#060d1a"/>
+
+  <!-- Title: 3 second wait -->
+  <text x="300" y="30" text-anchor="middle" font-family="monospace" font-size="9" fill="#1e3a5f" letter-spacing="2">THE 3-SECOND WAIT · TWO VERSIONS</text>
+
+  <!-- Timeline axis -->
+  <line x1="40" y1="60" x2="560" y2="60" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <text x="40" y="54" font-family="monospace" font-size="8" fill="#1e2d44">0s</text>
+  <text x="293" y="54" font-family="monospace" font-size="8" fill="#1e2d44">1.5s</text>
+  <text x="543" y="54" font-family="monospace" font-size="8" fill="#1e2d44">3s</text>
+
+  <!-- Row 1: Spinner (bad) -->
+  <text x="40" y="82" font-family="monospace" font-size="8" fill="#2d3a4d" letter-spacing="1">SPINNER</text>
+
+  <!-- Just a spinner for the whole wait -->
+  <rect x="40" y="88" width="510" height="40" rx="5" fill="#0d1629" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+  <text x="295" y="113" text-anchor="middle" font-family="monospace" font-size="11" fill="#1e2d44">⟳  loading...</text>
+  <!-- User thought bubbles -->
+  <text x="150" y="145" font-family="-apple-system,sans-serif" font-size="9" fill="#1e3350" font-style="italic">is it broken?</text>
+  <text x="300" y="145" font-family="-apple-system,sans-serif" font-size="9" fill="#1a2a40" font-style="italic">should I refresh?</text>
+  <text x="460" y="145" font-family="-apple-system,sans-serif" font-size="9" fill="#151f30" font-style="italic">already gone</text>
+
+  <!-- Divider -->
+  <line x1="20" y1="158" x2="580" y2="158" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+
+  <!-- Row 2: Labeled steps (good) -->
+  <text x="40" y="174" font-family="monospace" font-size="8" fill="#38bdf8" letter-spacing="1">LABELED</text>
+
+  <!-- Step 1 -->
+  <rect x="40" y="180" width="158" height="30" rx="4" fill="url(#stepGrad)" stroke="rgba(56,189,248,0.3)" stroke-width="1"/>
+  <text x="119" y="199" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="10" fill="#94a3b8">Reading your response...</text>
+  <circle cx="57" cy="195" r="3" fill="#38bdf8"/>
+
+  <!-- Step 2 -->
+  <rect x="206" y="180" width="188" height="30" rx="4" fill="rgba(56,189,248,0.04)" stroke="rgba(56,189,248,0.15)" stroke-width="1"/>
+  <text x="300" y="199" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="10" fill="#64748b">Checking STAR structure...</text>
+  <circle cx="223" cy="195" r="3" fill="rgba(56,189,248,0.3)"/>
+
+  <!-- Step 3 -->
+  <rect x="402" y="180" width="148" height="30" rx="4" fill="rgba(56,189,248,0.02)" stroke="rgba(56,189,248,0.08)" stroke-width="1"/>
+  <text x="476" y="199" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="10" fill="#475569">Calculating pacing...</text>
+  <circle cx="419" cy="195" r="3" fill="rgba(56,189,248,0.15)"/>
+
+  <!-- Top accent -->
+  <rect x="0" y="0" width="600" height="2" rx="1" fill="rgba(56,189,248,0.4)"/>
+</svg>

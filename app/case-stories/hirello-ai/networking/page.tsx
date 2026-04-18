@@ -177,7 +177,7 @@ export default function HirelloNetworkingPage() {
 
                         <Lead>"Cold outreach should feel guided, not overwhelming."</Lead>
 
-                        <List spacing="loose" marker="numbered" className="max-w-lg">
+                        <List spacing="loose" className="max-w-lg">
                           <ListItem marker="numbered">
                             <div>
                               <span className="font-medium text-foreground">Select contacts</span>

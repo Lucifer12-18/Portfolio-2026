@@ -1,0 +1,47 @@
+<svg width="600" height="220" viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="pathLeft" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="rgba(167,139,250,0.6)"/>
+      <stop offset="100%" stop-color="rgba(167,139,250,0.0)"/>
+    </linearGradient>
+    <linearGradient id="pathRight" x1="1" y1="0" x2="0" y2="0">
+      <stop offset="0%" stop-color="rgba(74,123,247,0.6)"/>
+      <stop offset="100%" stop-color="rgba(74,123,247,0.0)"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="220" fill="#060d1a"/>
+
+  <!-- Left path: Engineering -->
+  <path d="M 20 110 Q 140 50 300 110" fill="none" stroke="url(#pathLeft)" stroke-width="2"/>
+  <!-- Left side code-like elements -->
+  <text x="30" y="80" font-family="monospace" font-size="9" fill="rgba(167,139,250,0.5)">{system}</text>
+  <text x="30" y="94" font-family="monospace" font-size="9" fill="rgba(167,139,250,0.4)">data.flow()</text>
+  <text x="30" y="108" font-family="monospace" font-size="9" fill="rgba(167,139,250,0.3)">constraints</text>
+  <text x="30" y="122" font-family="monospace" font-size="9" fill="rgba(167,139,250,0.2)">latency: 2ms</text>
+  <text x="20" y="148" font-family="-apple-system,sans-serif" font-size="10" fill="#a78bfa" font-weight="500">Engineering</text>
+
+  <!-- Right path: UX -->
+  <path d="M 580 110 Q 460 50 300 110" fill="none" stroke="url(#pathRight)" stroke-width="2"/>
+  <!-- Right side design elements -->
+  <text x="480" y="80" font-family="-apple-system,sans-serif" font-size="9" fill="rgba(74,123,247,0.5)">mental model</text>
+  <text x="490" y="94" font-family="-apple-system,sans-serif" font-size="9" fill="rgba(74,123,247,0.4)">user goals</text>
+  <text x="495" y="108" font-family="-apple-system,sans-serif" font-size="9" fill="rgba(74,123,247,0.3)">friction pts</text>
+  <text x="492" y="122" font-family="-apple-system,sans-serif" font-size="9" fill="rgba(74,123,247,0.2)">flows</text>
+  <text x="472" y="148" font-family="-apple-system,sans-serif" font-size="10" fill="#4a7bf7" font-weight="500">UX Design</text>
+
+  <!-- Center meeting point -->
+  <circle cx="300" cy="110" r="22" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+  <circle cx="300" cy="110" r="10" fill="rgba(255,255,255,0.06)"/>
+  <text x="300" y="107" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#94a3b8">where</text>
+  <text x="300" y="118" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#e2e8f0" font-weight="600">I work</text>
+
+  <!-- Bottom paths diverge toward label -->
+  <path d="M 300 132 Q 200 170 100 175" fill="none" stroke="rgba(167,139,250,0.15)" stroke-width="1" stroke-dasharray="3,3"/>
+  <path d="M 300 132 Q 400 170 500 175" fill="none" stroke="rgba(74,123,247,0.15)" stroke-width="1" stroke-dasharray="3,3"/>
+
+  <!-- Top accent -->
+  <rect x="0" y="0" width="600" height="2" rx="1" fill="rgba(167,139,250,0.4)"/>
+
+  <!-- Bottom caption -->
+  <text x="300" y="200" text-anchor="middle" font-family="monospace" font-size="8" fill="#1e2d44" letter-spacing="2">TWO LANGUAGES · ONE PROBLEM</text>
+</svg>

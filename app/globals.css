@@ -3,10 +3,11 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Font variables - Press Start 2P is loaded via next/font in layout.tsx */
+/* Font variables — loaded via next/font in layout.tsx */
 :root {
-  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-    "Inter", "Segoe UI", sans-serif;
+  --font-sans: var(--font-sans, "DM Sans", system-ui, sans-serif);
+  --font-display: var(--font-display, "Syne", system-ui, sans-serif);
+  --font-mono: var(--font-mono, "JetBrains Mono", monospace);
 }
 
 body {
@@ -86,6 +87,8 @@ body {
 
 @theme inline {
   --font-sans: var(--font-sans);
+  --font-display: var(--font-display);
+  --font-mono: var(--font-mono);
   --font-pixel: var(--font-pixel);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -147,6 +150,244 @@ html {
   }
 }
 
+/* ── Typography system ──────────────────────────────────────────────────── */
+
+/* Display headings use Syne — cinematic, editorial */
+h1, h2, h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+h2 {
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+h3 {
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+/* Body text — DM Sans with comfortable reading rhythm */
+p, li, blockquote {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  line-height: 1.75;
+}
+
+/* Monospace system labels — JetBrains Mono */
+.font-mono, code, pre, kbd {
+  font-family: var(--font-mono);
+}
+
+/* ── Editorial type scale — cinematic display sizes ─────────────────────── */
+
+/* Massive editorial headline — section openers
+   NOTE: tuned for windowed chapter viewport (~640-840px tall). */
+.display-xl {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.5rem, 5vw, 4.25rem);
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+}
+
+/* Large display — primary section titles */
+.display-lg {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2rem, 4vw, 3.125rem);
+  line-height: 1.05;
+  letter-spacing: -0.032em;
+}
+
+/* Medium display — subsections */
+.display-md {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.5rem, 2.6vw, 2.125rem);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+}
+
+/* Eyebrow — unified kicker label above headlines */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(148, 163, 184, 0.7);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.eyebrow::before {
+  content: "";
+  display: inline-block;
+  width: 1.75rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, currentColor);
+  opacity: 0.6;
+}
+
+/* Lede — intro paragraph below a section headline */
+.lede {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: clamp(1rem, 1.2vw, 1.125rem);
+  line-height: 1.6;
+  letter-spacing: -0.005em;
+  color: rgba(203, 213, 225, 0.92);
+  max-width: 44ch;
+}
+
+/* Pull quote — editorial emphasis block */
+.pull-quote {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.35rem, 2.2vw, 1.875rem);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: rgb(226, 232, 240);
+  font-style: italic;
+  padding-left: 1.5rem;
+  border-left: 2px solid rgba(34, 211, 238, 0.5);
+  margin: 2.5rem 0;
+  max-width: 36ch;
+}
+
+/* Drop cap — first letter treatment for first paragraph of an article */
+.drop-cap::first-letter {
+  font-family: var(--font-display);
+  font-weight: 700;
+  float: left;
+  font-size: 4.5rem;
+  line-height: 0.9;
+  padding-right: 0.6rem;
+  padding-top: 0.35rem;
+  background: linear-gradient(135deg, rgb(34, 211, 238), rgb(167, 139, 250));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* Oversized decorative chapter numeral — anchors each section visually.
+   Kept subtle (low-alpha gradient) so it reads as a watermark, not content. */
+.marquee-num {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-style: italic;
+  font-size: clamp(4.5rem, 8.5vw, 7.5rem);
+  line-height: 0.8;
+  letter-spacing: -0.06em;
+  background: linear-gradient(180deg, rgba(226, 232, 240, 0.07) 0%, rgba(226, 232, 240, 0) 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+
+/* Editorial rule — thin divider with tick mark, magazine style */
+.rule-tick {
+  position: relative;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.14), rgba(255,255,255,0.02));
+  margin: 1.5rem 0;
+}
+.rule-tick::before {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  background: rgb(34, 211, 238);
+  border-radius: 50%;
+  box-shadow: 0 0 12px rgba(34, 211, 238, 0.7);
+}
+
+/* Reading column — constrained width for prose */
+.col-reading {
+  max-width: 42rem;
+}
+.col-narrow {
+  max-width: 32rem;
+}
+
+/* Editorial easing token */
+:root {
+  --ease-editorial: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-cinematic: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ── Text gradient — cyan → blue → lavender, matches chapter palette ──── */
+.text-gradient {
+  background: linear-gradient(
+    135deg,
+    rgb(34, 211, 238) 0%,
+    rgb(74, 123, 247) 45%,
+    rgb(167, 139, 250) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* Warmer gradient variant — for personal/about sections */
+.text-gradient-warm {
+  background: linear-gradient(
+    135deg,
+    rgb(147, 197, 253) 0%,
+    rgb(167, 139, 250) 50%,
+    rgb(249, 115, 98) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* ── Shimmer text — animated light sweep across gradient text ─────────── */
+@keyframes text-shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.text-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgb(34, 211, 238) 0%,
+    rgb(74, 123, 247) 30%,
+    rgb(224, 249, 255) 50%,
+    rgb(74, 123, 247) 70%,
+    rgb(167, 139, 250) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: text-shimmer 4s linear infinite;
+}
+
+/* ── Display utility — applies Syne to any element ───────────────────── */
+@utility font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
 /* Font pixel utility class */
 @utility font-pixel {
   font-family: var(--font-pixel), system-ui, sans-serif;
@@ -163,6 +404,15 @@ html {
 @keyframes grid-drift {
   0%   { background-position: 0px 0px; }
   100% { background-position: 16px 16px; }
+}
+
+/* Film grain drift — steps() gives the classic pixel-shift flicker */
+@keyframes film-grain-drift {
+  0%   { transform: translate(0, 0); }
+  25%  { transform: translate(-4%, 2%); }
+  50%  { transform: translate(3%, -3%); }
+  75%  { transform: translate(-2%, 4%); }
+  100% { transform: translate(0, 0); }
 }
 
 /* Shimmer sweep — used on card hover accents */
@@ -384,6 +634,35 @@ html {
   background: linear-gradient(90deg, transparent 0%, rgba(34, 211, 238, 0.12) 30%, rgba(167, 139, 250, 0.12) 70%, transparent 100%);
 }
 
+/* ── Cursor-follow spotlight — paints a radial wash through the wrapper ─── */
+/* Vars set by <Spotlight />: --mx, --my, --spot-size, --spot-color, --spot-intensity */
+.spotlight-root {
+  position: relative;
+  isolation: isolate;
+}
+.spotlight-root::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: radial-gradient(
+    var(--spot-size, 260px) circle at var(--mx, -9999px) var(--my, -9999px),
+    rgba(var(--spot-color, 34, 211, 238), var(--spot-intensity, 0.14)),
+    transparent 60%
+  );
+  z-index: 1;
+  transition: background 120ms ease-out;
+}
+/* Content must sit above the spotlight layer */
+.spotlight-root > * {
+  position: relative;
+  z-index: 2;
+}
+@media (prefers-reduced-motion: reduce) {
+  .spotlight-root::before { display: none; }
+}
+
 /* System log console entrance animation */
 @keyframes system-log-in {
   from {
@@ -533,30 +812,65 @@ html {
 /* Note prose — typography for individual note pages */
 .note-prose {
   color: rgb(203, 213, 225);
-  line-height: 1.75;
-  font-size: 1rem;
+  line-height: 1.8;
+  font-size: 1.0625rem;
+  font-family: var(--font-sans);
+  font-weight: 400;
 }
 
 .note-prose p {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.6rem;
   color: rgb(203, 213, 225);
+  line-height: 1.8;
+}
+
+/* Drop cap on the first paragraph of a note */
+.note-prose > p:first-of-type::first-letter {
+  font-family: var(--font-display);
+  font-weight: 700;
+  float: left;
+  font-size: 4.25rem;
+  line-height: 0.9;
+  padding: 0.35rem 0.55rem 0 0;
+  background: linear-gradient(135deg, rgb(34, 211, 238), rgb(167, 139, 250));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* Elevated blockquote — pull quote style for notes */
+.note-prose blockquote {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.375rem;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  color: rgb(226, 232, 240);
+  border-left: 2px solid rgba(34, 211, 238, 0.6);
+  padding: 0.25rem 0 0.25rem 1.4rem;
+  margin: 2.5rem 0;
+  max-width: 36ch;
 }
 
 .note-prose h2 {
-  font-size: 1.2rem;
-  font-weight: 600;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
   color: rgb(226, 232, 240);
-  margin-top: 2.5rem;
+  margin-top: 3rem;
   margin-bottom: 1rem;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.025em;
 }
 
 .note-prose h3 {
-  font-size: 1rem;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
   font-weight: 600;
   color: rgb(226, 232, 240);
   margin-top: 2rem;
   margin-bottom: 0.75rem;
+  letter-spacing: -0.015em;
 }
 
 .note-prose ul,
@@ -576,14 +890,6 @@ html {
 .note-prose li {
   margin-bottom: 0.5rem;
   color: rgb(203, 213, 225);
-}
-
-.note-prose blockquote {
-  border-left: 2px solid rgba(74, 123, 247, 0.5);
-  padding-left: 1.25rem;
-  margin: 1.75rem 0;
-  font-style: italic;
-  color: rgb(148, 163, 184);
 }
 
 .note-prose code {

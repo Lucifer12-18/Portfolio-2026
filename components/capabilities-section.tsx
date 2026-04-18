@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { ModuleBadge } from "@/components/module-badge"
 import { SectionWrapper } from "@/components/section-wrapper"
 import { Layers, Search, Cpu } from "lucide-react"
 import { motion } from "framer-motion"
@@ -199,16 +198,48 @@ export function CapabilitiesSection() {
       windowTitle="SHIFT · FROM LOGIC TO EXPERIENCE"
       moduleLabel="SHIFT · FROM LOGIC TO EXPERIENCE"
     >
-      <div className="flex flex-col h-full gap-4">
-        <ModuleBadge module="02" label="SHIFT" />
+      {/* Decorative chapter numeral */}
+      <div aria-hidden="true" className="absolute top-4 right-6 md:right-10 marquee-num select-none">
+        02
+      </div>
 
-        <div className="text-center mb-4">
-          <h2 className="text-2xl md:text-3xl font-semibold text-foreground mb-3">From Logic to Experience</h2>
+      <div className="relative flex flex-col h-full gap-6">
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="text-center max-w-3xl mx-auto space-y-5"
+        >
+          <span className="eyebrow">Chapter 02 · Shift · From Logic to Experience</span>
+
+          <motion.h2
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+            className="display-lg text-slate-50"
+          >
+            From logic{" "}
+            <span
+              className="font-mono inline-block"
+              style={{
+                background: "linear-gradient(90deg, #4a7bf7 0%, #22d3ee 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                fontStyle: "italic",
+              }}
+            >
+              →
+            </span>{" "}
+            <em className="not-italic text-gradient">experience.</em>
+          </motion.h2>
 
           {viewMode === "recruiter" && (
-            <div className="flex flex-col gap-2 p-4 bg-primary/5 rounded-xl border border-primary/10 mb-5 max-w-lg mx-auto text-left">
-              <span className="text-xs font-mono text-primary uppercase tracking-wide">Quick Summary</span>
-              <ul className="space-y-1.5">
+            <div className="flex flex-col gap-2 p-4 bg-primary/5 rounded-xl border border-primary/10 max-w-lg mx-auto text-left">
+              <span className="eyebrow" style={{ color: "rgba(74, 123, 247, 0.9)" }}>
+                Quick Summary
+              </span>
+              <ul className="space-y-1.5 mt-2">
                 {capabilitiesContent.recruiter.bullets.map((bullet, i) => (
                   <li key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
                     <span className="h-1.5 w-1.5 rounded-full bg-primary flex-shrink-0" />
@@ -219,12 +250,12 @@ export function CapabilitiesSection() {
             </div>
           )}
 
-          <p className="text-sm text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            As my projects became more complex, I stopped separating engineering from design. I began seeing products as
-            systems — shaped by constraints, workflows, and decision logic. That shift shows up in three areas:
-            structured product design, research-driven problem framing, and systems-aware interface thinking.
+          <p className="lede mx-auto">
+            As my projects became more complex, I stopped separating engineering from design.
+            Products became systems — shaped by constraints, workflows, and decision logic.
+            That shift shows up in three areas.
           </p>
-        </div>
+        </motion.div>
 
         {/* Desktop layout */}
         <div className="hidden md:grid grid-cols-3 gap-5 flex-1 min-h-0">
