@@ -1,9 +1,8 @@
 "use client"
 
-import { useRef, useMemo, useEffect, useState } from "react"
+import { useRef, useMemo, useEffect } from "react"
 import { formationWatchRef } from "@/lib/formation-state"
 import { Canvas, useFrame } from "@react-three/fiber"
-import { EffectComposer, Bloom } from "@react-three/postprocessing"
 import * as THREE from "three"
 import { useReadingStore } from "@/contexts/reading-store-context"
 
@@ -505,42 +504,15 @@ function MorphingScene({ chapterIndex, bloomRef }: MorphingSceneProps) {
 export default function PersistentScene() {
   const { activeChapterIndex } = useReadingStore()
   const bloomRef = useRef(0.75)
-  const [bloomIntensity, setBloomIntensity] = useState(0.75)
-
-  useEffect(() => {
-    let rafId: number
-    let frame = 0
-    const tick = () => {
-      frame++
-      // Only update React state every 3rd frame — bloom changes are slow anyway
-      if (frame % 3 === 0) {
-        setBloomIntensity((prev) => {
-          const next = Math.round(bloomRef.current * 100) / 100
-          return Math.abs(next - prev) > 0.01 ? next : prev
-        })
-      }
-      rafId = requestAnimationFrame(tick)
-    }
-    rafId = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(rafId)
-  }, [])
 
   return (
     <Canvas
       camera={{ position: [0, 0, 8], fov: 65 }}
       dpr={[1, 1.5]}
-      gl={{ antialias: false, powerPreference: "high-performance" }}
+      gl={{ antialias: false, powerPreference: "default" }}
       style={{ width: "100%", height: "100%" }}
     >
       <MorphingScene chapterIndex={activeChapterIndex} bloomRef={bloomRef} />
-      <EffectComposer>
-        <Bloom
-          intensity={bloomIntensity}
-          luminanceThreshold={0.15}
-          luminanceSmoothing={0.9}
-          mipmapBlur={false}
-        />
-      </EffectComposer>
     </Canvas>
   )
 }

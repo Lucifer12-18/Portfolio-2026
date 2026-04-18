@@ -2,7 +2,6 @@
 
 import { useRef, useMemo } from "react"
 import { Canvas, useFrame } from "@react-three/fiber"
-import { EffectComposer, Bloom } from "@react-three/postprocessing"
 import * as THREE from "three"
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -202,15 +201,6 @@ export default function ThreeDScene() {
       <ambientLight intensity={0.04} />
 
       <NetworkScene />
-
-      <EffectComposer>
-        <Bloom
-          intensity={1.1}
-          luminanceThreshold={0.12}
-          luminanceSmoothing={0.85}
-          mipmapBlur
-        />
-      </EffectComposer>
     </Canvas>
   )
 }
