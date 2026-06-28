@@ -11,6 +11,11 @@ import { H1, H3, P, Lead, Label, SectionLabel, Caption } from "@/components/ui/t
 import { SystemLogProvider } from "@/contexts/system-log-context"
 import { ReadingStoreProvider } from "@/contexts/reading-store-context"
 import { ViewModeProvider } from "@/contexts/view-mode-context"
+import { motion } from "framer-motion"
+import { childRise, childRiseHeavy } from "@/lib/motion"
+import { DecodeText } from "@/components/decode-text"
+import { CursorEffect } from "@/components/cursor-effect"
+import { FilmGrain } from "@/components/film-grain"
 
 export default function HirelloInterviewPage() {
   return (
@@ -24,21 +29,33 @@ export default function HirelloInterviewPage() {
                 <div className="w-full">
 
                   {/* Breadcrumb */}
-                  <nav className="mb-8 flex items-center gap-2 text-sm text-muted-foreground">
+                  <motion.nav
+                    variants={childRise}
+                    initial="hidden"
+                    animate="show"
+                    custom={0}
+                    className="mb-8 flex items-center gap-2 text-sm text-muted-foreground"
+                  >
                     <Link href="/" className="hover:text-foreground transition-colors">Home</Link>
                     <span>/</span>
                     <Link href="/case-stories/hirello-ai" className="hover:text-foreground transition-colors">Hirello</Link>
                     <span>/</span>
                     <span className="text-foreground">AI Interview Gym</span>
-                  </nav>
+                  </motion.nav>
 
                   <WindowShell title="hirello_interview_gym.tsx" className="max-h-full">
                     <div className="space-y-14 md:space-y-18">
 
                       {/* ── Hero ─────────────────────────────────────────── */}
-                      <header className="space-y-5">
+                      <motion.header
+                        variants={childRiseHeavy}
+                        initial="hidden"
+                        animate="show"
+                        custom={1}
+                        className="space-y-5"
+                      >
                         <Label>Module 02 · AI Interview Gym</Label>
-                        <H1>Designing structured AI interview feedback</H1>
+                        <H1><DecodeText text="Designing structured AI interview feedback" delay={250} /></H1>
                         <P className="max-w-2xl">
                           Most mock interview tools ask questions and return vague scores. This module
                           was designed to replace emotional, unhelpful feedback with a measurable
@@ -48,26 +65,26 @@ export default function HirelloInterviewPage() {
 
                         <div className="flex flex-wrap gap-2 text-xs">
                           {["Product Design", "AI & UX", "Feedback Systems"].map((tag) => (
-                            <Badge key={tag} variant="secondary" className="bg-[#F0EDE8] text-[#44403c] border-0">
+                            <Badge key={tag} variant="secondary" className="bg-white/[0.08] text-slate-200 border-0">
                               {tag}
                             </Badge>
                           ))}
                         </div>
 
                         {/* Meta row */}
-                        <div className="flex flex-wrap items-center gap-3 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] font-mono text-muted-foreground">
+                        <div className="flex flex-wrap items-center gap-3 rounded-lg border border-white/10 bg-slate-900/50 px-3 py-2 text-[11px] font-mono text-muted-foreground">
                           <span>role: <span className="text-foreground">Founding Product Designer</span></span>
-                          <span className="h-3 w-px bg-slate-300" />
+                          <span className="h-3 w-px bg-white/15" />
                           <span>platform: <span className="text-foreground">Hirello.ai</span></span>
-                          <span className="h-3 w-px bg-slate-300" />
+                          <span className="h-3 w-px bg-white/15" />
                           <span>status: <span className="text-foreground">Live in production</span></span>
-                          <span className="h-3 w-px bg-slate-300" />
+                          <span className="h-3 w-px bg-white/15" />
                           <span>AI model: <span className="text-foreground">Hiro — career co‑pilot</span></span>
                         </div>
-                      </header>
+                      </motion.header>
 
                       {/* ── 1. The Problem ──────────────────────────────── */}
-                      <section className="space-y-4">
+                      <motion.section variants={childRise} initial="hidden" animate="show" custom={2} className="space-y-4">
                         <SectionLabel>1. The problem</SectionLabel>
                         <Lead>
                           Practicing interviews is only useful if the feedback helps you improve.
@@ -101,10 +118,10 @@ export default function HirelloInterviewPage() {
                             "Feedback should be measurable, not emotional. And it should tell you exactly what to do next."
                           </Lead>
                         </ModuleCard>
-                      </section>
+                      </motion.section>
 
                       {/* ── 2. Design principles ────────────────────────── */}
-                      <section className="space-y-4">
+                      <motion.section variants={childRise} initial="hidden" animate="show" custom={3} className="space-y-4">
                         <SectionLabel>2. Design principles</SectionLabel>
                         <ModuleCardGrid cols={3}>
                           <ModuleCard
@@ -126,10 +143,10 @@ export default function HirelloInterviewPage() {
                             description="Feedback without a retry path is useless. Every insight must connect to a resource and a retry action."
                           />
                         </ModuleCardGrid>
-                      </section>
+                      </motion.section>
 
                       {/* ── 3. Interview experience ──────────────────────── */}
-                      <section className="space-y-6">
+                      <motion.section variants={childRise} initial="hidden" animate="show" custom={4} className="space-y-6">
                         <SectionLabel>3. The system — four layers</SectionLabel>
                         <H3>Layer 1 — Interview experience design</H3>
                         <P>
@@ -151,31 +168,31 @@ export default function HirelloInterviewPage() {
                         </List>
 
                         <div className="grid gap-3 md:grid-cols-2 md:items-start">
-                          <div className="rounded-lg border border-slate-200 bg-slate-50/80 overflow-hidden">
+                          <div className="rounded-lg border border-white/10 bg-white/[0.05] overflow-hidden">
                             <img
                               src="/hirello-interview-landing.png"
                               alt="Hirello Interview Gym landing screen with Hiro and difficulty selection"
                               className="block h-auto w-full"
                             />
-                            <Caption className="px-3 py-2 border-t border-slate-200">
+                            <Caption className="px-3 py-2 border-t border-white/10">
                               Landing screen — difficulty selection before entering the session.
                             </Caption>
                           </div>
-                          <div className="rounded-lg border border-slate-200 bg-slate-50/80 overflow-hidden">
+                          <div className="rounded-lg border border-white/10 bg-white/[0.05] overflow-hidden">
                             <img
                               src="/hirello-interview-live.png"
                               alt="Hirello live AI interview screen in dark immersive mode"
                               className="block h-auto w-full"
                             />
-                            <Caption className="px-3 py-2 border-t border-slate-200">
+                            <Caption className="px-3 py-2 border-t border-white/10">
                               Live session — focused dark UI, voice controls, Hiro as interviewer.
                             </Caption>
                           </div>
                         </div>
-                      </section>
+                      </motion.section>
 
                       {/* ── 4. Performance snapshot ─────────────────────── */}
-                      <section className="space-y-6">
+                      <motion.section variants={childRise} initial="hidden" animate="show" custom={5} className="space-y-6">
                         <H3>Layer 2 — Performance snapshot system</H3>
                         <P>
                           After each session, users receive a structured evaluation dashboard — not a
@@ -197,13 +214,13 @@ export default function HirelloInterviewPage() {
                           ))}
                         </ModuleCardGrid>
 
-                        <div className="rounded-lg border border-slate-200 bg-slate-50/80 overflow-hidden">
+                        <div className="rounded-lg border border-white/10 bg-white/[0.05] overflow-hidden">
                           <img
                             src="/hirello-interview-summary.png"
                             alt="Hirello interview analysis dashboard with overall score and question breakdown"
                             className="block h-auto w-full"
                           />
-                          <Caption className="px-4 py-2 border-t border-slate-200">
+                          <Caption className="px-4 py-2 border-t border-white/10">
                             Post-session dashboard — multi-dimensional scoring with per-question breakdown.
                           </Caption>
                         </div>
@@ -216,10 +233,10 @@ export default function HirelloInterviewPage() {
                             by a significant margin.
                           </P>
                         </ModuleCard>
-                      </section>
+                      </motion.section>
 
                       {/* ── 5. Diagnostic layer ──────────────────────────── */}
-                      <section className="space-y-6">
+                      <motion.section variants={childRise} initial="hidden" animate="show" custom={6} className="space-y-6">
                         <H3>Layer 3 — "What went wrong" diagnostic layer</H3>
                         <Lead>Turning vague criticism into structured growth.</Lead>
                         <P>
@@ -255,20 +272,20 @@ export default function HirelloInterviewPage() {
                           </ListItem>
                         </List>
 
-                        <div className="rounded-lg border border-slate-200 bg-slate-50/80 overflow-hidden shadow-sm">
+                        <div className="rounded-lg border border-white/10 bg-white/[0.05] overflow-hidden shadow-sm">
                           <img
                             src="/hirello-what-went-wrong.png"
                             alt="Hirello detailed feedback panel — issue, why it matters, missing elements, fix instructions"
                             className="block h-auto w-full"
                           />
-                          <Caption className="px-4 py-2 border-t border-slate-200">
+                          <Caption className="px-4 py-2 border-t border-white/10">
                             Diagnostic panel — four-layer structure turns criticism into a clear repair plan.
                           </Caption>
                         </div>
-                      </section>
+                      </motion.section>
 
                       {/* ── 6. Learning loop ─────────────────────────────── */}
-                      <section className="space-y-6">
+                      <motion.section variants={childRise} initial="hidden" animate="show" custom={7} className="space-y-6">
                         <H3>Layer 4 — Learning loop integration</H3>
                         <P>
                           Feedback is only valuable if the user can immediately act on it. After
@@ -276,13 +293,13 @@ export default function HirelloInterviewPage() {
                           retrying the same question.
                         </P>
 
-                        <div className="rounded-lg border border-slate-200 bg-slate-50/80 overflow-hidden max-w-xl">
+                        <div className="rounded-lg border border-white/10 bg-white/[0.05] overflow-hidden max-w-xl">
                           <img
                             src="/hirello-learn-loop.png"
                             alt="Hirello learn-before-you-retry panel with STAR method video and framework resources"
                             className="block h-auto w-full"
                           />
-                          <Caption className="px-4 py-2 border-t border-slate-200">
+                          <Caption className="px-4 py-2 border-t border-white/10">
                             Learn panel — STAR content, sample answers, and retry button form a closed loop.
                           </Caption>
                         </div>
@@ -301,10 +318,10 @@ export default function HirelloInterviewPage() {
                             shown alongside the new attempt so users can see their own progression.
                           </P>
                         </ModuleCard>
-                      </section>
+                      </motion.section>
 
                       {/* ── 7. Outcome ──────────────────────────────────── */}
-                      <section className="space-y-4">
+                      <motion.section variants={childRise} initial="hidden" animate="show" custom={8} className="space-y-4">
                         <SectionLabel>4. Outcome</SectionLabel>
                         <ModuleCardGrid cols={2}>
                           <ModuleCard variant="elevated" eyebrow="Feedback quality">
@@ -328,10 +345,10 @@ export default function HirelloInterviewPage() {
                           Both modules now inform the platform's roadmap for coaching and
                           personalisation features.
                         </P>
-                      </section>
+                      </motion.section>
 
                       {/* ── 8. What I learned ───────────────────────────── */}
-                      <section className="space-y-3">
+                      <motion.section variants={childRise} initial="hidden" animate="show" custom={9} className="space-y-3">
                         <SectionLabel>5. What this taught me</SectionLabel>
                         <P>
                           Designing AI feedback systems is less about making the AI smarter and more
@@ -343,14 +360,14 @@ export default function HirelloInterviewPage() {
                         <Lead>
                           "AI should reduce the gap between 'I got feedback' and 'I know what to do next' to zero."
                         </Lead>
-                      </section>
+                      </motion.section>
 
                       {/* ── Navigation ──────────────────────────────────── */}
-                      <section className="space-y-4 border-t border-slate-200 pt-6">
+                      <motion.section variants={childRise} initial="hidden" animate="show" custom={10} className="space-y-4 border-t border-white/10 pt-6">
                         <div className="flex flex-col sm:flex-row gap-3">
                           <Link
                             href="/case-stories/hirello-ai/networking"
-                            className="text-xs md:text-sm font-medium inline-flex items-center gap-1.5 rounded-full px-4 py-2 border border-slate-200 text-muted-foreground hover:text-foreground hover:border-foreground/40 transition-colors"
+                            className="text-xs md:text-sm font-medium inline-flex items-center gap-1.5 rounded-full px-4 py-2 border border-white/10 text-muted-foreground hover:text-foreground hover:border-foreground/40 transition-colors"
                           >
                             ← Module 01 — Networking Intelligence
                           </Link>
@@ -367,7 +384,7 @@ export default function HirelloInterviewPage() {
                         >
                           Back to snapshot
                         </Link>
-                      </section>
+                      </motion.section>
 
                     </div>
                   </WindowShell>
@@ -376,6 +393,8 @@ export default function HirelloInterviewPage() {
             </main>
             <Footer />
           </div>
+          <CursorEffect />
+          <FilmGrain />
         </ViewModeProvider>
       </ReadingStoreProvider>
     </SystemLogProvider>

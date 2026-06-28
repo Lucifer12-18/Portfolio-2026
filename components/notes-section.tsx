@@ -8,6 +8,8 @@ import Image from "next/image"
 import Link from "next/link"
 import { NOTES, type NoteMetadata } from "@/lib/notes-data"
 import { Spotlight } from "@/components/spotlight"
+import { DecodeText } from "@/components/decode-text"
+import { childRise, childRiseHeavy, childSlide } from "@/lib/motion"
 
 /** Convert an #rrggbb hex into "r, g, b" for Spotlight's `color` prop. */
 function hexToRgb(hex: string): string {
@@ -23,15 +25,6 @@ const filters = ["All", "UX", "AI", "Systems", "Career"]
 
 const ease = [0.16, 1, 0.3, 1] as [number, number, number, number]
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { delay: i * 0.06, duration: 0.45, ease },
-  }),
-}
-
 /**
  * Featured note — oversized editorial treatment for the first article.
  */
@@ -40,10 +33,10 @@ function FeaturedNote({ note }: { note: NoteMetadata }) {
 
   return (
     <motion.div
-      custom={0}
+      variants={childSlide}
       initial="hidden"
-      animate="visible"
-      variants={cardVariants}
+      animate="show"
+      custom={3}
       onHoverStart={() => setHovered(true)}
       onHoverEnd={() => setHovered(false)}
     >
@@ -54,7 +47,7 @@ function FeaturedNote({ note }: { note: NoteMetadata }) {
           transition={{ duration: 0.3, ease }}
           className="relative rounded-2xl overflow-hidden group cursor-pointer"
           style={{
-            background: "rgba(8, 15, 40, 0.65)",
+            background: "rgba(16, 16, 20, 0.72)",
             backdropFilter: "blur(16px)",
             WebkitBackdropFilter: "blur(16px)",
             border: hovered
@@ -87,7 +80,7 @@ function FeaturedNote({ note }: { note: NoteMetadata }) {
               <div
                 className="absolute inset-0"
                 style={{
-                  background: `linear-gradient(to right, transparent 60%, rgba(8,15,40,0.5))`,
+                  background: `linear-gradient(to right, transparent 60%, rgba(10,10,12,0.55))`,
                 }}
               />
             </div>
@@ -147,10 +140,10 @@ function NoteCard({ note, index }: { note: NoteMetadata; index: number }) {
 
   return (
     <motion.div
-      custom={index}
+      variants={childSlide}
       initial="hidden"
-      animate="visible"
-      variants={cardVariants}
+      animate="show"
+      custom={3 + index}
       onHoverStart={() => setHovered(true)}
       onHoverEnd={() => setHovered(false)}
       whileHover={{ y: -4 }}
@@ -161,7 +154,7 @@ function NoteCard({ note, index }: { note: NoteMetadata; index: number }) {
         <article
           className="relative rounded-xl overflow-hidden group cursor-pointer h-full flex flex-col"
           style={{
-            background: "rgba(8, 15, 40, 0.65)",
+            background: "rgba(16, 16, 20, 0.72)",
             backdropFilter: "blur(16px)",
             WebkitBackdropFilter: "blur(16px)",
             border: hovered
@@ -193,7 +186,7 @@ function NoteCard({ note, index }: { note: NoteMetadata; index: number }) {
             <div
               className="absolute inset-0"
               style={{
-                background: `linear-gradient(to bottom, transparent 55%, rgba(8,15,40,0.5))`,
+                background: `linear-gradient(to bottom, transparent 55%, rgba(10,10,12,0.55))`,
               }}
             />
           </div>
@@ -269,21 +262,23 @@ export function NotesSection() {
       <div className="relative space-y-6">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease }}
+          variants={childRise}
+          initial="hidden"
+          animate="show"
+          custom={0}
           className="space-y-4 max-w-3xl"
         >
           <span className="eyebrow">Chapter 05 · Notes from the Field</span>
 
           <motion.h2
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.08, ease }}
+            variants={childRiseHeavy}
+            initial="hidden"
+            animate="show"
+            custom={1}
             className="display-lg text-slate-50"
           >
             Short dispatches{" "}
-            <em className="not-italic text-gradient">from in-between work.</em>
+            <em className="not-italic text-gradient"><DecodeText text="from in-between work." delay={300} /></em>
           </motion.h2>
 
           <p className="lede">
@@ -295,9 +290,10 @@ export function NotesSection() {
 
         {/* Filter pills */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.4, delay: 0.25 }}
+          variants={childRise}
+          initial="hidden"
+          animate="show"
+          custom={2}
           className="flex flex-wrap gap-2"
         >
           {filters.map((filter) => (
@@ -310,14 +306,14 @@ export function NotesSection() {
               style={{
                 background:
                   activeFilter === filter
-                    ? "rgba(74, 123, 247, 0.18)"
-                    : "rgba(15, 23, 42, 0.5)",
+                    ? "rgba(245, 158, 11, 0.18)"
+                    : "rgba(24, 24, 28, 0.55)",
                 border:
                   activeFilter === filter
-                    ? "1px solid rgba(74, 123, 247, 0.5)"
+                    ? "1px solid rgba(245, 158, 11, 0.5)"
                     : "1px solid rgba(255,255,255,0.07)",
                 color: activeFilter === filter ? "rgb(147, 197, 253)" : "rgb(148, 163, 184)",
-                boxShadow: activeFilter === filter ? "0 0 14px rgba(74,123,247,0.18)" : "none",
+                boxShadow: activeFilter === filter ? "0 0 14px rgba(245,158,11,0.18)" : "none",
               }}
             >
               {filter}

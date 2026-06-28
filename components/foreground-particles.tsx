@@ -4,6 +4,8 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import { Canvas, useFrame, useThree } from "@react-three/fiber"
 import * as THREE from "three"
 import { useReadingStore } from "@/contexts/reading-store-context"
+import { damp } from "@/lib/motion"
+import { pointerState } from "@/lib/pointer-state"
 
 const FOREGROUND_PARTICLE_COUNT = 80
 
@@ -172,13 +174,13 @@ function ForegroundParticleCloud({ targetColor, scrollProgress, chapterIndex }: 
       burstRef.current = Math.max(0, burstRef.current - delta * 0.5)
     }
 
-    // Smoothly follow mouse for gentle parallax
-    const mouse = state.mouse
-    mouseLerped.current.x += (mouse.x - mouseLerped.current.x) * FG_PARALLAX_EASING
-    mouseLerped.current.y += (mouse.y - mouseLerped.current.y) * FG_PARALLAX_EASING
+    // Follow the SHARED pointer bus for gentle parallax (frame-rate independent).
+    // Wisps lag a touch behind the field (lower k) → reads as depth separation.
+    mouseLerped.current.x = damp(mouseLerped.current.x, pointerState.x, 4, delta)
+    mouseLerped.current.y = damp(mouseLerped.current.y, pointerState.y, 4, delta)
 
-    // Smooth scroll influence
-    scrollLerped.current += (scrollProgress - scrollLerped.current) * 0.08
+    // Smooth scroll influence (frame-rate independent)
+    scrollLerped.current = damp(scrollLerped.current, scrollProgress, 5, delta)
 
     const parallaxX = -mouseLerped.current.x * FG_PARALLAX_STRENGTH
     const parallaxY = -mouseLerped.current.y * FG_PARALLAX_STRENGTH
@@ -203,10 +205,10 @@ function ForegroundParticleCloud({ targetColor, scrollProgress, chapterIndex }: 
       groupRef.current.position.z = -scrollZOffset
     }
 
-    // Softly blend color toward current chapter accent
-    // Slightly faster during burst so color change is noticeable
-    const colorSpeed = 0.08 + burstRef.current * 0.12
-    uniforms.uColor.value.lerp(targetColorVec, colorSpeed)
+    // Softly blend color toward current chapter accent (frame-rate independent).
+    // Slightly faster during burst so the color change is noticeable.
+    const colorK = 5 + burstRef.current * 8
+    uniforms.uColor.value.lerp(targetColorVec, 1 - Math.exp(-colorK * delta))
   })
 
   return (

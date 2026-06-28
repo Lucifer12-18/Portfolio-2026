@@ -24,10 +24,8 @@ export function OpeningHero({ onDismiss }: OpeningHeroProps) {
     setIsVisible(false)
     setTimeout(() => {
       onDismiss()
-      // Scroll to prologue section
-      setTimeout(() => {
-        document.getElementById("prologue")?.scrollIntoView({ behavior: "smooth" })
-      }, 100)
+      // No scrollIntoView — the chapter window owns its own scroll (and resets
+      // to top on mount). Calling it here pushed the headline off the top on mobile.
     }, 350) // Wait for exit animation
   }, [onDismiss])
 
@@ -67,7 +65,7 @@ export function OpeningHero({ onDismiss }: OpeningHeroProps) {
           className="fixed inset-0 z-[100] min-h-[100svh] flex items-center justify-center overflow-hidden"
         >
           {/* Base background — visible instantly before 3D loads */}
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-[#020617] to-slate-950" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0c] via-[#0a0a0c] to-[#0a0a0c]" />
 
           {/* 3D scene — Vishal's system map (Design ↔ AI/Systems via translation layer) */}
           <div className="absolute inset-0">

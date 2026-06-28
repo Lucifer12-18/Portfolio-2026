@@ -7,9 +7,9 @@ export function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="py-6 border-t border-border bg-background/95 backdrop-blur-md">
+    <footer className="py-3 sm:py-6 border-t border-border bg-background/95 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:pl-24">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4 text-xs sm:text-sm text-muted-foreground">
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1.5">
               <Command className="h-4 w-4" />
@@ -21,7 +21,7 @@ export function Footer() {
             <span>© {currentYear} Vishal Deshmukh</span>
           </div>
 
-          <div className="flex items-center gap-4 font-mono text-xs">
+          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 font-mono text-[11px] sm:text-xs">
             <div className="flex items-center gap-1.5">
               {/* Subtle Framer Motion pulse */}
               <motion.span
@@ -44,8 +44,8 @@ export function Footer() {
             <span>ping: 12ms</span>
           </div>
         </div>
-        <div className="mt-4 pt-4 border-t border-border text-center">
-          <p className="text-sm font-mono text-muted-foreground">
+        <div className="mt-2 pt-2 sm:mt-4 sm:pt-4 border-t border-border text-center">
+          <p className="text-xs sm:text-sm font-mono text-muted-foreground">
             &gt; end of log. ready for next chapter.
           </p>
         </div>

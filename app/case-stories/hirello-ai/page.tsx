@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import Image from "next/image"
+import { motion } from "framer-motion"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { WindowShell } from "@/components/window-shell"
@@ -9,6 +10,10 @@ import { Badge } from "@/components/ui/badge"
 import { SystemLogProvider } from "@/contexts/system-log-context"
 import { ReadingStoreProvider } from "@/contexts/reading-store-context"
 import { ViewModeProvider } from "@/contexts/view-mode-context"
+import { childRise, childRiseHeavy } from "@/lib/motion"
+import { DecodeText } from "@/components/decode-text"
+import { CursorEffect } from "@/components/cursor-effect"
+import { FilmGrain } from "@/components/film-grain"
 
 const hirelloSnapshot = {
   title: "Hirello – AI Career Operating System",
@@ -36,7 +41,7 @@ export default function HirelloSnapshotPage() {
             <main className="flex-1 flex">
               <div className="mx-auto w-full max-w-4xl px-6 py-12 md:py-16 flex-1 flex">
                 <div className="w-full">
-                  <div className="mb-8">
+                  <motion.div className="mb-8" variants={childRise} initial="hidden" animate="show" custom={0}>
                     <Link
                       href="/"
                       className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
@@ -44,18 +49,30 @@ export default function HirelloSnapshotPage() {
                       <span aria-hidden>←</span>
                       Back to home
                     </Link>
-                  </div>
+                  </motion.div>
                   <WindowShell title="case_story_hirello.tsx" className="max-h-full">
                     <div className="space-y-8">
                       {/* Hero / Snapshot */}
-                      <div className="grid gap-6 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] items-start">
+                      <motion.div
+                        className="grid gap-6 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] items-start"
+                        variants={childRise}
+                        initial="hidden"
+                        animate="show"
+                        custom={1}
+                      >
                         <div className="space-y-4">
                           <p className="text-[11px] font-mono uppercase tracking-wide text-muted-foreground">
                             CASE SNAPSHOT · AI Career OS
                           </p>
-                          <h1 className="text-2xl md:text-3xl font-semibold text-foreground">
-                            Hirello – AI-First Hiring & Career Flow
-                          </h1>
+                          <motion.h1
+                            className="text-2xl md:text-3xl font-semibold text-foreground"
+                            variants={childRiseHeavy}
+                            initial="hidden"
+                            animate="show"
+                            custom={2}
+                          >
+                            <DecodeText text="Hirello – AI-First Hiring & Career Flow" delay={250} />
+                          </motion.h1>
                           <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
                             How I designed two connected systems — Networking Intelligence and AI Interview Gym — to turn a
                             chaotic job search into a structured, feedback-driven workflow.
@@ -63,14 +80,14 @@ export default function HirelloSnapshotPage() {
 
                           <div className="flex flex-wrap gap-2 text-xs">
                             {hirelloSnapshot.tags.map((tag) => (
-                              <Badge key={tag} variant="secondary" className="bg-[#F0EDE8] text-[#44403c] border-0">
+                              <Badge key={tag} variant="secondary" className="bg-white/[0.08] text-slate-200 border-0">
                                 {tag}
                               </Badge>
                             ))}
                           </div>
                         </div>
 
-                        <div className="relative h-40 md:h-48 rounded-xl border border-slate-200 bg-slate-50 overflow-hidden">
+                        <div className="relative h-40 md:h-48 rounded-xl border border-white/10 bg-slate-900/50 overflow-hidden">
                           <Image
                             src={hirelloSnapshot.imagePath}
                             alt="Hirello welcome screen with Hiro, the AI career co‑pilot"
@@ -78,19 +95,19 @@ export default function HirelloSnapshotPage() {
                             className="object-contain object-center"
                           />
                         </div>
-                      </div>
+                      </motion.div>
 
                       {/* Problem */}
-                      <section className="space-y-2">
+                      <motion.section className="space-y-2" variants={childRise} initial="hidden" animate="show" custom={3}>
                         <h2 className="text-sm font-mono uppercase tracking-wide text-muted-foreground flex items-center gap-2">
                           <span className="inline-block w-1.5 h-1.5 bg-primary rounded-[2px]" />
                           What was broken or unclear
                         </h2>
                         <p className="text-sm md:text-base text-muted-foreground leading-relaxed">{hirelloSnapshot.problem}</p>
-                      </section>
+                      </motion.section>
 
                       {/* Approach */}
-                      <section className="space-y-2">
+                      <motion.section className="space-y-2" variants={childRise} initial="hidden" animate="show" custom={4}>
                         <h2 className="text-sm font-mono uppercase tracking-wide text-muted-foreground flex items-center gap-2">
                           <span className="inline-block w-1.5 h-1.5 bg-primary rounded-[2px]" />
                           How I explored, mapped, and designed
@@ -103,19 +120,25 @@ export default function HirelloSnapshotPage() {
                             </li>
                           ))}
                         </ul>
-                      </section>
+                      </motion.section>
 
                       {/* Outcome */}
-                      <section className="space-y-2">
+                      <motion.section className="space-y-2" variants={childRise} initial="hidden" animate="show" custom={5}>
                         <h2 className="text-sm font-mono uppercase tracking-wide text-muted-foreground flex items-center gap-2">
                           <span className="inline-block w-1.5 h-1.5 bg-primary rounded-[2px]" />
                           What changed for users / stakeholders
                         </h2>
                         <p className="text-sm md:text-base text-muted-foreground leading-relaxed">{hirelloSnapshot.outcome}</p>
-                      </section>
+                      </motion.section>
 
                       {/* Tools + CTA */}
-                      <section className="space-y-4 border-t border-slate-200 pt-6">
+                      <motion.section
+                        className="space-y-4 border-t border-white/10 pt-6"
+                        variants={childRise}
+                        initial="hidden"
+                        animate="show"
+                        custom={6}
+                      >
                         <div>
                           <h2 className="text-sm font-mono uppercase tracking-wide text-muted-foreground flex items-center gap-2 mb-2">
                             <span className="inline-block w-1.5 h-1.5 bg-primary rounded-[2px]" />
@@ -126,7 +149,7 @@ export default function HirelloSnapshotPage() {
                               <Badge
                                 key={tool}
                                 variant="secondary"
-                                className="font-mono text-xs bg-[#F0EDE8] text-[#6B6B7B] border-0"
+                                className="font-mono text-xs bg-white/[0.08] text-slate-400 border-0"
                               >
                                 {tool}
                               </Badge>
@@ -135,7 +158,7 @@ export default function HirelloSnapshotPage() {
                         </div>
 
                         {/* Level 3 CTA */}
-                        <div className="border border-dashed border-slate-300/80 rounded-lg px-4 py-3 md:px-5 md:py-4 bg-slate-50/60 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                        <div className="border border-dashed border-white/15 rounded-lg px-4 py-3 md:px-5 md:py-4 bg-white/[0.05] flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                           <div className="space-y-1">
                             <p className="text-[11px] font-mono uppercase tracking-wide text-muted-foreground">
                               NEXT MODULE
@@ -152,7 +175,7 @@ export default function HirelloSnapshotPage() {
                             Open system log →
                           </Link>
                         </div>
-                      </section>
+                      </motion.section>
                     </div>
                   </WindowShell>
                 </div>
@@ -160,9 +183,14 @@ export default function HirelloSnapshotPage() {
             </main>
             <Footer />
           </div>
+
+          {/* Custom cursor — always on top, chapter-color reactive */}
+          <CursorEffect />
+
+          {/* Cinematic film grain — sits above scene, below cursor */}
+          <FilmGrain />
         </ViewModeProvider>
       </ReadingStoreProvider>
     </SystemLogProvider>
   )
 }
-

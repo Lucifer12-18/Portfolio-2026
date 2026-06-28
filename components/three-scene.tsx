@@ -196,7 +196,7 @@ export default function ThreeDScene() {
       style={{ width: "100%", height: "100%" }}
     >
       {/* Dark background matching the boot screen palette */}
-      <color attach="background" args={["#020617"]} />
+      <color attach="background" args={["#0a0a0c"]} />
 
       <ambientLight intensity={0.04} />
 

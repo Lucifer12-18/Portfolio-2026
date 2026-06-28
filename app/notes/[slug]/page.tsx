@@ -49,7 +49,7 @@ export default async function NotePage({
     <div
       className="min-h-screen"
       style={{
-        background: "#020617",
+        background: "#0a0a0c",
         backgroundImage: "radial-gradient(circle, rgba(34, 211, 238, 0.04) 1px, transparent 1px)",
         backgroundSize: "20px 20px",
       }}
@@ -58,7 +58,7 @@ export default async function NotePage({
       <header
         className="sticky top-0 z-50 flex items-center justify-between px-6 py-4 border-b"
         style={{
-          background: "rgba(2, 6, 23, 0.85)",
+          background: "rgba(10, 10, 12, 0.88)",
           backdropFilter: "blur(16px)",
           WebkitBackdropFilter: "blur(16px)",
           borderColor: "rgba(255,255,255,0.07)",
@@ -151,7 +151,7 @@ export default async function NotePage({
           <div
             className="absolute inset-0"
             style={{
-              background: `linear-gradient(to bottom, transparent 35%, rgba(2,6,23,0.55))`,
+              background: `linear-gradient(to bottom, transparent 35%, rgba(10,10,12,0.6))`,
             }}
           />
           <div

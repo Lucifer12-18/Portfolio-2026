@@ -14,20 +14,25 @@ body {
   font-family: var(--font-sans);
 }
 
-/* Dark-native palette — the 3D world is always the background */
+/* Dark-native palette — the 3D world is always the background.
+   SHIFTED 2026-04-20 (iter 2): full warm-neutral pass. Background moved to near-black
+   graphite, brand accent (`--primary`) shifted from electric blue (#4a7bf7) to amber
+   (#f59e0b) so the site no longer reads blue overall. Cyan is preserved as a contextual
+   accent (system-log chrome, chapter 0 content, particle system). Lavender + coral
+   remain for chromatic variety. To revert: see _docs/Sessions/Session Log.md. */
 :root {
-  --background: #020617;
-  --foreground: #e2e8f0;
-  --card: rgba(8, 15, 40, 0.65);
-  --card-foreground: #e2e8f0;
-  --popover: #0f172a;
-  --popover-foreground: #e2e8f0;
-  --primary: #4a7bf7;
-  --primary-foreground: #ffffff;
-  --secondary: rgba(15, 23, 42, 0.6);
-  --secondary-foreground: #cbd5e1;
-  --muted: rgba(15, 23, 42, 0.5);
-  --muted-foreground: #94a3b8;
+  --background: #08080a;
+  --foreground: #e8eaed;
+  --card: rgba(20, 20, 23, 0.72);
+  --card-foreground: #e8eaed;
+  --popover: #121215;
+  --popover-foreground: #e8eaed;
+  --primary: #f59e0b;
+  --primary-foreground: #0a0a0c;
+  --secondary: rgba(28, 28, 32, 0.62);
+  --secondary-foreground: #d4d4d8;
+  --muted: rgba(28, 28, 32, 0.55);
+  --muted-foreground: #9ca0a8;
   --accent: #f97362;
   --accent-foreground: #ffffff;
   --lavender: #a78bfa;
@@ -36,36 +41,36 @@ body {
   --destructive-foreground: #fecaca;
   --border: rgba(255, 255, 255, 0.07);
   --input: rgba(255, 255, 255, 0.07);
-  --ring: #4a7bf7;
+  --ring: #f59e0b;
   --chart-1: #e76f35;
   --chart-2: #2ba39e;
   --chart-3: #2d5a7b;
   --chart-4: #e5b82a;
   --chart-5: #dfa02f;
   --radius: 0.75rem;
-  --sidebar: #0f172a;
-  --sidebar-foreground: #e2e8f0;
-  --sidebar-primary: #4a7bf7;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: rgba(15, 23, 42, 0.6);
-  --sidebar-accent-foreground: #e2e8f0;
+  --sidebar: #121215;
+  --sidebar-foreground: #e8eaed;
+  --sidebar-primary: #f59e0b;
+  --sidebar-primary-foreground: #0a0a0c;
+  --sidebar-accent: rgba(28, 28, 32, 0.62);
+  --sidebar-accent-foreground: #e8eaed;
   --sidebar-border: rgba(255, 255, 255, 0.07);
-  --sidebar-ring: #4a7bf7;
+  --sidebar-ring: #f59e0b;
 }
 
 .dark {
-  --background: #020617;
-  --foreground: #e2e8f0;
-  --card: rgba(8, 15, 40, 0.65);
-  --card-foreground: #e2e8f0;
-  --popover: #0f172a;
-  --popover-foreground: #e2e8f0;
-  --primary: #4a7bf7;
-  --primary-foreground: #ffffff;
-  --secondary: rgba(15, 23, 42, 0.6);
-  --secondary-foreground: #cbd5e1;
-  --muted: rgba(15, 23, 42, 0.5);
-  --muted-foreground: #94a3b8;
+  --background: #08080a;
+  --foreground: #e8eaed;
+  --card: rgba(20, 20, 23, 0.72);
+  --card-foreground: #e8eaed;
+  --popover: #121215;
+  --popover-foreground: #e8eaed;
+  --primary: #f59e0b;
+  --primary-foreground: #0a0a0c;
+  --secondary: rgba(28, 28, 32, 0.62);
+  --secondary-foreground: #d4d4d8;
+  --muted: rgba(28, 28, 32, 0.55);
+  --muted-foreground: #9ca0a8;
   --accent: #f97362;
   --accent-foreground: #ffffff;
   --lavender: #a78bfa;
@@ -74,15 +79,38 @@ body {
   --destructive-foreground: #fecaca;
   --border: rgba(255, 255, 255, 0.07);
   --input: rgba(255, 255, 255, 0.07);
-  --ring: #4a7bf7;
-  --sidebar: #0f172a;
-  --sidebar-foreground: #e2e8f0;
-  --sidebar-primary: #4a7bf7;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: rgba(15, 23, 42, 0.6);
-  --sidebar-accent-foreground: #e2e8f0;
+  --ring: #f59e0b;
+  --sidebar: #121215;
+  --sidebar-foreground: #e8eaed;
+  --sidebar-primary: #f59e0b;
+  --sidebar-primary-foreground: #0a0a0c;
+  --sidebar-accent: rgba(28, 28, 32, 0.62);
+  --sidebar-accent-foreground: #e8eaed;
   --sidebar-border: rgba(255, 255, 255, 0.07);
-  --sidebar-ring: #4a7bf7;
+  /* palette-shift-marker: 2026-04-20-amber */
+  --sidebar-ring: #f59e0b;
+}
+
+/* ── Neutral-dark overrides for Tailwind's slate bg utilities ──────────────
+   The section components and shell chrome lean on bg-slate-950 / bg-slate-900
+   (blue-tinted). These overrides retarget the *background-color* side of
+   those utilities to neutral near-black so the chapter accents pop.
+   `text-slate-*`, `border-slate-*`, and gradient stops (*-slate-950) are
+   left alone — those are used for type and structure, not surface fill.
+   Revert: delete this entire block. */
+@layer utilities {
+  .bg-slate-950            { background-color: #08080a; }
+  .bg-slate-950\/95        { background-color: rgb(8 8 10 / 0.95); }
+  .bg-slate-950\/85        { background-color: rgb(8 8 10 / 0.85); }
+  .bg-slate-950\/80        { background-color: rgb(8 8 10 / 0.80); }
+  .bg-slate-950\/\[0\.87\] { background-color: rgb(8 8 10 / 0.87); }
+  .bg-slate-950\/60        { background-color: rgb(8 8 10 / 0.60); }
+  .bg-slate-900            { background-color: #121215; }
+  .bg-slate-900\/90        { background-color: rgb(18 18 21 / 0.90); }
+  .bg-slate-900\/80        { background-color: rgb(18 18 21 / 0.80); }
+  .bg-slate-900\/70        { background-color: rgb(18 18 21 / 0.70); }
+  .bg-slate-900\/60        { background-color: rgb(18 18 21 / 0.60); }
+  .bg-slate-900\/50        { background-color: rgb(18 18 21 / 0.50); }
 }
 
 @theme inline {
@@ -143,8 +171,8 @@ html {
     @apply bg-background text-foreground antialiased;
     font-family: var(--font-sans);
     overflow-x: hidden;
-    /* Subtle dot pattern — visible only before the 3D world loads */
-    background-image: radial-gradient(circle, rgba(34, 211, 238, 0.04) 1px, transparent 1px);
+    /* Subtle dot pattern — warm amber whisper before the 3D world loads */
+    background-image: radial-gradient(circle, rgba(245, 158, 11, 0.04) 1px, transparent 1px);
     background-size: 20px 20px;
     animation: grid-drift 16s linear infinite;
   }
@@ -258,7 +286,7 @@ p, li, blockquote {
   color: rgb(226, 232, 240);
   font-style: italic;
   padding-left: 1.5rem;
-  border-left: 2px solid rgba(34, 211, 238, 0.5);
+  border-left: 2px solid rgba(245, 158, 11, 0.55);
   margin: 2.5rem 0;
   max-width: 36ch;
 }
@@ -272,7 +300,7 @@ p, li, blockquote {
   line-height: 0.9;
   padding-right: 0.6rem;
   padding-top: 0.35rem;
-  background: linear-gradient(135deg, rgb(34, 211, 238), rgb(167, 139, 250));
+  background: linear-gradient(135deg, rgb(245, 158, 11), rgb(167, 139, 250));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -312,9 +340,9 @@ p, li, blockquote {
   left: 0;
   width: 7px;
   height: 7px;
-  background: rgb(34, 211, 238);
+  background: rgb(245, 158, 11);
   border-radius: 50%;
-  box-shadow: 0 0 12px rgba(34, 211, 238, 0.7);
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.7);
 }
 
 /* Reading column — constrained width for prose */
@@ -331,12 +359,12 @@ p, li, blockquote {
   --ease-cinematic: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* ── Text gradient — cyan → blue → lavender, matches chapter palette ──── */
+/* ── Text gradient — amber → coral → lavender, warm-to-cool arc ──────── */
 .text-gradient {
   background: linear-gradient(
     135deg,
-    rgb(34, 211, 238) 0%,
-    rgb(74, 123, 247) 45%,
+    rgb(245, 158, 11) 0%,
+    rgb(249, 115, 98) 50%,
     rgb(167, 139, 250) 100%
   );
   -webkit-background-clip: text;
@@ -345,13 +373,13 @@ p, li, blockquote {
   color: transparent;
 }
 
-/* Warmer gradient variant — for personal/about sections */
+/* Warmer variant — used for personal/about sections, even more amber-heavy */
 .text-gradient-warm {
   background: linear-gradient(
     135deg,
-    rgb(147, 197, 253) 0%,
-    rgb(167, 139, 250) 50%,
-    rgb(249, 115, 98) 100%
+    rgb(252, 211, 77) 0%,
+    rgb(249, 115, 98) 55%,
+    rgb(167, 139, 250) 100%
   );
   -webkit-background-clip: text;
   background-clip: text;
@@ -368,10 +396,10 @@ p, li, blockquote {
 .text-shimmer {
   background: linear-gradient(
     90deg,
-    rgb(34, 211, 238) 0%,
-    rgb(74, 123, 247) 30%,
-    rgb(224, 249, 255) 50%,
-    rgb(74, 123, 247) 70%,
+    rgb(245, 158, 11) 0%,
+    rgb(249, 115, 98) 30%,
+    rgb(254, 243, 199) 50%,
+    rgb(249, 115, 98) 70%,
     rgb(167, 139, 250) 100%
   );
   background-size: 200% auto;
@@ -395,7 +423,7 @@ p, li, blockquote {
 
 /* Dark mode — same as root since we're always dark */
 .dark body {
-  background-image: radial-gradient(circle, rgba(34, 211, 238, 0.04) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(245, 158, 11, 0.04) 1px, transparent 1px);
   background-size: 20px 20px;
   animation: grid-drift 16s linear infinite;
 }
@@ -442,8 +470,8 @@ p, li, blockquote {
 
 /* Soft glow pulse — used on interactive highlights */
 @keyframes glow-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(74, 123, 247, 0); }
-  50%       { box-shadow: 0 0 18px 4px rgba(74, 123, 247, 0.25); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+  50%       { box-shadow: 0 0 18px 4px rgba(245, 158, 11, 0.28); }
 }
 
 /* Chapter in — chapter content appears with a reveal */
@@ -462,7 +490,7 @@ p, li, blockquote {
 @layer components {
   /* Animated shimmer highlight */
   .shimmer-line {
-    background: linear-gradient(90deg, transparent 0%, rgba(74,123,247,0.7) 50%, transparent 100%);
+    background: linear-gradient(90deg, transparent 0%, rgba(245,158,11,0.7) 50%, transparent 100%);
     background-size: 200% 100%;
     animation: shimmer-sweep 1.8s ease infinite;
   }
@@ -483,10 +511,10 @@ p, li, blockquote {
   }
   .card-glow-hover:hover {
     box-shadow:
-      0 0 0 1px rgba(74, 123, 247, 0.3),
-      0 8px 32px rgba(74, 123, 247, 0.12),
-      0 2px 8px rgba(0, 0, 0, 0.3);
-    border-color: rgba(74, 123, 247, 0.3) !important;
+      0 0 0 1px rgba(245, 158, 11, 0.32),
+      0 8px 32px rgba(245, 158, 11, 0.14),
+      0 2px 8px rgba(0, 0, 0, 0.4);
+    border-color: rgba(245, 158, 11, 0.32) !important;
     transform: translateY(-3px);
   }
 
@@ -552,7 +580,7 @@ p, li, blockquote {
 
   /* Dark frosted glass card — elevated panel over the 3D world */
   .glass-card {
-    background: rgba(2, 6, 23, 0.55);
+    background: rgba(10, 10, 12, 0.6);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.07);
@@ -560,14 +588,14 @@ p, li, blockquote {
   }
   .glass-card:hover {
     box-shadow:
-      0 0 0 1px rgba(34, 211, 238, 0.14),
-      0 8px 36px rgba(0, 0, 0, 0.55);
+      0 0 0 1px rgba(245, 158, 11, 0.14),
+      0 8px 36px rgba(0, 0, 0, 0.6);
   }
 
   /* Glass card with colored glow on hover — Draftly-inspired */
   .glass-card-glow {
     position: relative;
-    background: rgba(2, 6, 23, 0.55);
+    background: rgba(10, 10, 12, 0.6);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.07);
@@ -578,7 +606,7 @@ p, li, blockquote {
     position: absolute;
     inset: -1px;
     border-radius: inherit;
-    background: linear-gradient(135deg, rgba(34, 211, 238, 0.10), rgba(167, 139, 250, 0.10));
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.10), rgba(167, 139, 250, 0.10));
     z-index: -1;
     filter: blur(24px);
     opacity: 0;
@@ -588,9 +616,9 @@ p, li, blockquote {
   .glass-card-glow:hover {
     border-color: rgba(255, 255, 255, 0.12);
     box-shadow:
-      0 0 0 1px rgba(34, 211, 238, 0.10),
-      0 8px 40px rgba(0, 0, 0, 0.50),
-      0 0 60px rgba(34, 211, 238, 0.04);
+      0 0 0 1px rgba(245, 158, 11, 0.12),
+      0 8px 40px rgba(0, 0, 0, 0.55),
+      0 0 60px rgba(245, 158, 11, 0.05);
   }
   .glass-card-glow:hover::before {
     opacity: 1;
@@ -644,7 +672,7 @@ p, li, blockquote {
 /* Section separator — gradient line that fades in/out */
 .section-separator {
   height: 1px;
-  background: linear-gradient(90deg, transparent 0%, rgba(34, 211, 238, 0.12) 30%, rgba(167, 139, 250, 0.12) 70%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, rgba(245, 158, 11, 0.14) 30%, rgba(167, 139, 250, 0.12) 70%, transparent 100%);
 }
 
 /* ── Cursor-follow spotlight — paints a radial wash through the wrapper ─── */
@@ -737,11 +765,11 @@ p, li, blockquote {
 @keyframes breathing {
   0%, 100% {
     transform: translateY(0);
-    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.28);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.36);
   }
   50% {
     transform: translateY(-3px);
-    box-shadow: 0 32px 80px rgba(15, 23, 42, 0.36);
+    box-shadow: 0 32px 80px rgba(0, 0, 0, 0.44);
   }
 }
 
@@ -845,7 +873,7 @@ p, li, blockquote {
   font-size: 4.25rem;
   line-height: 0.9;
   padding: 0.35rem 0.55rem 0 0;
-  background: linear-gradient(135deg, rgb(34, 211, 238), rgb(167, 139, 250));
+  background: linear-gradient(135deg, rgb(245, 158, 11), rgb(167, 139, 250));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -860,7 +888,7 @@ p, li, blockquote {
   line-height: 1.3;
   letter-spacing: -0.02em;
   color: rgb(226, 232, 240);
-  border-left: 2px solid rgba(34, 211, 238, 0.6);
+  border-left: 2px solid rgba(245, 158, 11, 0.6);
   padding: 0.25rem 0 0.25rem 1.4rem;
   margin: 2.5rem 0;
   max-width: 36ch;
@@ -908,8 +936,8 @@ p, li, blockquote {
 .note-prose code {
   font-family: "JetBrains Mono", ui-monospace, monospace;
   font-size: 0.875em;
-  background: rgba(15, 23, 42, 0.8);
-  color: rgb(34, 211, 238);
+  background: rgba(24, 24, 28, 0.8);
+  color: rgb(245, 158, 11);
   padding: 0.15em 0.4em;
   border-radius: 4px;
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -926,7 +954,7 @@ p, li, blockquote {
 }
 
 .note-prose a {
-  color: rgb(74, 123, 247);
+  color: rgb(245, 158, 11);
   text-decoration: underline;
   text-underline-offset: 3px;
 }

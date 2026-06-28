@@ -1,6 +1,7 @@
 "use client"
 
 import type React from "react"
+import { useEffect, useRef } from "react"
 import { cn } from "@/lib/utils"
 import { motion } from "framer-motion"
 
@@ -11,6 +12,14 @@ interface WindowShellProps {
 }
 
 export function WindowShell({ title, children, className }: WindowShellProps) {
+  // Each chapter remounts this shell (keyed parent), so reset the internal
+  // scroll to the top on mount — otherwise a prior scroll position (or the
+  // boot-screen scrollIntoView) clips the headline off the top on mobile.
+  const scrollRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (scrollRef.current) scrollRef.current.scrollTop = 0
+  }, [])
+
   return (
     <motion.div
       className={cn(
@@ -51,7 +60,7 @@ export function WindowShell({ title, children, className }: WindowShellProps) {
         />
       </div>
       {/* Window Content */}
-      <div className="flex-1 min-h-0 overflow-y-auto p-4 md:p-6 modal-scroll flex flex-col">{children}</div>
+      <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto p-4 md:p-6 modal-scroll flex flex-col">{children}</div>
     </motion.div>
   )
 }

@@ -24,7 +24,7 @@ export const NOTES: NoteMetadata[] = [
     date: "Nov 2024",
     isoDate: "2024-11-01",
     imagePath: "/images/notes/thumb-ai-ux.svg",
-    accentColor: "rgba(74, 123, 247, 0.6)",
+    accentColor: "rgba(245, 158, 11, 0.6)",
     height: "tall",
   },
   {

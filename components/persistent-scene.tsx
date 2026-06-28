@@ -1,10 +1,12 @@
 "use client"
 
-import { useRef, useMemo, useEffect } from "react"
+import { useRef, useMemo } from "react"
 import { formationWatchRef } from "@/lib/formation-state"
 import { Canvas, useFrame } from "@react-three/fiber"
 import * as THREE from "three"
 import { useReadingStore } from "@/contexts/reading-store-context"
+import { damp } from "@/lib/motion"
+import { pointerState, fieldPulse, railHover } from "@/lib/pointer-state"
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CONFIGURATION
@@ -23,8 +25,8 @@ const CHAPTER_COLORS: [number, number, number][] = [
 ]
 
 const CHAPTER_BG = [
-  "#020617", "#041822", "#0e0520", "#12032a",
-  "#031018", "#061525", "#020617",
+  "#0a0a0c", "#041822", "#0e0520", "#12032a",
+  "#031018", "#061525", "#0a0a0c",
 ]
 
 const CHAPTER_BLOOM = [0.75, 1.0, 1.2, 1.0, 0.9, 0.85, 0.65]
@@ -74,6 +76,13 @@ uniform float uPixelRatio;
 uniform vec3 uColorFrom;
 uniform vec3 uColorTo;
 uniform vec2 uMouse;
+
+// Pointer / click reactivity (B10) — all zero at rest, so the field is
+// mathematically unchanged unless you sweep fast or click.
+uniform float uPointerVel;   // 0..~1.5, rises with cursor speed, decays
+uniform float uClickPulse;   // 1 → 0 after a click
+uniform vec2  uClickOrigin;  // click origin in NDC
+uniform float uAspect;       // viewport width / height
 
 varying vec3 vColor;
 varying float vAlpha;
@@ -292,6 +301,22 @@ void main() {
   vec4 mvPosition = modelViewMatrix * vec4(finalPos, 1.0);
   gl_Position = projectionMatrix * mvPosition;
 
+  // ── Pointer & click reactivity (screen space) ──────────────────────────
+  // Gated by uPointerVel / uClickPulse (both 0 at rest) so the field is
+  // untouched until you sweep the cursor fast or click.
+  vec2 ndc = gl_Position.xy / max(gl_Position.w, 0.0001);
+  // (a) Parting: particles near a FAST-moving cursor get pushed aside, like water.
+  vec2 toP = ndc - uMouse;
+  toP.x *= uAspect;
+  float pInfluence = smoothstep(0.45, 0.0, length(toP));
+  gl_Position.xy += normalize(toP + 0.0001) * pInfluence * uPointerVel * 0.12 * gl_Position.w;
+  // (b) Click ripple: an expanding ring of displacement from the click origin.
+  vec2 toC = ndc - uClickOrigin;
+  toC.x *= uAspect;
+  float ringR = (1.0 - uClickPulse) * 1.3;                       // expands as the pulse fades
+  float ring  = smoothstep(0.16, 0.0, abs(length(toC) - ringR)) * uClickPulse;
+  gl_Position.xy += normalize(toC + 0.0001) * ring * 0.12 * gl_Position.w;
+
   // Size: swell dramatically during transition, subtle depth attenuation
   float baseSize = 2.0 + aRandom.x * 3.0;
   float sizePulse = 1.0 + sin(t * PI) * 1.1;
@@ -349,8 +374,6 @@ function MorphingScene({ chapterIndex, bloomRef }: MorphingSceneProps) {
   const currentBg = useRef(new THREE.Color(CHAPTER_BG[0]))
   const targetBg = useRef(new THREE.Color(CHAPTER_BG[0]))
 
-  const mouseTarget = useRef(new THREE.Vector2(0, 0))
-
   const { positions, indices, randoms } = useMemo(() => {
     const count = PARTICLE_COUNT
     const pos = new Float32Array(count * 3)
@@ -377,20 +400,16 @@ function MorphingScene({ chapterIndex, bloomRef }: MorphingSceneProps) {
       uColorFrom: { value: new THREE.Vector3(...CHAPTER_COLORS[0]) },
       uColorTo: { value: new THREE.Vector3(...CHAPTER_COLORS[0]) },
       uMouse: { value: new THREE.Vector2(0, 0) },
+      uPointerVel: { value: 0 },
+      uClickPulse: { value: 0 },
+      uClickOrigin: { value: new THREE.Vector2(0, 0) },
+      uAspect: { value: 1 },
     }),
     [],
   )
 
-  useEffect(() => {
-    const handlePointerMove = (event: MouseEvent) => {
-      const x = (event.clientX / window.innerWidth) * 2 - 1
-      const y = -(event.clientY / window.innerHeight) * 2 + 1
-      mouseTarget.current.set(x, y)
-    }
-
-    window.addEventListener("mousemove", handlePointerMove)
-    return () => window.removeEventListener("mousemove", handlePointerMove)
-  }, [])
+  // Pointer-velocity tracking for the "parting" reactivity (B10).
+  const prevPointer = useRef(new THREE.Vector2(0, 0))
 
   useFrame((state, delta) => {
     const chapter = chapterRef.current
@@ -421,9 +440,24 @@ function MorphingScene({ chapterIndex, bloomRef }: MorphingSceneProps) {
     uniforms.uTransition.value = tr.progress
     uniforms.uPixelRatio.value = state.gl.getPixelRatio()
 
-    // Smoothly ease mouse uniform toward latest pointer target
+    // Ease mouse uniform toward the SHARED pointer bus (~150ms follow,
+    // frame-rate independent). One signal feeds field + wisps + content.
     const uMouse = uniforms.uMouse.value as THREE.Vector2
-    uMouse.lerp(mouseTarget.current, 0.08)
+    uMouse.x = damp(uMouse.x, pointerState.x, 5, delta)
+    uMouse.y = damp(uMouse.y, pointerState.y, 5, delta)
+
+    // ── Pointer / click reactivity (B10) ──────────────────────────────────
+    // Cursor speed → uPointerVel (rises fast, decays); drives the "parting".
+    const pdx = pointerState.x - prevPointer.current.x
+    const pdy = pointerState.y - prevPointer.current.y
+    prevPointer.current.set(pointerState.x, pointerState.y)
+    const speed = Math.hypot(pdx, pdy) / Math.max(delta, 0.001)
+    uniforms.uPointerVel.value = damp(uniforms.uPointerVel.value, Math.min(speed * 0.3, 1.0), 7, delta)
+    // Click ripple — decays toward 0 (~1s); feed origin into the shader.
+    fieldPulse.value = damp(fieldPulse.value, 0, 2.4, delta)
+    uniforms.uClickPulse.value = fieldPulse.value
+    ;(uniforms.uClickOrigin.value as THREE.Vector2).set(fieldPulse.x, fieldPulse.y)
+    uniforms.uAspect.value = state.size.width / Math.max(state.size.height, 1)
 
     const fromColor = CHAPTER_COLORS[tr.from] ?? CHAPTER_COLORS[0]
     const toColor = CHAPTER_COLORS[tr.to] ?? CHAPTER_COLORS[0]
@@ -434,15 +468,29 @@ function MorphingScene({ chapterIndex, bloomRef }: MorphingSceneProps) {
     // Camera sweeps decisively toward the new chapter, eases into place
     const camTarget = CAM_TARGETS[tr.to] ?? CAM_TARGETS[0]
     const camTransitionPeak = Math.sin(tr.progress * Math.PI)
-    const camSpeed = 0.028 + camTransitionPeak * 0.012  // faster during scatter peak
-    camPos.current.x += (camTarget[0] - camPos.current.x) * camSpeed
-    camPos.current.y += (camTarget[1] - camPos.current.y) * camSpeed
-    camPos.current.z += (camTarget[2] - camPos.current.z) * camSpeed
+    // Frame-rate-independent glide; faster during the scatter peak (same intent
+    // as the old 0.028 + peak*0.012 per-frame factor, expressed as a damp rate).
+    const camK = 1.8 + camTransitionPeak * 0.8
+    // Rail-hover "preview lean" — when settled, ease ~14% toward the hovered
+    // chapter's vantage, then return when the hover ends (B10).
+    let camX = camTarget[0], camY = camTarget[1], camZ = camTarget[2]
+    const hov = railHover.chapter
+    if (hov >= 0 && hov !== tr.to && tr.progress > 0.98 && CAM_TARGETS[hov]) {
+      const ht = CAM_TARGETS[hov]
+      camX += (ht[0] - camX) * 0.14
+      camY += (ht[1] - camY) * 0.14
+      camZ += (ht[2] - camZ) * 0.14
+    }
+    camPos.current.x = damp(camPos.current.x, camX, camK, delta)
+    camPos.current.y = damp(camPos.current.y, camY, camK, delta)
+    camPos.current.z = damp(camPos.current.z, camZ, camK, delta)
     state.camera.position.copy(camPos.current)
     state.camera.lookAt(0, 0, 0)
 
     // ── Background ────────────────────────────────────────────────────────
-    currentBg.current.lerp(targetBg.current, 0.015)
+    currentBg.current.r = damp(currentBg.current.r, targetBg.current.r, 0.9, delta)
+    currentBg.current.g = damp(currentBg.current.g, targetBg.current.g, 0.9, delta)
+    currentBg.current.b = damp(currentBg.current.b, targetBg.current.b, 0.9, delta)
     state.scene.background = currentBg.current
 
     // ── Bloom (synced to PersistentScene via shared ref) ──────────────────
@@ -450,7 +498,7 @@ function MorphingScene({ chapterIndex, bloomRef }: MorphingSceneProps) {
     const transitionBoost = Math.sin(tr.progress * Math.PI)
     // Bloom surges at transition peak, creating a brief luminous flash
     const boostedBloom = baseBloom * (1.0 + 0.75 * transitionBoost)
-    bloomRef.current += (boostedBloom - bloomRef.current) * 0.02
+    bloomRef.current = damp(bloomRef.current, boostedBloom, 1.2, delta)
 
     // ── Rotation ──────────────────────────────────────────────────────────
     if (groupRef.current) {

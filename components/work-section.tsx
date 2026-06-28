@@ -9,6 +9,8 @@ import { useViewMode } from "@/contexts/view-mode-context"
 import { useSystemLog } from "@/contexts/system-log-context"
 import { useModal } from "@/contexts/modal-context"
 import { Spotlight } from "@/components/spotlight"
+import { DecodeText } from "@/components/decode-text"
+import { childRise, childRiseHeavy, childSlide } from "@/lib/motion"
 import Image from "next/image"
 import { useState } from "react"
 
@@ -108,15 +110,6 @@ const workContent = {
 
 const ease = [0.16, 1, 0.3, 1] as [number, number, number, number]
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 28 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { delay: 0.05 + i * 0.08, duration: 0.55, ease },
-  }),
-}
-
 export function WorkSection() {
   const { viewMode } = useViewMode()
   const { addLog } = useSystemLog()
@@ -155,26 +148,28 @@ export function WorkSection() {
       <div className="relative space-y-6">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease }}
+          variants={childRise}
+          initial="hidden"
+          animate="show"
+          custom={0}
           className="space-y-4 max-w-3xl"
         >
           <span className="eyebrow">Chapter 04 · Work · Case Stories</span>
 
           <motion.h2
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.08, ease }}
+            variants={childRiseHeavy}
+            initial="hidden"
+            animate="show"
+            custom={1}
             className="display-lg text-slate-50"
           >
             Case stories, not a{" "}
-            <em className="not-italic text-gradient">résumé gallery.</em>
+            <em className="not-italic text-gradient"><DecodeText text="résumé gallery." delay={300} /></em>
           </motion.h2>
 
           {viewMode === "recruiter" && (
             <div className="flex flex-col gap-2 p-4 bg-primary/5 rounded-xl border border-primary/10 max-w-lg">
-              <span className="eyebrow" style={{ color: "rgba(74, 123, 247, 0.9)" }}>
+              <span className="eyebrow" style={{ color: "rgba(245, 158, 11, 0.9)" }}>
                 Quick Summary
               </span>
               <ul className="space-y-1.5 mt-2">
@@ -199,10 +194,10 @@ export function WorkSection() {
         {/* Featured Project — cinematic treatment */}
         {featuredProject && (
           <motion.div
+            variants={childSlide}
             initial="hidden"
-            animate="visible"
-            variants={cardVariants}
-            custom={0}
+            animate="show"
+            custom={2}
           >
             <motion.div
               onHoverStart={() => setHoveredCard(featuredProject.title)}
@@ -210,15 +205,15 @@ export function WorkSection() {
               whileHover={{ y: -4 }}
               transition={{ duration: 0.3, ease }}
             >
-              <Spotlight size={420} color="74, 123, 247" intensity={0.12} className="rounded-2xl">
+              <Spotlight size={420} color="245, 158, 11" intensity={0.12} className="rounded-2xl">
               <Card
                 className="border-border shadow-sm group overflow-hidden cursor-pointer py-0 rounded-2xl relative"
                 style={{
                   transition: "box-shadow 0.4s ease, border-color 0.4s ease",
                   boxShadow: hoveredCard === featuredProject.title
-                    ? "0 0 0 1px rgba(74,123,247,0.3), 0 16px 48px rgba(74,123,247,0.14), 0 2px 8px rgba(0,0,0,0.4)"
+                    ? "0 0 0 1px rgba(245,158,11,0.3), 0 16px 48px rgba(245,158,11,0.14), 0 2px 8px rgba(0,0,0,0.4)"
                     : "0 2px 12px rgba(0,0,0,0.2)",
-                  borderColor: hoveredCard === featuredProject.title ? "rgba(74,123,247,0.3)" : undefined,
+                  borderColor: hoveredCard === featuredProject.title ? "rgba(245,158,11,0.3)" : undefined,
                 }}
                 onClick={() => handleProjectClick(featuredProject)}
               >
@@ -226,7 +221,7 @@ export function WorkSection() {
                 <motion.div
                   className="absolute top-0 left-0 right-0 h-[1px] z-10"
                   style={{
-                    background: "linear-gradient(90deg, transparent, rgba(74,123,247,0.8), transparent)",
+                    background: "linear-gradient(90deg, transparent, rgba(245,158,11,0.8), transparent)",
                     opacity: hoveredCard === featuredProject.title ? 1 : 0,
                     transition: "opacity 0.3s ease",
                   }}
@@ -252,7 +247,7 @@ export function WorkSection() {
                     <div
                       className="absolute inset-0 transition-opacity duration-500 pointer-events-none"
                       style={{
-                        background: "linear-gradient(to right, transparent 60%, rgba(74,123,247,0.08))",
+                        background: "linear-gradient(to right, transparent 60%, rgba(245,158,11,0.08))",
                         opacity: hoveredCard === featuredProject.title ? 1 : 0,
                       }}
                     />
@@ -305,10 +300,10 @@ export function WorkSection() {
             return (
               <motion.div
                 key={project.title}
-                custom={i + 1}
+                variants={childSlide}
                 initial="hidden"
-                animate="visible"
-                variants={cardVariants}
+                animate="show"
+                custom={3 + i}
               >
                 <motion.div
                   onHoverStart={() => setHoveredCard(project.title)}
@@ -317,22 +312,22 @@ export function WorkSection() {
                   transition={{ duration: 0.3, ease }}
                   className="h-full"
                 >
-                  <Spotlight size={320} color="74, 123, 247" intensity={0.11} className="rounded-2xl h-full">
+                  <Spotlight size={320} color="245, 158, 11" intensity={0.11} className="rounded-2xl h-full">
                   <Card
                     className="h-full border-border group overflow-hidden cursor-pointer flex flex-col py-0 rounded-2xl relative"
                     style={{
                       transition: "box-shadow 0.4s ease, border-color 0.4s ease",
                       boxShadow: hoveredCard === project.title
-                        ? "0 0 0 1px rgba(74,123,247,0.25), 0 12px 36px rgba(74,123,247,0.12), 0 2px 8px rgba(0,0,0,0.3)"
+                        ? "0 0 0 1px rgba(245,158,11,0.25), 0 12px 36px rgba(245,158,11,0.12), 0 2px 8px rgba(0,0,0,0.3)"
                         : "0 1px 6px rgba(0,0,0,0.15)",
-                      borderColor: hoveredCard === project.title ? "rgba(74,123,247,0.25)" : undefined,
+                      borderColor: hoveredCard === project.title ? "rgba(245,158,11,0.25)" : undefined,
                     }}
                     onClick={() => handleProjectClick(project)}
                   >
                     <div
                       className="absolute top-0 left-0 right-0 h-[1px] z-10"
                       style={{
-                        background: "linear-gradient(90deg, transparent, rgba(74,123,247,0.6), transparent)",
+                        background: "linear-gradient(90deg, transparent, rgba(245,158,11,0.6), transparent)",
                         opacity: hoveredCard === project.title ? 1 : 0,
                         transition: "opacity 0.3s ease",
                       }}
@@ -357,7 +352,7 @@ export function WorkSection() {
                       <div
                         className="absolute inset-0 transition-opacity duration-500 pointer-events-none"
                         style={{
-                          background: "linear-gradient(to bottom, transparent 50%, rgba(74,123,247,0.05))",
+                          background: "linear-gradient(to bottom, transparent 50%, rgba(245,158,11,0.05))",
                           opacity: hoveredCard === project.title ? 1 : 0,
                         }}
                       />

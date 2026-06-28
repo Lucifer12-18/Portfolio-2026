@@ -4,7 +4,6 @@ import type React from "react"
 import { useEffect, useRef } from "react"
 import { cn } from "@/lib/utils"
 import { WindowShell } from "@/components/window-shell"
-import { motion } from "framer-motion"
 import { useSystemLog } from "@/contexts/system-log-context"
 import { useReadingStore } from "@/contexts/reading-store-context"
 import { CHAPTERS } from "@/lib/chapters-config"
@@ -64,14 +63,12 @@ export function SectionWrapper({ id, children, className, windowTitle, moduleLab
       </div>
 
       <div className="relative flex-1 min-h-0 w-full">
-        <motion.div
-          className="h-full"
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, ease: "easeOut" }}
-        >
+        {/* The page-level shell (pageFlipVariants) reveals the window; the
+            per-element childRise cascade reveals the content. No competing
+            block-fade here — that's what made the chapter "arrive as a block". */}
+        <div className="h-full">
           {windowTitle ? <WindowShell title={windowTitle}>{children}</WindowShell> : children}
-        </motion.div>
+        </div>
       </div>
     </section>
   )

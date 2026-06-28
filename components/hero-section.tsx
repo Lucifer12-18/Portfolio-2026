@@ -9,6 +9,8 @@ import { useViewMode } from "@/contexts/view-mode-context"
 import { useReadingStore } from "@/contexts/reading-store-context"
 import { Magnetic } from "@/components/magnetic"
 import { Spotlight } from "@/components/spotlight"
+import { childRise, childRiseHeavy, childSlide } from "@/lib/motion"
+import { DecodeText } from "@/components/decode-text"
 import Image from "next/image"
 
 const roles = ["Product Design", "UX Research", "AI & Systems Thinking", "Information Systems @ UMBC"]
@@ -50,8 +52,6 @@ This portfolio is a record of how I think and ship: from "how it works" → to "
   },
 }
 
-const ease = [0.16, 1, 0.3, 1] as [number, number, number, number]
-
 export function HeroSection() {
   const { viewMode } = useViewMode()
   const { setActiveChapterIndex } = useReadingStore()
@@ -65,7 +65,7 @@ export function HeroSection() {
   return (
     <SectionWrapper
       id="prologue"
-      className="pt-20 md:pt-24"
+      className="pt-4 sm:pt-10 md:pt-24"
       windowTitle="PROLOGUE · PIXELOGIC OS"
       moduleLabel="PROLOGUE · PIXELOGIC OS"
     >
@@ -80,32 +80,32 @@ export function HeroSection() {
       <div className="relative grid lg:grid-cols-12 gap-6 lg:gap-10 items-start">
         {/* Left Column — editorial text block (7 cols) */}
         <div className="lg:col-span-7 space-y-5">
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease }}
-          >
+          <motion.div variants={childRise} initial="hidden" animate="show" custom={0}>
             <span className="eyebrow">{content.eyebrow}</span>
           </motion.div>
 
-          {/* Editorial headline */}
+          {/* Editorial headline — the heaviest element, leads the cascade */}
           <motion.h1
             key={viewMode}
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.08, ease }}
+            variants={childRiseHeavy}
+            initial="hidden"
+            animate="show"
+            custom={1}
             className="display-xl text-slate-50"
           >
             {content.headline[0]}{" "}
-            <em className="not-italic text-shimmer">{content.headline[1]}</em>{" "}
+            <em className="not-italic text-shimmer">
+              <DecodeText text={content.headline[1]} delay={300} />
+            </em>{" "}
             <span className="text-slate-300/90">{content.headline[2]}</span>
           </motion.h1>
 
           {/* System boot line — keeps the Pixelogic OS voice */}
           <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.4, delay: 0.35 }}
+            variants={childRise}
+            initial="hidden"
+            animate="show"
+            custom={2}
             className="text-[11px] font-mono text-slate-500 tracking-wide"
           >
             <span className="text-cyan-400/70">$</span> boot: designing clarity inside complex systems
@@ -114,9 +114,10 @@ export function HeroSection() {
 
           {/* Lede */}
           <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2, ease }}
+            variants={childRise}
+            initial="hidden"
+            animate="show"
+            custom={3}
             className="lede"
           >
             {content.lede}
@@ -127,14 +128,15 @@ export function HeroSection() {
 
           <motion.div
             key={`desc-${viewMode}`}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.28, ease }}
+            variants={childRise}
+            initial="hidden"
+            animate="show"
+            custom={4}
             className="space-y-5"
           >
             {viewMode === "recruiter" && content.bullets && (
               <div className="flex flex-col gap-2 p-4 bg-primary/5 rounded-xl border border-primary/10">
-                <span className="eyebrow" style={{ color: "rgba(74, 123, 247, 0.9)" }}>
+                <span className="eyebrow" style={{ color: "rgba(245, 158, 11, 0.9)" }}>
                   Quick Summary
                 </span>
                 <ul className="space-y-1.5 mt-2">
@@ -154,9 +156,10 @@ export function HeroSection() {
 
           {/* Role pills — restrained */}
           <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.4 }}
+            variants={childRise}
+            initial="hidden"
+            animate="show"
+            custom={5}
             className="flex flex-wrap gap-x-4 gap-y-2 text-xs font-mono text-slate-400 uppercase tracking-[0.18em]"
           >
             {roles.map((role, i) => (
@@ -169,9 +172,10 @@ export function HeroSection() {
 
           {/* Status */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.4, delay: 0.5 }}
+            variants={childRise}
+            initial="hidden"
+            animate="show"
+            custom={6}
             className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 py-2.5 px-4 bg-secondary/50 rounded-xl border border-border"
           >
             <div className="flex items-center gap-2">
@@ -194,9 +198,10 @@ export function HeroSection() {
 
           {/* CTAs — magnetic pull for tactile hero moment */}
           <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.58 }}
+            variants={childRise}
+            initial="hidden"
+            animate="show"
+            custom={7}
             className="flex flex-col sm:flex-row gap-4 pt-2"
           >
             <Magnetic strength={10} range={110}>
@@ -231,14 +236,11 @@ export function HeroSection() {
           {miniWindows.map((window, index) => (
             <motion.div
               key={window.filename}
-              initial={{ opacity: 0, x: 24, y: 8 }}
-              animate={{ opacity: 1, x: 0, y: 0 }}
+              variants={childSlide}
+              initial="hidden"
+              animate="show"
+              custom={3 + index}
               whileHover={{ y: -5, scale: 1.015 }}
-              transition={{
-                delay: 0.25 + index * 0.12,
-                duration: 0.6,
-                ease,
-              }}
             >
               <Spotlight size={240} color={index === 0 ? "34, 211, 238" : "167, 139, 250"} intensity={0.18} className="rounded-xl">
               <Card className="overflow-hidden border-white/8 bg-slate-900/70 shadow-[0_4px_24px_rgba(0,0,0,0.5)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.65)] transition-all">
@@ -266,9 +268,10 @@ export function HeroSection() {
 
           {/* Skill tags — editorial, inline, restrained */}
           <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 0.4, ease }}
+            variants={childSlide}
+            initial="hidden"
+            animate="show"
+            custom={6}
             className="pt-4 border-t border-white/5"
           >
             <span className="eyebrow mb-4 block">Skill Set</span>

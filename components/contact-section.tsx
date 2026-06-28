@@ -2,9 +2,11 @@
 
 import { Button } from "@/components/ui/button"
 import { SectionWrapper } from "@/components/section-wrapper"
+import { DecodeText } from "@/components/decode-text"
 import { WindowShell } from "@/components/window-shell"
 import { Mail, Linkedin, MapPin, Wifi } from "lucide-react"
 import { motion } from "framer-motion"
+import { childRise, childSlide } from "@/lib/motion"
 import Image from "next/image"
 
 const interests = [
@@ -29,16 +31,17 @@ export function ContactSection() {
           {/* Left Column - Text */}
           <div className="space-y-6 flex flex-col justify-center">
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              variants={childRise}
+              initial="hidden"
+              animate="show"
+              custom={0}
               className="space-y-4"
             >
               <span className="eyebrow">Chapter 06 · Epilogue · Open Channel</span>
 
               <h2 className="display-lg text-slate-50 leading-[1.04]">
                 What I'm looking{" "}
-                <em className="not-italic text-gradient-warm">for next.</em>
+                <em className="not-italic text-gradient-warm"><DecodeText text="for next." delay={300} /></em>
               </h2>
 
               <p className="lede">
@@ -54,9 +57,10 @@ export function ContactSection() {
 
             {/* Interest tags */}
             <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.15, duration: 0.4 }}
+              variants={childRise}
+              initial="hidden"
+              animate="show"
+              custom={2}
             >
               <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider mb-2.5">
                 Areas I care about:
@@ -65,13 +69,14 @@ export function ContactSection() {
                 {interests.map((interest, i) => (
                   <motion.span
                     key={interest}
-                    initial={{ opacity: 0, scale: 0.85 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.2 + i * 0.05, duration: 0.3 }}
+                    variants={childSlide}
+                    initial="hidden"
+                    animate="show"
+                    custom={3 + i}
                     className="px-2.5 py-1 rounded-full text-xs font-medium text-slate-300 border"
                     style={{
-                      background: "rgba(15, 23, 42, 0.6)",
-                      borderColor: "rgba(74, 123, 247, 0.2)",
+                      background: "rgba(24, 24, 28, 0.65)",
+                      borderColor: "rgba(245, 158, 11, 0.2)",
                     }}
                   >
                     {interest}
@@ -82,9 +87,10 @@ export function ContactSection() {
 
             {/* Buttons */}
             <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.4 }}
+              variants={childRise}
+              initial="hidden"
+              animate="show"
+              custom={4}
               className="flex flex-col sm:flex-row gap-3 pt-2"
             >
               <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }}>
@@ -117,22 +123,23 @@ export function ContactSection() {
 
           {/* Right Column - Profile card */}
           <motion.div
-            initial={{ opacity: 0, x: 16 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.1, duration: 0.45 }}
+            variants={childSlide}
+            initial="hidden"
+            animate="show"
+            custom={1}
             className="flex flex-col"
           >
             <div
               className="rounded-xl overflow-hidden flex flex-col h-full"
               style={{
-                background: "rgba(8, 15, 40, 0.7)",
+                background: "rgba(16, 16, 20, 0.75)",
                 border: "1px solid rgba(255,255,255,0.07)",
               }}
             >
               {/* Card header */}
               <div
                 className="px-5 py-3 flex items-center gap-2 border-b"
-                style={{ borderColor: "rgba(255,255,255,0.06)", background: "rgba(15,23,42,0.5)" }}
+                style={{ borderColor: "rgba(255,255,255,0.06)", background: "rgba(24,24,28,0.55)" }}
               >
                 <span className="text-[10px] font-mono text-slate-500 uppercase tracking-wide">contact.json</span>
               </div>
@@ -143,7 +150,7 @@ export function ContactSection() {
                   <div className="relative">
                     <div
                       className="w-16 h-16 rounded-full overflow-hidden border-2"
-                      style={{ borderColor: "rgba(74, 123, 247, 0.4)" }}
+                      style={{ borderColor: "rgba(245, 158, 11, 0.4)" }}
                     >
                       <Image
                         src="/images/vishal-portrait.jpg"
@@ -157,7 +164,7 @@ export function ContactSection() {
                     {/* Online indicator */}
                     <div
                       className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full border-2 bg-green-500 flex items-center justify-center"
-                      style={{ borderColor: "rgba(8, 15, 40, 0.9)" }}
+                      style={{ borderColor: "rgba(10, 10, 12, 0.9)" }}
                     >
                       <motion.div
                         className="w-2 h-2 rounded-full bg-green-400"
@@ -193,7 +200,7 @@ export function ContactSection() {
                     <div
                       key={item.label}
                       className="rounded-lg p-3 flex flex-col gap-1.5"
-                      style={{ background: "rgba(15, 23, 42, 0.6)", border: "1px solid rgba(255,255,255,0.06)" }}
+                      style={{ background: "rgba(24, 24, 28, 0.65)", border: "1px solid rgba(255,255,255,0.06)" }}
                     >
                       <div className="flex items-center gap-1.5">
                         {item.live && (
@@ -215,7 +222,7 @@ export function ContactSection() {
                 {/* Remote / preference */}
                 <div
                   className="rounded-lg p-3"
-                  style={{ background: "rgba(15, 23, 42, 0.6)", border: "1px solid rgba(255,255,255,0.06)" }}
+                  style={{ background: "rgba(24, 24, 28, 0.65)", border: "1px solid rgba(255,255,255,0.06)" }}
                 >
                   <span className="text-[10px] font-mono text-slate-500 uppercase tracking-wide block mb-1.5">
                     Work preference
@@ -226,9 +233,9 @@ export function ContactSection() {
                         key={mode}
                         className="px-2 py-0.5 rounded text-[10px] font-mono"
                         style={{
-                          background: i === 0 ? "rgba(74,123,247,0.15)" : "rgba(255,255,255,0.04)",
-                          border: i === 0 ? "1px solid rgba(74,123,247,0.3)" : "1px solid rgba(255,255,255,0.06)",
-                          color: i === 0 ? "rgb(74,123,247)" : "rgb(100,116,139)",
+                          background: i === 0 ? "rgba(245,158,11,0.15)" : "rgba(255,255,255,0.04)",
+                          border: i === 0 ? "1px solid rgba(245,158,11,0.3)" : "1px solid rgba(255,255,255,0.06)",
+                          color: i === 0 ? "rgb(245,158,11)" : "rgb(100,116,139)",
                         }}
                       >
                         {mode}

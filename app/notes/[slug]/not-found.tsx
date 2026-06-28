@@ -6,7 +6,7 @@ export default function NoteNotFound() {
     <div
       className="min-h-screen flex flex-col items-center justify-center px-6"
       style={{
-        background: "#020617",
+        background: "#0a0a0c",
         backgroundImage: "radial-gradient(circle, rgba(34, 211, 238, 0.04) 1px, transparent 1px)",
         backgroundSize: "20px 20px",
       }}

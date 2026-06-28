@@ -197,7 +197,6 @@ export function CinematicIntro({ onComplete }: CinematicIntroProps) {
     setVisible(false)
     setTimeout(() => {
       setPhase("done")
-      if (typeof window !== "undefined") sessionStorage.setItem("cinematic_seen", "1")
       onComplete()
     }, 900)
   }, [onComplete])
@@ -265,7 +264,7 @@ export function CinematicIntro({ onComplete }: CinematicIntroProps) {
         transition: "opacity 0.9s ease-in-out",
         pointerEvents: phase === "fading" ? "none" : "auto",
       }}
-      onClick={phase === "waiting" ? begin : phase === "playing" ? skip : undefined}
+      onClick={phase === "waiting" ? begin : phase === "playing" ? skip : phase === "credit" ? finish : undefined}
     >
       {/* Hidden audio */}
       <audio ref={audioRef} src="/audio/dylan-field.mp3" preload="auto" />
@@ -381,6 +380,25 @@ export function CinematicIntro({ onComplete }: CinematicIntroProps) {
               initial={{ width: 0 }}
               animate={{ width: 40, transition: { duration: 0.6, delay: 0.4 } }}
             />
+
+            {/* Progress cue — appears 0.9s after credit, fills over 2.8s */}
+            <motion.div
+              className="mt-5 flex flex-col items-center gap-2"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1, transition: { delay: 0.9, duration: 0.5 } }}
+            >
+              {/* Track + fill in one element using scaleX — no overflow clipping needed */}
+              <div className="w-36 h-px bg-white/12 relative">
+                <motion.div
+                  className="absolute inset-0 bg-white/40 origin-left"
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1, transition: { duration: 2.8, delay: 0.9, ease: "linear" } }}
+                />
+              </div>
+              <p className="text-white/25 text-[9px] tracking-[0.35em] uppercase font-mono">
+                click to enter
+              </p>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

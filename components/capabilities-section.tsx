@@ -4,8 +4,9 @@ import { useState } from "react"
 import { SectionWrapper } from "@/components/section-wrapper"
 import { Layers, Search, Cpu } from "lucide-react"
 import { motion } from "framer-motion"
-import type { Variants } from "framer-motion"
 import { useViewMode } from "@/contexts/view-mode-context"
+import { childRise, childRiseHeavy, childSlide } from "@/lib/motion"
+import { DecodeText } from "@/components/decode-text"
 
 const capabilities = [
   {
@@ -19,8 +20,8 @@ const capabilities = [
       "Design systems & scalable components",
       "High-fidelity prototypes for validation",
     ],
-    accentColor: "rgba(74, 123, 247, 0.8)",
-    accentBg: "rgba(74, 123, 247, 0.08)",
+    accentColor: "rgba(245, 158, 11, 0.8)",
+    accentBg: "rgba(245, 158, 11, 0.08)",
   },
   {
     icon: Search,
@@ -62,41 +63,26 @@ const capabilitiesContent = {
   },
 }
 
-const cardVariants: Variants = {
-  hidden: { opacity: 0, y: 28, scale: 0.97 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: {
-      delay: 0.05 + i * 0.07,
-      duration: 0.45,
-      ease: [0.16, 1, 0.3, 1],
-    },
-  }),
-}
-
 function CapabilityCard({ capability, index }: { capability: (typeof capabilities)[0]; index: number }) {
   const [hovered, setHovered] = useState(false)
 
   return (
     <motion.div
-      custom={index}
+      variants={childSlide}
       initial="hidden"
-      animate="visible"
-      variants={cardVariants}
+      animate="show"
+      custom={2 + index}
       onHoverStart={() => setHovered(true)}
       onHoverEnd={() => setHovered(false)}
-      whileHover={{ y: -6 }}
-      transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+      whileHover={{ y: -6, transition: { duration: 0.25, ease: [0.16, 1, 0.3, 1] } }}
       className="h-full"
     >
       <div
         className="relative h-full rounded-2xl overflow-hidden flex flex-col p-6"
         style={{
           background: hovered
-            ? `linear-gradient(135deg, rgba(8,15,40,0.85), rgba(8,15,40,0.70))`
-            : "rgba(8, 15, 40, 0.55)",
+            ? `linear-gradient(135deg, rgba(16,16,20,0.88), rgba(16,16,20,0.74))`
+            : "rgba(16, 16, 20, 0.62)",
           backdropFilter: "blur(16px)",
           WebkitBackdropFilter: "blur(16px)",
           border: hovered
@@ -128,7 +114,7 @@ function CapabilityCard({ capability, index }: { capability: (typeof capabilitie
           <motion.div
             className="p-4 rounded-2xl flex items-center justify-center"
             style={{
-              background: hovered ? capability.accentBg : "rgba(15, 23, 42, 0.6)",
+              background: hovered ? capability.accentBg : "rgba(24, 24, 28, 0.65)",
               border: `1px solid ${hovered ? capability.accentColor + "30" : "rgba(255,255,255,0.06)"}`,
               transition: "all 0.35s ease",
             }}
@@ -178,7 +164,7 @@ function CapabilityCard({ capability, index }: { capability: (typeof capabilitie
             >
               <span
                 className="h-1.5 w-1.5 rounded-full mt-1.5 flex-shrink-0 transition-colors duration-300"
-                style={{ background: hovered ? capability.accentColor : "rgba(74, 123, 247, 0.6)" }}
+                style={{ background: hovered ? capability.accentColor : "rgba(245, 158, 11, 0.6)" }}
               />
               {bullet}
             </motion.li>
@@ -205,24 +191,26 @@ export function CapabilitiesSection() {
 
       <div className="relative flex flex-col h-full gap-6">
         <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          variants={childRise}
+          initial="hidden"
+          animate="show"
+          custom={0}
           className="text-center max-w-3xl mx-auto space-y-5"
         >
           <span className="eyebrow">Chapter 02 · Shift · From Logic to Experience</span>
 
           <motion.h2
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+            variants={childRiseHeavy}
+            initial="hidden"
+            animate="show"
+            custom={1}
             className="display-lg text-slate-50"
           >
             From logic{" "}
             <span
               className="font-mono inline-block"
               style={{
-                background: "linear-gradient(90deg, #4a7bf7 0%, #22d3ee 100%)",
+                background: "linear-gradient(90deg, #f59e0b 0%, #a78bfa 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
@@ -231,12 +219,12 @@ export function CapabilitiesSection() {
             >
               →
             </span>{" "}
-            <em className="not-italic text-gradient">experience.</em>
+            <em className="not-italic text-gradient"><DecodeText text="experience." delay={300} /></em>
           </motion.h2>
 
           {viewMode === "recruiter" && (
             <div className="flex flex-col gap-2 p-4 bg-primary/5 rounded-xl border border-primary/10 max-w-lg mx-auto text-left">
-              <span className="eyebrow" style={{ color: "rgba(74, 123, 247, 0.9)" }}>
+              <span className="eyebrow" style={{ color: "rgba(245, 158, 11, 0.9)" }}>
                 Quick Summary
               </span>
               <ul className="space-y-1.5 mt-2">

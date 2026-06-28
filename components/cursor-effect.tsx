@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import { motion, useMotionValue, useSpring, AnimatePresence } from "framer-motion"
 import { useReadingStore } from "@/contexts/reading-store-context"
+import { FOLLOW_SPRING, SNAP } from "@/lib/motion"
 
 // Matches the chapter accent palette in page.tsx exactly
 const CHAPTER_ACCENTS: [number, number, number][] = [
@@ -23,9 +24,9 @@ export function CursorEffect() {
   const cursorX = useMotionValue(-200)
   const cursorY = useMotionValue(-200)
 
-  // Spring-lagged ring
-  const springX = useSpring(cursorX, { stiffness: 200, damping: 22, mass: 0.6 })
-  const springY = useSpring(cursorY, { stiffness: 200, damping: 22, mass: 0.6 })
+  // Spring-lagged ring — shared FOLLOW physics (same family as the parallax bus + magnetic)
+  const springX = useSpring(cursorX, FOLLOW_SPRING)
+  const springY = useSpring(cursorY, FOLLOW_SPRING)
 
   const [isHover,   setIsHover]   = useState(false)
   const [isClick,   setIsClick]   = useState(false)
@@ -35,7 +36,7 @@ export function CursorEffect() {
 
   const canvasRef   = useRef<HTMLCanvasElement>(null)
   const accentRef   = useRef<[number, number, number]>([r, g, b])
-  const trailRef    = useRef<{ x: number; y: number; age: number }[]>([])
+  const trailRef    = useRef<{ x: number; y: number; born: number }[]>([])
   const rafRef      = useRef<number>(0)
   const idleTimer   = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -64,18 +65,20 @@ export function CursorEffect() {
     resize()
 
     // ── Trail draw loop ──────────────────────────────────────────────────
+    // Cull by elapsed TIME (not frame count) so the trail length is identical
+    // at 60Hz and 144Hz — same fps-independence law as the particle scene.
+    const TRAIL_LIFE_MS = 300
     const drawLoop = () => {
       if (ctx && canvas) {
         ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-        // Age & cull
-        trailRef.current = trailRef.current
-          .map(p => ({ ...p, age: p.age + 1 }))
-          .filter(p => p.age < 18)
+        const now = performance.now()
+        // Cull expired points
+        trailRef.current = trailRef.current.filter(p => now - p.born < TRAIL_LIFE_MS)
 
         trailRef.current.forEach((p, i) => {
           const [cr, cg, cb] = accentRef.current
-          const life    = 1 - p.age / 18
+          const life    = 1 - (now - p.born) / TRAIL_LIFE_MS
           const density = (i + 1) / trailRef.current.length
           const opacity = life * density * 0.45
           const size    = life * 2.8
@@ -97,7 +100,7 @@ export function CursorEffect() {
       cursorX.set(e.clientX)
       cursorY.set(e.clientY)
 
-      trailRef.current.push({ x: e.clientX, y: e.clientY, age: 0 })
+      trailRef.current.push({ x: e.clientX, y: e.clientY, born: performance.now() })
       if (trailRef.current.length > 22) trailRef.current.shift()
 
       setIsIdle(false)
@@ -139,7 +142,6 @@ export function CursorEffect() {
 
   const accent    = `rgba(${r},${g},${b}`
   const ringSize  = isHover ? 44 : isClick ? 16 : 28
-  const ringHalf  = ringSize / 2
 
   return (
     <>
@@ -190,23 +192,29 @@ export function CursorEffect() {
       </AnimatePresence>
 
       {/* ── Ring follower (spring-lagged) ──────────────────────────────── */}
+      {/* All morph (size / radius / glow / press) runs on ONE SNAP spring —
+          no mixed CSS-ease + spring. Auto-centred via -50% so size changes
+          never shift the ring off the cursor. */}
       <motion.div
         className="fixed top-0 left-0 pointer-events-none"
         style={{
           x: springX,
           y: springY,
-          translateX: `-${ringHalf}px`,
-          translateY: `-${ringHalf}px`,
+          translateX: "-50%",
+          translateY: "-50%",
           zIndex: 9998,
+          borderWidth: 1.5,
+          borderStyle: "solid",
+        }}
+        animate={{
           width:  ringSize,
           height: ringSize,
-          border: `1.5px solid ${accent},${isHover ? 0.7 : 0.38})`,
-          borderRadius: isHover ? "8px" : "50%",
+          borderRadius: isHover ? 10 : ringSize / 2,
+          borderColor: `${accent},${isHover ? 0.7 : 0.38})`,
           boxShadow: `0 0 ${isHover ? 18 : 10}px 1px ${accent},${isHover ? 0.22 : 0.09})`,
-          transition: "width 0.18s ease, height 0.18s ease, border-radius 0.18s ease, border-color 0.15s ease, box-shadow 0.15s ease",
+          scale: isClick ? 0.65 : 1,
         }}
-        animate={{ scale: isClick ? 0.65 : 1 }}
-        transition={{ type: "spring", stiffness: 420, damping: 22 }}
+        transition={SNAP}
         aria-hidden
       />
 
@@ -222,14 +230,13 @@ export function CursorEffect() {
           borderRadius: "50%",
           background: `${accent},0.95)`,
           boxShadow: `0 0 7px 2px ${accent},0.45)`,
-          transition: "width 0.15s ease, height 0.15s ease",
         }}
         animate={{
           width:  isHover ? 0  : isClick ? 9 : 5,
           height: isHover ? 0  : isClick ? 9 : 5,
           scale:  isClick ? 1.4 : 1,
         }}
-        transition={{ type: "spring", stiffness: 380, damping: 22 }}
+        transition={SNAP}
         aria-hidden
       />
     </>

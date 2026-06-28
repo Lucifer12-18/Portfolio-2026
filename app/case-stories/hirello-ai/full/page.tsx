@@ -1,12 +1,17 @@
 "use client"
 
 import Link from "next/link"
+import { motion } from "framer-motion"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { WindowShell } from "@/components/window-shell"
 import { SystemLogProvider } from "@/contexts/system-log-context"
 import { ReadingStoreProvider } from "@/contexts/reading-store-context"
 import { ViewModeProvider } from "@/contexts/view-mode-context"
+import { childRise, childRiseHeavy } from "@/lib/motion"
+import { DecodeText } from "@/components/decode-text"
+import { CursorEffect } from "@/components/cursor-effect"
+import { FilmGrain } from "@/components/film-grain"
 
 export default function HirelloFullCaseStudyPage() {
   return (
@@ -18,7 +23,7 @@ export default function HirelloFullCaseStudyPage() {
             <main className="flex-1 flex">
               <div className="mx-auto w-full max-w-4xl px-6 py-12 md:py-16 flex-1 flex">
                 <div className="w-full">
-                  <div className="mb-8">
+                  <motion.div className="mb-8" variants={childRise} initial="hidden" animate="show" custom={0}>
                     <Link
                       href="/"
                       className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
@@ -26,39 +31,47 @@ export default function HirelloFullCaseStudyPage() {
                       <span aria-hidden>←</span>
                       Back to home
                     </Link>
-                  </div>
+                  </motion.div>
                   <WindowShell title="hirello_ai_full_case.tsx" className="max-h-full">
                     <div className="space-y-16 md:space-y-20">
                 {/* 1. Hero / Overview */}
-                <header className="space-y-6">
+                <motion.header className="space-y-6" variants={childRise} initial="hidden" animate="show" custom={1}>
                   <div className="space-y-3">
                     <p className="text-[11px] font-mono uppercase tracking-wide text-muted-foreground">
                       CASE STUDY · PRODUCT / UX
                     </p>
-                    <h1 className="text-2xl md:text-3xl font-semibold tracking-wide text-foreground">Hirello</h1>
+                    <motion.h1
+                      className="text-2xl md:text-3xl font-semibold tracking-wide text-foreground"
+                      variants={childRiseHeavy}
+                      initial="hidden"
+                      animate="show"
+                      custom={2}
+                    >
+                      <DecodeText text="Hirello" delay={250} />
+                    </motion.h1>
                     <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
                       Designing an AI Career Operating System for Job Seekers.
                     </p>
                   </div>
 
                   {/* Meta row */}
-                  <div className="flex flex-wrap items-center gap-3 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] font-mono text-muted-foreground">
+                  <div className="flex flex-wrap items-center gap-3 rounded-lg border border-white/10 bg-slate-900/50 px-3 py-2 text-[11px] font-mono text-muted-foreground">
                     <span>
                       role: <span className="text-foreground">Founding Product Designer</span>
                     </span>
-                    <span className="h-3 w-px bg-slate-300" />
+                    <span className="h-3 w-px bg-white/15" />
                     <span>
                       team: <span className="text-foreground">2 (Product + Engineering)</span>
                     </span>
-                    <span className="h-3 w-px bg-slate-300" />
+                    <span className="h-3 w-px bg-white/15" />
                     <span>
                       stage: <span className="text-foreground">Live Production Platform</span>
                     </span>
-                    <span className="h-3 w-px bg-slate-300" />
+                    <span className="h-3 w-px bg-white/15" />
                     <span>
                       users: <span className="text-foreground">Job Seekers</span>
                     </span>
-                    <span className="h-3 w-px bg-slate-300" />
+                    <span className="h-3 w-px bg-white/15" />
                     <span>
                       scope:{" "}
                       <span className="text-foreground">
@@ -81,17 +94,17 @@ export default function HirelloFullCaseStudyPage() {
                   </p>
 
                   {/* Hero product image */}
-                  <div className="rounded-lg border border-slate-200 bg-slate-50/80 overflow-hidden inline-block max-w-xl mx-auto">
+                  <div className="rounded-lg border border-white/10 bg-white/[0.05] overflow-hidden inline-block max-w-xl mx-auto">
                     <img
                       src="/hirello-hero.png"
                       alt="Welcome screen for Hirello with Hiro, the AI career co-pilot"
                       className="block h-auto w-full"
                     />
                   </div>
-                </header>
+                </motion.header>
 
                 {/* 2. The Opportunity / Problem */}
-                <section className="space-y-4 pt-6">
+                <motion.section className="space-y-4 pt-6" variants={childRise} initial="hidden" animate="show" custom={3}>
                   <h2 className="text-sm font-mono uppercase tracking-[0.18em] text-muted-foreground">1. The problem</h2>
                   <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
                     Modern job search is chaotic.
@@ -110,10 +123,10 @@ export default function HirelloFullCaseStudyPage() {
                   <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
                     The opportunity: design a system that reduces chaos and increases momentum.
                   </p>
-                </section>
+                </motion.section>
 
                 {/* 3. Design Strategy */}
-                <section className="space-y-4 pt-4">
+                <motion.section className="space-y-4 pt-4" variants={childRise} initial="hidden" animate="show" custom={4}>
                   <h2 className="text-sm font-mono uppercase tracking-[0.18em] text-muted-foreground">
                     2. Design philosophy
                   </h2>
@@ -127,10 +140,10 @@ export default function HirelloFullCaseStudyPage() {
                   <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
                     Everything in Hirello maps back to those two ideas.
                   </p>
-                </section>
+                </motion.section>
 
                 {/* Module 01 — Networking Intelligence System */}
-                <section className="space-y-8 pt-6">
+                <motion.section className="space-y-8 pt-6" variants={childRise} initial="hidden" animate="show" custom={5}>
                   <h2 className="text-sm font-mono uppercase tracking-[0.18em] text-muted-foreground">
                     Module 1 — Networking Intelligence System
                   </h2>
@@ -159,7 +172,7 @@ export default function HirelloFullCaseStudyPage() {
                       </p>
                     </div>
                     <div className="space-y-2 flex justify-center md:justify-end">
-                      <div className="rounded-lg border border-slate-200 bg-slate-50/80 overflow-hidden inline-block w-[85%]">
+                      <div className="rounded-lg border border-white/10 bg-white/[0.05] overflow-hidden inline-block w-[85%]">
                         <img
                           src="/hirello-contacts.png"
                           alt="Hirello Add Contact modal with tiers, metadata, and follow-up fields"
@@ -192,21 +205,21 @@ export default function HirelloFullCaseStudyPage() {
                       This progressive structure reduced cognitive overload and increased clarity.
                     </p>
                     <div className="flex flex-wrap gap-3">
-                      <div className="rounded-lg border border-slate-200 bg-slate-50/80 overflow-hidden inline-block transform scale-[0.95] opacity-90">
+                      <div className="rounded-lg border border-white/10 bg-white/[0.05] overflow-hidden inline-block transform scale-[0.95] opacity-90">
                         <img
                           src="/hirello-outreach-step-1.png"
                           alt="Hirello outreach wizard — step 1 thumbnail"
                           className="block h-auto w-40 md:w-48"
                         />
                       </div>
-                      <div className="rounded-lg border border-slate-200 bg-slate-50/80 overflow-hidden inline-block transform scale-[0.95] opacity-90">
+                      <div className="rounded-lg border border-white/10 bg-white/[0.05] overflow-hidden inline-block transform scale-[0.95] opacity-90">
                         <img
                           src="/hirello-outreach-step-2.png"
                           alt="Hirello outreach wizard — step 2 thumbnail"
                           className="block h-auto w-40 md:w-48"
                         />
                       </div>
-                      <div className="rounded-lg border border-slate-200 bg-slate-50/80 overflow-hidden inline-block transform scale-[0.95] opacity-90">
+                      <div className="rounded-lg border border-white/10 bg-white/[0.05] overflow-hidden inline-block transform scale-[0.95] opacity-90">
                         <img
                           src="/hirello-outreach-step-3.png"
                           alt="Hirello outreach wizard — step 3 thumbnail"
@@ -224,7 +237,7 @@ export default function HirelloFullCaseStudyPage() {
                       next.
                     </p>
                     <div className="flex justify-center">
-                      <div className="rounded-lg border border-slate-200 bg-slate-50/80 overflow-hidden inline-block">
+                      <div className="rounded-lg border border-white/10 bg-white/[0.05] overflow-hidden inline-block">
                         <img
                           src="/hirello-pipeline.png"
                           alt="Hirello opportunity pipeline Kanban view"
@@ -237,18 +250,18 @@ export default function HirelloFullCaseStudyPage() {
                       and outreach sequencing.
                     </p>
                   </div>
-                </section>
+                </motion.section>
 
                 {/* Module break */}
-                <section className="pt-12 md:pt-16">
-                  <div className="border-t border-slate-200 mb-6" />
+                <motion.section className="pt-12 md:pt-16" variants={childRise} initial="hidden" animate="show" custom={6}>
+                  <div className="border-t border-white/10 mb-6" />
                   <p className="text-[11px] font-mono uppercase tracking-[0.18em] text-center text-muted-foreground">
                     Module 2 — AI Interview Gym
                   </p>
-                </section>
+                </motion.section>
 
                 {/* Module 02 — AI Interview Gym */}
-                <section className="space-y-8 pt-2">
+                <motion.section className="space-y-8 pt-2" variants={childRise} initial="hidden" animate="show" custom={7}>
                   <h2 className="text-sm font-mono uppercase tracking-[0.18em] text-muted-foreground">
                     Module 2 — AI Interview Gym
                   </h2>
@@ -268,7 +281,7 @@ export default function HirelloFullCaseStudyPage() {
                     </p>
                     <div className="grid gap-3 md:grid-cols-2 md:items-start">
                       <div className="flex justify-center">
-                        <div className="rounded-lg border border-slate-200 bg-slate-50/80 overflow-hidden inline-block w-[80%]">
+                        <div className="rounded-lg border border-white/10 bg-white/[0.05] overflow-hidden inline-block w-[80%]">
                           <img
                             src="/hirello-interview-landing.png"
                             alt="Hirello Interview Gym landing screen with Hiro and difficulty selection"
@@ -277,7 +290,7 @@ export default function HirelloFullCaseStudyPage() {
                         </div>
                       </div>
                       <div className="flex justify-center">
-                        <div className="rounded-lg border border-slate-200 bg-slate-50/80 overflow-hidden inline-block w-[80%]">
+                        <div className="rounded-lg border border-white/10 bg-white/[0.05] overflow-hidden inline-block w-[80%]">
                           <img
                             src="/hirello-interview-live.png"
                             alt="Hirello live AI interview screen in dark immersive mode"
@@ -301,7 +314,7 @@ export default function HirelloFullCaseStudyPage() {
                       After each session, users receive structured evaluation across duration, pace, structure (STAR
                       compliance), content strength, and an overall score. Feedback becomes measurable, not emotional.
                     </p>
-                    <div className="rounded-lg border border-slate-200 bg-slate-50/80 overflow-hidden inline-block">
+                    <div className="rounded-lg border border-white/10 bg-white/[0.05] overflow-hidden inline-block">
                       <img
                         src="/hirello-interview-summary.png"
                         alt="Hirello interview analysis dashboard with overall score and detailed question breakdown"
@@ -320,7 +333,7 @@ export default function HirelloFullCaseStudyPage() {
                       Instead of vague comments, I designed a layered breakdown: the issue identified, why it matters,
                       missing elements, fix instructions, and a clear retry option. This turns criticism into growth.
                     </p>
-                    <div className="rounded-lg border border-slate-200 bg-slate-50/80 overflow-hidden inline-block shadow-sm">
+                    <div className="rounded-lg border border-white/10 bg-white/[0.05] overflow-hidden inline-block shadow-sm">
                       <img
                         src="/hirello-what-went-wrong.png"
                         alt="Hirello detailed feedback panel showing issue, why it matters, missing elements and how to fix"
@@ -336,7 +349,7 @@ export default function HirelloFullCaseStudyPage() {
                       Users are guided to improve via STAR method content, framework guides, sample high-scoring answers,
                       and a retry answer button — forming a loop of feedback → learn → retry → improve.
                     </p>
-                    <div className="rounded-lg border border-slate-200 bg-slate-50/80 overflow-hidden inline-block max-w-xl">
+                    <div className="rounded-lg border border-white/10 bg-white/[0.05] overflow-hidden inline-block max-w-xl">
                       <img
                         src="/hirello-learn-loop.png"
                         alt="Hirello learn-before-you-retry panel with STAR method video and resources"
@@ -344,10 +357,10 @@ export default function HirelloFullCaseStudyPage() {
                       />
                     </div>
                   </div>
-                </section>
+                </motion.section>
 
                 {/* Impact */}
-                <section className="space-y-3 pt-10">
+                <motion.section className="space-y-3 pt-10" variants={childRise} initial="hidden" animate="show" custom={8}>
                   <h2 className="text-sm font-mono uppercase tracking-[0.18em] text-muted-foreground">4. Impact</h2>
                   <div className="space-y-2 text-sm md:text-base text-muted-foreground leading-relaxed">
                     <p className="font-semibold">
@@ -363,20 +376,20 @@ export default function HirelloFullCaseStudyPage() {
                       Two AI-driven modules now run in a live production platform, informing future product work.
                     </p>
                   </div>
-                </section>
+                </motion.section>
 
                 {/* My role */}
-                <section className="space-y-3 pt-8">
+                <motion.section className="space-y-3 pt-8" variants={childRise} initial="hidden" animate="show" custom={9}>
                   <h2 className="text-sm font-mono uppercase tracking-[0.18em] text-muted-foreground">5. My role</h2>
                   <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
                     As Founding Product Designer, I owned the end-to-end experience: mapping workflows, defining IA and
                     interaction patterns, structuring feedback systems, and partnering directly with engineering to ship
                     and iterate in production.
                   </p>
-                </section>
+                </motion.section>
 
                 {/* What this taught me */}
-                <section className="space-y-3 pt-4">
+                <motion.section className="space-y-3 pt-4" variants={childRise} initial="hidden" animate="show" custom={10}>
                   <h2 className="text-sm font-mono uppercase tracking-[0.18em] text-muted-foreground">
                     6. What this taught me
                   </h2>
@@ -385,10 +398,16 @@ export default function HirelloFullCaseStudyPage() {
                     feedback safe but honest, and creating measurable improvement loops. Hirello reinforced that AI
                     products should guide decisions without overwhelming users or taking control away from them.
                   </p>
-                </section>
+                </motion.section>
 
                 {/* Why this matters */}
-                <section className="space-y-3 border-t border-slate-200 pt-5">
+                <motion.section
+                  className="space-y-3 border-t border-white/10 pt-5"
+                  variants={childRise}
+                  initial="hidden"
+                  animate="show"
+                  custom={11}
+                >
                   <h2 className="text-sm font-mono uppercase tracking-wide text-muted-foreground">
                     Why this matters
                   </h2>
@@ -396,17 +415,23 @@ export default function HirelloFullCaseStudyPage() {
                     Job search is emotionally heavy. Designing structured systems reduces anxiety, creates clarity,
                     encourages consistency, and turns uncertainty into measurable progress.
                   </p>
-                </section>
+                </motion.section>
 
                 {/* Back links */}
-                <section className="flex flex-wrap gap-4 border-t border-slate-200 pt-5 text-sm">
+                <motion.section
+                  className="flex flex-wrap gap-4 border-t border-white/10 pt-5 text-sm"
+                  variants={childRise}
+                  initial="hidden"
+                  animate="show"
+                  custom={12}
+                >
                   <Link
                     href="#work"
                     className="text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
                   >
                     ← Back to Case Stories
                   </Link>
-                </section>
+                </motion.section>
               </div>
             </WindowShell>
           </div>
@@ -414,9 +439,10 @@ export default function HirelloFullCaseStudyPage() {
       </main>
             <Footer />
           </div>
+          <CursorEffect />
+          <FilmGrain />
         </ViewModeProvider>
       </ReadingStoreProvider>
     </SystemLogProvider>
   )
 }
-

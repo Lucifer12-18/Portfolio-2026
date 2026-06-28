@@ -81,7 +81,7 @@ export function Navbar() {
                 <div className="relative flex items-center bg-slate-800/80 border border-white/10 rounded-sm p-0 gap-0 overflow-hidden">
                   {/* Sliding indicator */}
                   <motion.div
-                    className="absolute inset-y-0 bg-[#4A7BF7] rounded-none"
+                    className="absolute inset-y-0 bg-[#F59E0B] rounded-none"
                     layout
                     layoutId="view-mode-slider"
                     style={{
@@ -164,10 +164,10 @@ export function Navbar() {
           <span className="flex items-center gap-1.5">
             <span>VIEW.MODE:</span>
             <span
-              className="h-1.5 w-1.5 rounded-full bg-[#4A7BF7] flex-shrink-0 shadow-[0_0_6px_2px_rgba(74,123,247,0.6)]"
+              className="h-1.5 w-1.5 rounded-full bg-[#F59E0B] flex-shrink-0 shadow-[0_0_6px_2px_rgba(245,158,11,0.6)]"
               aria-hidden
             />
-            <span className="text-[#4A7BF7] font-medium">
+            <span className="text-[#FBBF24] font-medium">
               {viewMode === "designer" ? "DESIGNER" : "RECRUITER"}
             </span>
           </span>
@@ -213,7 +213,7 @@ export function Navbar() {
                   <button
                     onClick={() => handleViewModeToggle("recruiter")}
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                      viewMode === "recruiter" ? "bg-[#4A7BF7] text-white shadow-sm" : "text-slate-400"
+                      viewMode === "recruiter" ? "bg-[#F59E0B] text-white shadow-sm" : "text-slate-400"
                     }`}
                   >
                     Recruiter
@@ -221,7 +221,7 @@ export function Navbar() {
                   <button
                     onClick={() => handleViewModeToggle("designer")}
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                      viewMode === "designer" ? "bg-[#4A7BF7] text-white shadow-sm" : "text-slate-400"
+                      viewMode === "designer" ? "bg-[#F59E0B] text-white shadow-sm" : "text-slate-400"
                     }`}
                   >
                     Designer
@@ -231,7 +231,7 @@ export function Navbar() {
 
               {/* Resume button */}
               <div className="pt-4 mt-2 border-t border-white/8">
-                <Button size="sm" className="w-full gap-2 bg-[#4A7BF7] hover:bg-[#3B6CE8] rounded-full" asChild>
+                <Button size="sm" className="w-full gap-2 bg-[#F59E0B] hover:bg-[#D97706] rounded-full" asChild>
                   <a
                     href="https://drive.google.com/file/d/1jaaSJL7kWIxkYDRnyQOkN-DpAu9-hZTG/view?usp=drive_link"
                     target="_blank"

@@ -4,6 +4,8 @@ import { Card, CardContent } from "@/components/ui/card"
 import { SectionWrapper } from "@/components/section-wrapper"
 import { useViewMode } from "@/contexts/view-mode-context"
 import { motion } from "framer-motion"
+import { childRise, childRiseHeavy, childSlide } from "@/lib/motion"
+import { DecodeText } from "@/components/decode-text"
 
 const aboutContent = {
   recruiter: {
@@ -74,7 +76,7 @@ const timeline = [
     milestone: "Computer Engineering Foundation",
     description:
       "Learning how systems are built, optimized, and constrained — from backend logic to scalable architecture.",
-    color: "rgba(74, 123, 247, 0.8)",
+    color: "rgba(245, 158, 11, 0.8)",
   },
   {
     year: "2022–2023",
@@ -102,7 +104,7 @@ const timeline = [
     milestone: "Founding Product Designer — Hirello.ai",
     description:
       "Designing AI-driven career workflows, translating complex AI capabilities into clear, trustworthy user experiences.",
-    color: "rgba(74, 123, 247, 0.9)",
+    color: "rgba(245, 158, 11, 0.9)",
   },
 ]
 
@@ -134,18 +136,15 @@ export function AboutSection() {
       <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
         {/* Left Column - Story Text */}
         <div className="space-y-5">
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          >
+          <motion.div variants={childRise} initial="hidden" animate="show" custom={0}>
             <span className="eyebrow">Chapter 01 · Origin · Systems Background</span>
           </motion.div>
 
           <motion.h2
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+            variants={childRiseHeavy}
+            initial="hidden"
+            animate="show"
+            custom={1}
             className="display-lg text-slate-50 leading-[1.04]"
           >
             The{" "}
@@ -158,16 +157,17 @@ export function AboutSection() {
                 backgroundClip: "text",
               }}
             >
-              systems
+              <DecodeText text="systems" delay={300} />
             </em>{" "}
             background.
           </motion.h2>
 
           <motion.div
             key={viewMode}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
+            variants={childRise}
+            initial="hidden"
+            animate="show"
+            custom={2}
             className="space-y-4"
           >
             {viewMode === "recruiter" && recruiterContent.bullets && (
@@ -199,9 +199,10 @@ export function AboutSection() {
                     return (
                       <motion.p
                         key={i}
-                        initial={{ opacity: 0, y: 6 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.04 + i * 0.04, duration: 0.3 }}
+                        variants={childRise}
+                        initial="hidden"
+                        animate="show"
+                        custom={3 + i}
                         className={block.sectionBreak ? "mb-1" : ""}
                       >
                         {block.text}
@@ -212,9 +213,10 @@ export function AboutSection() {
                     return (
                       <motion.div
                         key={i}
-                        initial={{ opacity: 0, y: 6 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.04 + i * 0.04, duration: 0.3 }}
+                        variants={childRise}
+                        initial="hidden"
+                        animate="show"
+                        custom={3 + i}
                         className="pl-4 border-l-2 border-primary/30 py-1 bg-primary/5 rounded-r-lg pr-3"
                       >
                         <p className="mb-2 text-foreground/80">{block.intro}</p>
@@ -233,9 +235,10 @@ export function AboutSection() {
                     return (
                       <motion.div
                         key={i}
-                        initial={{ opacity: 0, x: -8 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.04 + i * 0.04, duration: 0.4 }}
+                        variants={childRise}
+                        initial="hidden"
+                        animate="show"
+                        custom={3 + i}
                         className="relative my-4 pl-5 border-l-2 border-accent/50 italic text-foreground/70 leading-[2]"
                         style={{
                           background: "linear-gradient(90deg, rgba(249,115,98,0.04), transparent)",
@@ -248,9 +251,10 @@ export function AboutSection() {
                           <motion.span
                             key={j}
                             className="block"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.1 + i * 0.04 + j * 0.06, duration: 0.3 }}
+                            variants={childRise}
+                            initial="hidden"
+                            animate="show"
+                            custom={3 + i + j}
                           >
                             {line}
                           </motion.span>
@@ -271,7 +275,7 @@ export function AboutSection() {
           <div
             className="absolute left-[18px] top-3 bottom-3 w-0.5 rounded-full"
             style={{
-              background: "linear-gradient(to bottom, rgba(74,123,247,0.6), rgba(167,139,250,0.4), rgba(74,123,247,0.2))",
+              background: "linear-gradient(to bottom, rgba(245,158,11,0.6), rgba(167,139,250,0.4), rgba(245,158,11,0.2))",
             }}
           />
 
@@ -279,9 +283,10 @@ export function AboutSection() {
             {timeline.map((item, index) => (
               <motion.div
                 key={item.year}
-                initial={{ opacity: 0, x: -16 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.06 + index * 0.07, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                variants={childSlide}
+                initial="hidden"
+                animate="show"
+                custom={3 + index}
                 className="relative pl-14"
               >
                 {/* Numbered node with glow */}
@@ -298,7 +303,7 @@ export function AboutSection() {
 
                 <Card className="border-border shadow-sm hover:shadow-md transition-all group"
                   style={{
-                    background: "rgba(8, 15, 40, 0.55)",
+                    background: "rgba(16, 16, 20, 0.62)",
                     borderColor: "rgba(255,255,255,0.07)",
                   }}
                 >

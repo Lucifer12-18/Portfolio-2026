@@ -11,6 +11,11 @@ import { H1, H3, P, Lead, Label, SectionLabel, Caption } from "@/components/ui/t
 import { SystemLogProvider } from "@/contexts/system-log-context"
 import { ReadingStoreProvider } from "@/contexts/reading-store-context"
 import { ViewModeProvider } from "@/contexts/view-mode-context"
+import { motion } from "framer-motion"
+import { childRise, childRiseHeavy } from "@/lib/motion"
+import { DecodeText } from "@/components/decode-text"
+import { CursorEffect } from "@/components/cursor-effect"
+import { FilmGrain } from "@/components/film-grain"
 
 export default function HirelloNetworkingPage() {
   return (
@@ -24,21 +29,33 @@ export default function HirelloNetworkingPage() {
                 <div className="w-full">
 
                   {/* Breadcrumb */}
-                  <nav className="mb-8 flex items-center gap-2 text-sm text-muted-foreground">
+                  <motion.nav
+                    variants={childRise}
+                    initial="hidden"
+                    animate="show"
+                    custom={0}
+                    className="mb-8 flex items-center gap-2 text-sm text-muted-foreground"
+                  >
                     <Link href="/" className="hover:text-foreground transition-colors">Home</Link>
                     <span>/</span>
                     <Link href="/case-stories/hirello-ai" className="hover:text-foreground transition-colors">Hirello</Link>
                     <span>/</span>
                     <span className="text-foreground">Networking Intelligence</span>
-                  </nav>
+                  </motion.nav>
 
                   <WindowShell title="hirello_networking_module.tsx" className="max-h-full">
                     <div className="space-y-14 md:space-y-18">
 
                       {/* ── Hero ─────────────────────────────────────────── */}
-                      <header className="space-y-5">
+                      <motion.header
+                        variants={childRiseHeavy}
+                        initial="hidden"
+                        animate="show"
+                        custom={1}
+                        className="space-y-5"
+                      >
                         <Label>Module 01 · Networking Intelligence System</Label>
-                        <H1>Designing a CRM for job seekers</H1>
+                        <H1><DecodeText text="Designing a CRM for job seekers" delay={250} /></H1>
                         <P className="max-w-2xl">
                           Job seekers don't need "contacts" — they need strategy. This module replaced
                           ad-hoc spreadsheets with a structured, priority-driven networking workflow:
@@ -47,26 +64,32 @@ export default function HirelloNetworkingPage() {
 
                         <div className="flex flex-wrap gap-2 text-xs">
                           {["Product Design", "AI & UX", "Systems Design"].map((tag) => (
-                            <Badge key={tag} variant="secondary" className="bg-[#F0EDE8] text-[#44403c] border-0">
+                            <Badge key={tag} variant="secondary" className="bg-white/[0.08] text-slate-200 border-0">
                               {tag}
                             </Badge>
                           ))}
                         </div>
 
                         {/* Meta row */}
-                        <div className="flex flex-wrap items-center gap-3 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] font-mono text-muted-foreground">
+                        <div className="flex flex-wrap items-center gap-3 rounded-lg border border-white/10 bg-slate-900/50 px-3 py-2 text-[11px] font-mono text-muted-foreground">
                           <span>role: <span className="text-foreground">Founding Product Designer</span></span>
-                          <span className="h-3 w-px bg-slate-300" />
+                          <span className="h-3 w-px bg-white/12" />
                           <span>platform: <span className="text-foreground">Hirello.ai</span></span>
-                          <span className="h-3 w-px bg-slate-300" />
+                          <span className="h-3 w-px bg-white/12" />
                           <span>status: <span className="text-foreground">Live in production</span></span>
-                          <span className="h-3 w-px bg-slate-300" />
+                          <span className="h-3 w-px bg-white/12" />
                           <span>tools: <span className="text-foreground">Figma · FigJam · Maze</span></span>
                         </div>
-                      </header>
+                      </motion.header>
 
                       {/* ── 1. The Problem ──────────────────────────────── */}
-                      <section className="space-y-4">
+                      <motion.section
+                        variants={childRise}
+                        initial="hidden"
+                        animate="show"
+                        custom={2}
+                        className="space-y-4"
+                      >
                         <SectionLabel>1. The problem</SectionLabel>
                         <Lead>
                           Networking is one of the highest-leverage job search activities. But almost
@@ -83,10 +106,16 @@ export default function HirelloNetworkingPage() {
                             "Networking fails because it lacks structure, not because people don't try."
                           </Lead>
                         </ModuleCard>
-                      </section>
+                      </motion.section>
 
                       {/* ── 2. Design principles ────────────────────────── */}
-                      <section className="space-y-4">
+                      <motion.section
+                        variants={childRise}
+                        initial="hidden"
+                        animate="show"
+                        custom={3}
+                        className="space-y-4"
+                      >
                         <SectionLabel>2. Design principles</SectionLabel>
                         <P>Three principles constrained every decision in this module:</P>
                         <ModuleCardGrid cols={3}>
@@ -109,10 +138,16 @@ export default function HirelloNetworkingPage() {
                             description="Users need to feel progress. A visual pipeline replaces the anxiety of scattered spreadsheets."
                           />
                         </ModuleCardGrid>
-                      </section>
+                      </motion.section>
 
                       {/* ── 3. Contact architecture ─────────────────────── */}
-                      <section className="space-y-6">
+                      <motion.section
+                        variants={childRise}
+                        initial="hidden"
+                        animate="show"
+                        custom={4}
+                        className="space-y-6"
+                      >
                         <SectionLabel>3. Contact architecture</SectionLabel>
                         <H3>A. Structured contact intelligence</H3>
                         <P>
@@ -144,13 +179,13 @@ export default function HirelloNetworkingPage() {
                               outreach templates.
                             </P>
                           </div>
-                          <div className="rounded-lg border border-slate-200 bg-slate-50/80 overflow-hidden">
+                          <div className="rounded-lg border border-white/10 bg-white/[0.05] overflow-hidden">
                             <img
                               src="/hirello-contacts.png"
                               alt="Hirello Add Contact modal showing tier selection, metadata fields, and follow-up state"
                               className="block h-auto w-full"
                             />
-                            <Caption className="px-3 py-2 border-t border-slate-200">
+                            <Caption className="px-3 py-2 border-t border-white/10">
                               Add Contact modal — tier, metadata, and follow-up state in one view.
                             </Caption>
                           </div>
@@ -164,10 +199,16 @@ export default function HirelloNetworkingPage() {
                             clear definitions removed the ambiguity without removing control.
                           </P>
                         </ModuleCard>
-                      </section>
+                      </motion.section>
 
                       {/* ── 4. Outreach wizard ──────────────────────────── */}
-                      <section className="space-y-6">
+                      <motion.section
+                        variants={childRise}
+                        initial="hidden"
+                        animate="show"
+                        custom={5}
+                        className="space-y-6"
+                      >
                         <H3>B. Guided outreach wizard — reducing decision fatigue</H3>
                         <P>
                           Cold outreach is paralysing because there are too many open questions at once:
@@ -206,7 +247,7 @@ export default function HirelloNetworkingPage() {
                           ].map(({ src, alt }) => (
                             <div
                               key={src}
-                              className="rounded-lg border border-slate-200 bg-slate-50/80 overflow-hidden"
+                              className="rounded-lg border border-white/10 bg-white/[0.05] overflow-hidden"
                             >
                               <img src={src} alt={alt} className="block h-auto w-36 md:w-44" />
                             </div>
@@ -222,10 +263,16 @@ export default function HirelloNetworkingPage() {
                             improved noticeably in usability testing.
                           </P>
                         </ModuleCard>
-                      </section>
+                      </motion.section>
 
                       {/* ── 5. Pipeline ─────────────────────────────────── */}
-                      <section className="space-y-6">
+                      <motion.section
+                        variants={childRise}
+                        initial="hidden"
+                        animate="show"
+                        custom={6}
+                        className="space-y-6"
+                      >
                         <H3>C. Opportunity pipeline — making momentum visible</H3>
                         <P>
                           Networking without a view of overall progress feels chaotic. The pipeline
@@ -233,13 +280,13 @@ export default function HirelloNetworkingPage() {
                           happen next — shifting networking from reactive to repeatable.
                         </P>
 
-                        <div className="rounded-lg border border-slate-200 bg-slate-50/80 overflow-hidden">
+                        <div className="rounded-lg border border-white/10 bg-white/[0.05] overflow-hidden">
                           <img
                             src="/hirello-pipeline.png"
                             alt="Hirello opportunity pipeline Kanban view showing leads across stages"
                             className="block h-auto w-full"
                           />
-                          <Caption className="px-4 py-2 border-t border-slate-200">
+                          <Caption className="px-4 py-2 border-t border-white/10">
                             Kanban pipeline — leads move through stages with clear next-action prompts.
                           </Caption>
                         </div>
@@ -255,10 +302,16 @@ export default function HirelloNetworkingPage() {
                             Overdue follow-ups are flagged visually, eliminating the "out of sight, out of mind" problem.
                           </ListItem>
                         </List>
-                      </section>
+                      </motion.section>
 
                       {/* ── 6. Outcome ──────────────────────────────────── */}
-                      <section className="space-y-4">
+                      <motion.section
+                        variants={childRise}
+                        initial="hidden"
+                        animate="show"
+                        custom={7}
+                        className="space-y-4"
+                      >
                         <SectionLabel>4. Outcome</SectionLabel>
                         <ModuleCardGrid cols={2}>
                           <ModuleCard variant="elevated" eyebrow="Workflow change">
@@ -279,10 +332,16 @@ export default function HirelloNetworkingPage() {
                           the foundation of Hirello's career operating system — the data collected here
                           feeds into the platform's broader recommendation and coaching layers.
                         </P>
-                      </section>
+                      </motion.section>
 
                       {/* ── 7. What I learned ───────────────────────────── */}
-                      <section className="space-y-3">
+                      <motion.section
+                        variants={childRise}
+                        initial="hidden"
+                        animate="show"
+                        custom={8}
+                        className="space-y-3"
+                      >
                         <SectionLabel>5. What this taught me</SectionLabel>
                         <P>
                           CRM design for consumers is fundamentally different from enterprise CRM. Users
@@ -293,14 +352,20 @@ export default function HirelloNetworkingPage() {
                         <Lead>
                           "The job seeker doesn't want a powerful tool. They want the right answer fast."
                         </Lead>
-                      </section>
+                      </motion.section>
 
                       {/* ── Navigation ──────────────────────────────────── */}
-                      <section className="space-y-4 border-t border-slate-200 pt-6">
+                      <motion.section
+                        variants={childRise}
+                        initial="hidden"
+                        animate="show"
+                        custom={9}
+                        className="space-y-4 border-t border-white/10 pt-6"
+                      >
                         <div className="flex flex-col sm:flex-row gap-3">
                           <Link
                             href="/case-stories/hirello-ai"
-                            className="text-xs md:text-sm font-medium inline-flex items-center gap-1.5 rounded-full px-4 py-2 border border-slate-200 text-muted-foreground hover:text-foreground hover:border-foreground/40 transition-colors"
+                            className="text-xs md:text-sm font-medium inline-flex items-center gap-1.5 rounded-full px-4 py-2 border border-white/10 text-muted-foreground hover:text-foreground hover:border-foreground/40 transition-colors"
                           >
                             ← Case snapshot
                           </Link>
@@ -317,7 +382,7 @@ export default function HirelloNetworkingPage() {
                         >
                           Read full case study (both modules)
                         </Link>
-                      </section>
+                      </motion.section>
 
                     </div>
                   </WindowShell>
@@ -326,6 +391,8 @@ export default function HirelloNetworkingPage() {
             </main>
             <Footer />
           </div>
+          <CursorEffect />
+          <FilmGrain />
         </ViewModeProvider>
       </ReadingStoreProvider>
     </SystemLogProvider>

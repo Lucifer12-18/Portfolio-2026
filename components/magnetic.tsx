@@ -2,6 +2,7 @@
 
 import { useRef, type PropsWithChildren, type CSSProperties } from "react"
 import { motion, useMotionValue, useSpring } from "framer-motion"
+import { DRIFT_SPRING } from "@/lib/motion"
 
 type MagneticProps = PropsWithChildren<{
   /** How far the element drifts toward the cursor, in px. Default 8 */
@@ -29,8 +30,8 @@ export function Magnetic({
   const ref = useRef<HTMLDivElement>(null)
   const x = useMotionValue(0)
   const y = useMotionValue(0)
-  const sx = useSpring(x, { stiffness: 220, damping: 18, mass: 0.4 })
-  const sy = useSpring(y, { stiffness: 220, damping: 18, mass: 0.4 })
+  const sx = useSpring(x, DRIFT_SPRING)
+  const sy = useSpring(y, DRIFT_SPRING)
 
   const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return

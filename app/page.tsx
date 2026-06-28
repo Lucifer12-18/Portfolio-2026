@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef, type ComponentType } from "react"
 import dynamic from "next/dynamic"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion, AnimatePresence, MotionConfig } from "framer-motion"
 import { Navbar } from "@/components/navbar"
 import { OpeningHero } from "@/components/opening-hero"
 import { HeroSection } from "@/components/hero-section"
@@ -25,6 +25,9 @@ import { CursorEffect } from "@/components/cursor-effect"
 import { FilmGrain } from "@/components/film-grain"
 import { CinematicIntro } from "@/components/cinematic-intro"
 import { formationWatchRef } from "@/lib/formation-state"
+import { EASE_SETTLE } from "@/lib/motion"
+import { PointerProvider, PointerParallax } from "@/contexts/pointer-context"
+import { FormationTelemetry } from "@/components/formation-telemetry"
 
 // ── CRT module IDs shown during transition ────────────────────────────────────
 const MODULE_IDS = [
@@ -87,6 +90,12 @@ const EXIT_DURATION_MS   = 380
 const FORMATION_WATCH_MS = 2600
 const ENTER_DELAY_MS     = EXIT_DURATION_MS + FORMATION_WATCH_MS   // 2 980 ms
 
+// The luminous burst is no longer a quick early spike — it's a SUSTAINED surge
+// that rises with the content implosion and holds through the particle scatter
+// peak (the field's bloom peaks mid-transition, ~1.6s), so 2D burst + 3D bloom
+// read as one light event rather than two. ~2.2s spans implosion→scatter→reform.
+const BURST_MS           = 2200
+
 // ── Luminous burst — the cinematic connector between 2D and 3D ───────────────
 //
 // When a chapter fires, this component erupts from the center of the viewport
@@ -115,7 +124,7 @@ function LuminousBurst() {
 
     setColor(ACCENT_COLORS[activeChapterIndex] ?? ACCENT_COLORS[0])
     setKey(k => k + 1)
-    timer.current = setTimeout(() => setColor(null), 1400)
+    timer.current = setTimeout(() => setColor(null), BURST_MS)
     return () => { if (timer.current) clearTimeout(timer.current) }
   }, [activeChapterIndex])
 
@@ -130,12 +139,14 @@ function LuminousBurst() {
       aria-hidden
       initial={{ opacity: 0, scale: 0.3 }}
       animate={{
-        opacity: [0, 0.55, 0.22, 0],
-        scale:   [0.3, 1.0, 1.4, 1.9],
+        // Bell-shaped surge (rise → hold through scatter peak → long fade) that
+        // mirrors the field bloom's sin(progress·π) envelope — one light event.
+        opacity: [0, 0.5, 0.55, 0.22, 0],
+        scale:   [0.3, 0.9, 1.4, 1.8, 2.1],
       }}
       transition={{
-        duration: 1.4,
-        times: [0, 0.22, 0.55, 1],
+        duration: BURST_MS / 1000,
+        times: [0, 0.18, 0.45, 0.72, 1],
         ease: "easeOut",
       }}
     >
@@ -250,7 +261,9 @@ const pageFlipVariants = {
     opacity: 0,
     clipPath: "inset(32% 28% 32% 28% round 8px)",
     filter: "blur(14px) brightness(3.5) saturate(0)",
-    scale: 0.96,
+    // Contracts harder toward its own centre as it flares white — content
+    // visibly FEEDS the LuminousBurst erupting from the same point (B9).
+    scale: 0.9,
     transition: {
       duration: 0.38,
       ease: [0.88, 0, 1, 0] as const,
@@ -271,7 +284,7 @@ function GradientOverlay() {
       animate={{
         background: `radial-gradient(ellipse at 50% 30%, rgba(${c.r},${c.g},${c.b},0.06) 0%, transparent 65%)`,
       }}
-      transition={{ duration: 0.8, ease: "easeInOut" }}
+      transition={{ duration: 1.2, ease: EASE_SETTLE }}
     />
   )
 }
@@ -381,12 +394,21 @@ function PageFlipContainer() {
 
   return (
     <div
-      className="relative min-w-0 w-full h-[calc(100vh-220px)] overflow-hidden"
+      className="relative min-w-0 w-full h-full min-h-0 overflow-hidden"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
       {/* Particle system status — "▸ compiling.torus" → "▸ render.complete" */}
       <ParticleSystemStatus />
+
+      {/* Formation telemetry — diegetic HUD over the exposed field during the
+          watch window. Shows the DESTINATION chapter's formation + accent. */}
+      <FormationTelemetry
+        active={isWatching}
+        accent={ACCENT_COLORS[activeChapterIndex] ?? ACCENT_COLORS[0]}
+        formation={FORMATION_IDS[activeChapterIndex] ?? "fibonacci_sphere"}
+        durationMs={ENTER_DELAY_MS}
+      />
 
       <AnimatePresence mode="wait">
         {/* Content is absent (isWatching=true) during the formation-watch window.
@@ -431,27 +453,24 @@ function PageLevelModal() {
 }
 
 export default function Home() {
-  // Skip intro if already seen this session (avoids flash on back-navigation)
-  const [cinematicDone, setCinematicDone] = useState(() =>
-    typeof window !== "undefined" && !!sessionStorage.getItem("cinematic_seen")
-  )
+  const [cinematicDone, setCinematicDone]     = useState(false)
   const [bootScreenDismissed, setBootScreenDismissed] = useState(false)
 
   return (
+    <MotionConfig reducedMotion="user">
     <SystemLogProvider>
       <ReadingStoreProvider>
         <ViewModeProvider>
           <ModalProvider>
-            {/* ── Cinematic intro — plays once per session before the boot screen ── */}
+            {/* ── Cinematic intro — z-[9999] overlay, covers OpeningHero until done ── */}
             {!cinematicDone && (
               <CinematicIntro onComplete={() => setCinematicDone(true)} />
             )}
 
-            {/* Boot screen — only mounts after cinematic is done */}
-            {cinematicDone && (
-              <OpeningHero onDismiss={() => setBootScreenDismissed(true)} />
-            )}
+            {/* Boot screen — always in the tree (prevents SSR/hydration mismatch) */}
+            <OpeningHero onDismiss={() => setBootScreenDismissed(true)} />
 
+            <PointerProvider>
             <div
               className={bootScreenDismissed ? "" : "invisible pointer-events-none fixed inset-0 overflow-hidden"}
               aria-hidden={!bootScreenDismissed}
@@ -478,41 +497,47 @@ export default function Home() {
                 <ForegroundParticles />
               </div>
 
-              {/* All content above the 3D background */}
-              <div className="relative bg-transparent h-screen overflow-hidden" style={{ zIndex: 2 }}>
+              {/* All content above the 3D background — flex column so navbar /
+                  content / footer resolve their heights at ANY viewport size
+                  (no fragile magic-number calc heights). */}
+              <div className="relative bg-transparent h-[100svh] overflow-hidden flex flex-col" style={{ zIndex: 2 }}>
                 <Navbar />
                 <main
                   className="mx-auto w-full max-w-[1440px] lg:max-w-[1680px] px-6 lg:px-4
-                 lg:grid lg:grid-cols-[220px_1fr_360px] lg:gap-7 h-[calc(100vh-160px)]"
+                 flex-1 min-h-0 flex flex-col
+                 lg:grid lg:grid-cols-[220px_1fr_360px] lg:gap-7"
                 >
-                  {/* Left column: sticky ChapterRail */}
-                  <div className="hidden lg:block">
+                  {/* Left column: sticky ChapterRail — subtlest parallax depth */}
+                  <PointerParallax strength={2} className="hidden lg:block">
                     <div className="sticky top-0 h-full min-h-0 flex items-center justify-center">
                       <div className="w-full max-h-full overflow-y-auto pb-4">
                         <ChapterRail />
                       </div>
                     </div>
-                  </div>
+                  </PointerParallax>
 
-                  {/* Middle column: single page at a time with flip animation */}
-                  <PageFlipContainer />
+                  {/* Middle column: single page at a time with flip animation.
+                      flex-1 fills the column on mobile (flex-col main); on lg the
+                      grid stretches it. */}
+                  <PointerParallax strength={5} className="min-w-0 flex-1 min-h-0">
+                    <PageFlipContainer />
+                  </PointerParallax>
 
-                  {/* Right column: SystemLogConsole */}
-                  <div className="hidden lg:block min-w-0">
+                  {/* Right column: SystemLogConsole — subtlest parallax depth */}
+                  <PointerParallax strength={2} className="hidden lg:block min-w-0">
                     <div className="sticky top-0 self-start z-40">
                       <div className="pt-6 flex justify-end">
                         <SystemLogConsole />
                       </div>
                     </div>
-                  </div>
+                  </PointerParallax>
                 </main>
 
-                {/* Footer pinned at bottom */}
-                <div className="absolute bottom-0 left-0 right-0">
-                  <Footer />
-                </div>
+                {/* Footer — in flow at the bottom of the flex column */}
+                <Footer />
               </div>
             </div>
+            </PointerProvider>
 
             {/* Modal rendered at page-level, OUTSIDE the perspective container */}
             <PageLevelModal />
@@ -526,5 +551,6 @@ export default function Home() {
         </ViewModeProvider>
       </ReadingStoreProvider>
     </SystemLogProvider>
+    </MotionConfig>
   )
 }

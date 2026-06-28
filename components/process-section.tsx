@@ -7,6 +7,8 @@ import { Ear, Map, PenTool, Rocket } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useViewMode } from "@/contexts/view-mode-context"
 import { cn } from "@/lib/utils"
+import { childRise, childRiseHeavy, childSlide } from "@/lib/motion"
+import { DecodeText } from "@/components/decode-text"
 
 const steps = [
   {
@@ -79,17 +81,19 @@ export function ProcessSection() {
       </div>
 
       <motion.div
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        variants={childRise}
+        initial="hidden"
+        animate="show"
+        custom={0}
         className="relative space-y-5 max-w-3xl mb-8"
       >
         <span className="eyebrow">Chapter 03 · Method · The Design Rhythm</span>
 
         <motion.h2
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+          variants={childRiseHeavy}
+          initial="hidden"
+          animate="show"
+          custom={1}
           className="display-lg text-slate-50"
         >
           The design{" "}
@@ -102,13 +106,13 @@ export function ProcessSection() {
               backgroundClip: "text",
             }}
           >
-            rhythm.
+            <DecodeText text="rhythm." delay={300} />
           </em>
         </motion.h2>
 
         {viewMode === "recruiter" && (
           <div className="flex flex-col gap-2 p-4 bg-primary/5 rounded-xl border border-primary/10 max-w-lg">
-            <span className="eyebrow" style={{ color: "rgba(74, 123, 247, 0.9)" }}>
+            <span className="eyebrow" style={{ color: "rgba(245, 158, 11, 0.9)" }}>
               Quick Summary
             </span>
             <ul className="space-y-1.5 mt-2">
@@ -128,9 +132,10 @@ export function ProcessSection() {
         </p>
 
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.4, delay: 0.2 }}
+          variants={childRise}
+          initial="hidden"
+          animate="show"
+          custom={2}
           className="pull-quote"
           style={{ borderLeftColor: "rgba(251, 191, 36, 0.6)" }}
         >
@@ -156,8 +161,8 @@ export function ProcessSection() {
             <motion.div
               className="absolute top-1/2 left-4 h-[2px] rounded-full origin-left"
               style={{
-                background: "linear-gradient(90deg, rgba(74,123,247,0.8), rgba(167,139,250,0.6))",
-                boxShadow: "0 0 6px rgba(74,123,247,0.4)",
+                background: "linear-gradient(90deg, rgba(245,158,11,0.8), rgba(167,139,250,0.6))",
+                boxShadow: "0 0 6px rgba(245,158,11,0.4)",
               }}
               animate={{
                 width: `${(activeStep / (steps.length - 1)) * (100 - 6)}%`,
@@ -205,8 +210,8 @@ export function ProcessSection() {
                           isActive
                             ? {
                                 boxShadow: [
-                                  "0 0 0 0 rgba(74, 123, 247, 0.5)",
-                                  "0 0 0 14px rgba(74, 123, 247, 0)",
+                                  "0 0 0 0 rgba(245, 158, 11, 0.5)",
+                                  "0 0 0 14px rgba(245, 158, 11, 0)",
                                 ],
                               }
                             : {}
@@ -214,9 +219,9 @@ export function ProcessSection() {
                         transition={{ duration: 1.8, repeat: isActive ? Infinity : 0 }}
                         style={
                           isActive
-                            ? { filter: "drop-shadow(0 0 14px rgba(74, 123, 247, 0.7))" }
+                            ? { filter: "drop-shadow(0 0 14px rgba(245, 158, 11, 0.7))" }
                             : isPast
-                            ? { filter: "drop-shadow(0 0 6px rgba(74, 123, 247, 0.25))" }
+                            ? { filter: "drop-shadow(0 0 6px rgba(245, 158, 11, 0.25))" }
                             : {}
                         }
                       >
@@ -278,9 +283,10 @@ export function ProcessSection() {
                   {currentStep.bullets.map((bullet, i) => (
                     <motion.li
                       key={i}
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.05 + i * 0.03 }}
+                      variants={childSlide}
+                      initial="hidden"
+                      animate="show"
+                      custom={3 + i}
                       className="flex items-start gap-3 text-muted-foreground"
                     >
                       <span className="h-1.5 w-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
@@ -302,14 +308,15 @@ export function ProcessSection() {
           {steps.map((step, index) => (
             <motion.div
               key={step.title}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: index * 0.05, duration: 0.3 }}
+              variants={childSlide}
+              initial="hidden"
+              animate="show"
+              custom={3 + index}
               className="relative pl-16"
             >
               <div
                 className="absolute left-3 top-4 w-6 h-6 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-xs font-bold shadow-md z-10"
-                style={{ filter: "drop-shadow(0 0 6px rgba(74, 123, 247, 0.4))" }}
+                style={{ filter: "drop-shadow(0 0 6px rgba(245, 158, 11, 0.4))" }}
               >
                 {step.number}
               </div>

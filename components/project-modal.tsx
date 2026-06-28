@@ -124,7 +124,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                   <ul className="space-y-2">
                     {project.approach.map((item, i) => (
                       <li key={i} className="flex items-start gap-2 text-slate-300">
-                        <span className="h-1.5 w-1.5 rounded-full bg-[#4A7BF7] mt-2 flex-shrink-0" />
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#F59E0B] mt-2 flex-shrink-0" />
                         {item}
                       </li>
                     ))}
@@ -168,7 +168,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                       </div>
                       <Link
                         href="/case-stories/hirello-ai/full"
-                        className="text-xs font-semibold inline-flex items-center gap-1 rounded-full px-4 py-1.5 border border-white/10 bg-slate-800 text-white hover:bg-white hover:text-slate-900 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#4A7BF7]"
+                        className="text-xs font-semibold inline-flex items-center gap-1 rounded-full px-4 py-1.5 border border-white/10 bg-slate-800 text-white hover:bg-white hover:text-slate-900 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#F59E0B]"
                       >
                         Open system log →
                       </Link>
