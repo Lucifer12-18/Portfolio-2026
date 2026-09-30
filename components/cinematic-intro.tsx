@@ -2,9 +2,10 @@
 
 import { useEffect, useRef, useState, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import { prefersReducedMotion } from "@/lib/use-reduced-motion"
 
 // ── Types ─────────────────────────────────────────────────────────────────────
-type WordStyle = "muted" | "normal" | "emphasis" | "hero" | "cyan" | "strike"
+type WordStyle = "muted" | "normal" | "emphasis" | "hero" | "signal" | "strike"
 
 interface SceneWord {
   text: string
@@ -60,7 +61,7 @@ const SCENES: Scene[] = [
         { text: "get",   style: "normal" },
         { text: "to",    style: "normal" },
       ],
-      [{ text: "GREAT", style: "cyan" }],
+      [{ text: "GREAT", style: "signal" }],
     ],
   },
   {
@@ -91,7 +92,7 @@ const SCENES: Scene[] = [
         { text: "in",        style: "muted" },
         { text: "game",      style: "normal" },
         { text: "of",        style: "normal" },
-        { text: "software —", style: "normal" },
+        { text: "software,", style: "normal" },
       ],
     ],
   },
@@ -108,7 +109,7 @@ const SCENES: Scene[] = [
       ],
       [
         { text: "through", style: "normal" },
-        { text: "design.", style: "cyan" },
+        { text: "design.", style: "signal" },
       ],
     ],
   },
@@ -149,12 +150,12 @@ const FADE_AT    = 16200  // ms — fade out after credit has 3.2s to breathe
 
 // ── Style map ─────────────────────────────────────────────────────────────────
 const WORD_CLASS: Record<WordStyle, string> = {
-  muted:    "text-white/35 text-2xl sm:text-3xl font-light  font-display tracking-wide",
-  normal:   "text-white/65 text-3xl sm:text-4xl font-normal font-display",
-  emphasis: "text-white    text-4xl sm:text-5xl font-bold   font-display tracking-tight",
-  hero:     "text-white    text-5xl sm:text-7xl lg:text-8xl font-black  font-display tracking-tighter leading-none",
-  cyan:     "text-cyan-400 text-5xl sm:text-7xl lg:text-8xl font-black  font-display tracking-tighter leading-none",
-  strike:   "text-white/50 text-3xl sm:text-5xl font-semibold font-display line-through decoration-white/40 decoration-[2px]",
+  muted:    "text-bone/35 text-2xl sm:text-3xl font-light font-display tracking-[-0.02em]",
+  normal:   "text-bone/65 text-3xl sm:text-4xl font-normal font-display tracking-[-0.03em]",
+  emphasis: "text-bone    text-4xl sm:text-5xl font-medium font-display tracking-[-0.04em]",
+  hero:     "text-bone    text-5xl sm:text-7xl lg:text-8xl font-semibold font-display tracking-[-0.055em] leading-none",
+  signal:   "text-signal  text-5xl sm:text-7xl lg:text-8xl font-semibold font-display tracking-[-0.055em] leading-none",
+  strike:   "text-bone/50 text-3xl sm:text-5xl font-medium font-display tracking-[-0.03em] line-through decoration-bone/40 decoration-[2px]",
 }
 
 // ── Framer variants ───────────────────────────────────────────────────────────
@@ -185,10 +186,27 @@ export function CinematicIntro({ onComplete }: CinematicIntroProps) {
   const [sceneIdx, setSceneIdx] = useState(-1)
   const [visible, setVisible]   = useState(true)
   const audioRef                = useRef<HTMLAudioElement | null>(null)
+  const overlayRef              = useRef<HTMLDivElement | null>(null)
   const fadeTimer               = useRef<ReturnType<typeof setTimeout> | null>(null)
   const creditTimer             = useRef<ReturnType<typeof setTimeout> | null>(null)
   const phaseRef                = useRef(phase)
   phaseRef.current              = phase
+
+  // Reduced motion: this is a motion/flash-heavy audio sequence — complete
+  // immediately so those visitors land straight on the (calm) site.
+  useEffect(() => {
+    if (prefersReducedMotion()) {
+      setPhase("done")
+      onComplete()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // Keyboard access: the overlay is the only thing on screen — focus it so
+  // Enter/Space/Escape work without hunting for a target.
+  useEffect(() => {
+    overlayRef.current?.focus({ preventScroll: true })
+  }, [])
 
   const finish = useCallback(() => {
     if (fadeTimer.current)  clearTimeout(fadeTimer.current)
@@ -256,15 +274,39 @@ export function CinematicIntro({ onComplete }: CinematicIntroProps) {
 
   if (phase === "done") return null
 
+  // The same action a click performs in the current phase, exposed to keyboard.
+  const activate =
+    phase === "waiting" ? begin : phase === "playing" ? skip : phase === "credit" ? finish : undefined
+
   return (
     <div
-      className="fixed inset-0 z-[9999] bg-black flex items-center justify-center overflow-hidden"
+      ref={overlayRef}
+      role="button"
+      tabIndex={0}
+      aria-label={
+        phase === "waiting"
+          ? "Begin intro (Enter). Press Escape anytime to skip."
+          : phase === "playing"
+            ? "Skip intro"
+            : "Enter site"
+      }
+      className="fixed inset-0 z-[9999] bg-black flex items-center justify-center overflow-hidden focus:outline-none"
       style={{
         opacity: visible ? 1 : 0,
         transition: "opacity 0.9s ease-in-out",
         pointerEvents: phase === "fading" ? "none" : "auto",
       }}
-      onClick={phase === "waiting" ? begin : phase === "playing" ? skip : phase === "credit" ? finish : undefined}
+      onClick={activate}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault()
+          activate?.()
+        } else if (e.key === "Escape" && (phase === "playing" || phase === "credit" || phase === "waiting")) {
+          e.preventDefault()
+          // Escape always fast-forwards into the site.
+          phase === "waiting" ? finish() : skip()
+        }
+      }}
     >
       {/* Hidden audio */}
       <audio ref={audioRef} src="/audio/dylan-field.mp3" preload="auto" />
@@ -295,7 +337,7 @@ export function CinematicIntro({ onComplete }: CinematicIntroProps) {
                 press anywhere
               </p>
               <p className="text-white/20 text-[10px] tracking-[0.3em] uppercase font-mono">
-                to begin
+                to begin · esc skips
               </p>
             </div>
             {/* Bottom line */}
@@ -367,7 +409,7 @@ export function CinematicIntro({ onComplete }: CinematicIntroProps) {
             className="flex flex-col items-center gap-3 select-none"
           >
             <motion.div
-              className="h-px bg-cyan-400/50 mx-auto"
+              className="h-px bg-bone/40 mx-auto"
               initial={{ width: 0 }}
               animate={{ width: 40, transition: { duration: 0.6, delay: 0.2 } }}
             />
@@ -376,7 +418,7 @@ export function CinematicIntro({ onComplete }: CinematicIntroProps) {
               Figma CEO Dylan Field
             </p>
             <motion.div
-              className="h-px bg-cyan-400/50 mx-auto"
+              className="h-px bg-bone/40 mx-auto"
               initial={{ width: 0 }}
               animate={{ width: 40, transition: { duration: 0.6, delay: 0.4 } }}
             />

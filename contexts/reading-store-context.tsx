@@ -64,3 +64,9 @@ export function useReadingStore() {
   }
   return context
 }
+
+/** Same store, but `undefined` outside a provider — for shared chrome
+ *  (WindowShell) that also renders on standalone pages. */
+export function useOptionalReadingStore() {
+  return useContext(ReadingStoreContext)
+}

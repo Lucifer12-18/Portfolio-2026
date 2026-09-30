@@ -6,6 +6,8 @@ import * as THREE from "three"
 import { useReadingStore } from "@/contexts/reading-store-context"
 import { damp } from "@/lib/motion"
 import { pointerState } from "@/lib/pointer-state"
+import { useReducedMotion } from "@/lib/use-reduced-motion"
+import { CHAPTER_ACCENTS_VEC } from "@/lib/chapter-palette"
 
 const FOREGROUND_PARTICLE_COUNT = 80
 
@@ -16,15 +18,7 @@ const FG_SCROLL_Y_OFFSET = 0.3
 const FG_SCROLL_Z_OFFSET = 0.2
 const FG_SCROLL_INFLUENCE = 0.12
 
-const FG_CHAPTER_COLORS: [number, number, number][] = [
-  [0.133, 0.827, 0.933],
-  [0.024, 0.714, 0.831],
-  [0.486, 0.227, 0.929],
-  [0.655, 0.545, 0.98],
-  [0.22, 0.741, 0.973],
-  [0.576, 0.773, 0.992],
-  [0.878, 0.976, 1.0],
-]
+const FG_CHAPTER_COLORS = CHAPTER_ACCENTS_VEC
 
 const fgVertexShader = /* glsl */ `
 precision highp float;
@@ -117,13 +111,19 @@ interface ForegroundParticleCloudProps {
   targetColor: [number, number, number]
   scrollProgress: number
   chapterIndex: number
+  reduced: boolean
 }
 
-function ForegroundParticleCloud({ targetColor, scrollProgress, chapterIndex }: ForegroundParticleCloudProps) {
+function ForegroundParticleCloud({ targetColor, scrollProgress, chapterIndex, reduced }: ForegroundParticleCloudProps) {
   const pointsRef = useRef<THREE.Points>(null!)
   const groupRef = useRef<THREE.Group>(null!)
   const mouseLerped = useRef<THREE.Vector2>(new THREE.Vector2(0, 0))
   const scrollLerped = useRef(0)
+
+  // Reduced motion: wisps drift at ~12% speed, no burst, no pointer parallax.
+  const reducedRef = useRef(reduced)
+  reducedRef.current = reduced
+  const timeRef = useRef(0)
 
   // Chapter-change burst: wisps rush outward then drift back to stillness
   const prevChapterRef = useRef(chapterIndex)
@@ -160,13 +160,15 @@ function ForegroundParticleCloud({ targetColor, scrollProgress, chapterIndex }: 
   )
 
   useFrame((state, delta) => {
-    uniforms.uTime.value = state.clock.elapsedTime
+    const rm = reducedRef.current
+    timeRef.current += delta * (rm ? 0.12 : 1)
+    uniforms.uTime.value = timeRef.current
     uniforms.uPixelRatio.value = state.gl.getPixelRatio()
 
-    // Detect chapter change → trigger warp burst
+    // Detect chapter change → trigger warp burst (skipped under reduced motion)
     if (chapterIndex !== prevChapterRef.current) {
       prevChapterRef.current = chapterIndex
-      burstRef.current = 1.0
+      if (!rm) burstRef.current = 1.0
     }
 
     // Decay burst over ~2s — exponential so it snaps quickly then fades gently
@@ -176,8 +178,9 @@ function ForegroundParticleCloud({ targetColor, scrollProgress, chapterIndex }: 
 
     // Follow the SHARED pointer bus for gentle parallax (frame-rate independent).
     // Wisps lag a touch behind the field (lower k) → reads as depth separation.
-    mouseLerped.current.x = damp(mouseLerped.current.x, pointerState.x, 4, delta)
-    mouseLerped.current.y = damp(mouseLerped.current.y, pointerState.y, 4, delta)
+    // Reduced motion: settle to centre.
+    mouseLerped.current.x = damp(mouseLerped.current.x, rm ? 0 : pointerState.x, 4, delta)
+    mouseLerped.current.y = damp(mouseLerped.current.y, rm ? 0 : pointerState.y, 4, delta)
 
     // Smooth scroll influence (frame-rate independent)
     scrollLerped.current = damp(scrollLerped.current, scrollProgress, 5, delta)
@@ -188,8 +191,9 @@ function ForegroundParticleCloud({ targetColor, scrollProgress, chapterIndex }: 
     const scrollZOffset = scrollLerped.current * FG_SCROLL_Z_OFFSET
 
     // Rotation: base drift + scroll influence + burst spike when chapter changes
-    // Burst makes wisps feel like they're reacting to the world-shift
-    if (pointsRef.current) {
+    // Burst makes wisps feel like they're reacting to the world-shift.
+    // Held still under reduced motion.
+    if (pointsRef.current && !rm) {
       const baseRotSpeed = 0.025 + Math.abs(scrollLerped.current) * FG_SCROLL_INFLUENCE
       const burstBoost = burstRef.current * burstRef.current * 0.35  // quadratic so burst is sharp
       pointsRef.current.rotation.y += delta * (baseRotSpeed + burstBoost)
@@ -216,11 +220,8 @@ function ForegroundParticleCloud({ targetColor, scrollProgress, chapterIndex }: 
       <group ref={pointsRef}>
         <points frustumCulled={false}>
           <bufferGeometry>
-            {/* @ts-expect-error – R3F bufferAttribute args tuple */}
             <bufferAttribute attach="attributes-position" args={[positions, 3]} />
-            {/* @ts-expect-error – R3F bufferAttribute args tuple */}
             <bufferAttribute attach="attributes-aIndex" args={[indices, 1]} />
-            {/* @ts-expect-error – R3F bufferAttribute args tuple */}
             <bufferAttribute attach="attributes-aRandom" args={[randoms, 3]} />
           </bufferGeometry>
           <shaderMaterial
@@ -237,7 +238,7 @@ function ForegroundParticleCloud({ targetColor, scrollProgress, chapterIndex }: 
   )
 }
 
-function ForegroundParticlesInner() {
+function ForegroundParticlesInner({ reduced }: { reduced: boolean }) {
   const { activeChapterIndex } = useReadingStore()
   const colorIndex = FG_CHAPTER_COLORS[activeChapterIndex] ? activeChapterIndex : 0
   const palette = FG_CHAPTER_COLORS[colorIndex] ?? FG_CHAPTER_COLORS[0]
@@ -269,21 +270,25 @@ function ForegroundParticlesInner() {
           targetColor={palette}
           scrollProgress={scrollProgress}
           chapterIndex={activeChapterIndex}
+          reduced={reduced}
         />
       </group>
     </>
   )
 }
 
-export default function ForegroundParticles() {
+export default function ForegroundParticles({ active = true }: { active?: boolean }) {
+  const reduced = useReducedMotion()
   return (
     <Canvas
       camera={{ position: [0, 0, 4], fov: 60 }}
       dpr={1}
+      // Paused while the boot gate hides the layer.
+      frameloop={active ? "always" : "never"}
       gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
       style={{ width: "100%", height: "100%", pointerEvents: "none" }}
     >
-      <ForegroundParticlesInner />
+      <ForegroundParticlesInner reduced={reduced} />
     </Canvas>
   )
 }

@@ -5,11 +5,13 @@
 ---
 
 ## Current Status
-**Last updated:** 2026-04-20
+**Last updated:** 2026-09-29
 **Dev server:** `npm run dev` → localhost:3000
 **Build status:** ⏳ Visual verification pending (sandbox npm install timed out — run `npm run dev` locally to confirm)
 
-**Active experiment (2026-04-20, iter 2):** full warm-amber shift. Base went fully black/graphite AND brand accent (`--primary`) moved from electric blue `#4a7bf7` → warm amber `#f59e0b`. The first iteration (neutral dark base only) looked "basically the same" per user feedback because the blue `--primary` and cyan/blue `text-gradient` still dominated the hero headline + CTAs + eyebrow labels. Iter 2 rebuilds the accent chrome around amber + coral + lavender. Cyan is preserved only in contextual places (system-log, chapter-0 particle accents, 3D scene). Revertible — see _docs/Sessions/Session Log.md entry dated 2026-04-20 (iter 2).
+**Current design system (2026-09-29): "Pigment on Charcoal" — see the section of that name below.** It supersedes the warm-amber iter-2 palette notes and the font/colour details of the Editorial Design System further down (the utility class NAMES still exist; their styling changed).
+
+**Superseded experiment (2026-04-20, iter 2):** full warm-amber shift. Base went fully black/graphite AND brand accent (`--primary`) moved from electric blue `#4a7bf7` → warm amber `#f59e0b`. The first iteration (neutral dark base only) looked "basically the same" per user feedback because the blue `--primary` and cyan/blue `text-gradient` still dominated the hero headline + CTAs + eyebrow labels. Iter 2 rebuilds the accent chrome around amber + coral + lavender. Cyan is preserved only in contextual places (system-log, chapter-0 particle accents, 3D scene). Revertible — see _docs/Sessions/Session Log.md entry dated 2026-04-20 (iter 2).
 
 ---
 
@@ -55,7 +57,7 @@
 
 > Add tasks here as they come up. Remove when done.
 
-- [ ] Visually verify the warm-amber palette shift in the browser (2026-04-20 iter 2) — does it look good or roll back to blue?
+- [ ] User review of the 2026-09-29 Pigment-on-Charcoal pass (colour intensity, DevTown removal, Hirello copy)
 - [ ] Visually verify the editorial redesign in the browser (all 7 chapters + notes article pages)
 - [ ] Consider editorial polish on case story pages (`/case-stories/hirello-ai/*`) — typography primitives already propagate, but layouts haven't been touched
 
@@ -186,9 +188,66 @@ The shell is now **flexbox-driven** (`app/page.tsx`): content div is `h-[100svh]
 - Footer compacted on mobile (194px→~120px); hero top padding `pt-20`→`pt-4 sm:pt-10 md:pt-24`.
 - Verified zero horizontal overflow at 375 / 768 / 1024 / 1440; 3-col grid engages at `lg` (1024) and fits exactly.
 
+## Accessibility + recruiter-readiness overhaul (shipped 2026-06-28)
+
+WCAG-level pass across the whole site. The important mechanics:
+
+- **Keyboard access everywhere**: cinematic intro overlay is a focusable role=button (Enter begins, Escape skips — it autofocuses); work cards are role=button with Enter/Space; project modal has role=dialog + aria-modal + focus trap + focus restore + labeled ≥24px close; WindowShell scroll region is `tabIndex=0 role=region` (Tab in → arrows scroll natively). Global `:focus-visible` amber outline in globals.css (system cursor is hidden by CursorEffect, so this is the only indicator).
+- **Arrow-key guard** (`app/page.tsx` handleKeyDown): chapter flipping only when no modifiers, no open modal, and activeElement is body or inside `[data-chapter-nav]` — otherwise arrows do their native thing.
+- **Reduced motion** (`lib/use-reduced-motion.ts`, the ONE source of truth; `?reducedMotion` URL param forces it for testing): auto-skips the intro, ~200ms chapter crossfades (no watch window/burst/flashes), calm near-static particle field, CursorEffect disabled (system cursor stays), global CSS animation kill in globals.css.
+- **Gate logic** (`app/page.tsx` Home): intro plays once per session (`sessionStorage plx.introSeen`); skipped for `?skipIntro` (localStorage), chapter deep-links, and reduced motion; `?showIntro` clears flags and replays.
+- **Hash deep links**: `/#chapter-4` etc. resolve BEFORE first content mount (PageFlipContainer `hydrated` gate + mount-time sync of both indices — nothing to interrupt). In-page hashchange uses `skipTransitionRef` (lib/formation-state) through the quick unmount-gap flow. URL hash syncs on chapter change (replaceState).
+- **AnimatePresence NOTE**: the chapter slot deliberately uses DEFAULT mode, not mode="wait" — "wait" wedges permanently if an exit interrupts a just-started enter (blank chapter). Sequencing comes from the isWatching gap; don't reintroduce mode="wait" here.
+- **SR semantics**: single sr-only h1 in page.tsx (hero headline demoted to h2); aria-live polite region announces chapter changes; aria-pressed/expanded/current on toggles/menu/pills/steps/dots; decorative layers + separators aria-hidden; DecodeText renders sr-only real text + aria-hidden scramble.
+- **Metadata**: root layout has metadataBase (NEXT_PUBLIC_SITE_URL → VERCEL_URL → localhost), OG + twitter cards, title template; `app/opengraph-image.tsx` renders the share card via next/og; case pages get titles via per-segment layout.tsx files (pages are client components — and the hirello-ai layout must keep its nested title TEMPLATE or grandchildren lose the suffix).
+- **Hygiene**: `ignoreBuildErrors` REMOVED (tsc must stay clean — it is); ESLint 9 + eslint-config-next flat config (`eslint.config.mjs`; native flat exports, no FlatCompat; vault/scaffold dirs ignored; React-Compiler-era rules demoted to warn); postprocessing deps removed; three-scene dpr capped [1,1.5]; hidden canvases pause via `frameloop` gated on an `active` prop.
+- Global styled 404 (`app/not-found.tsx`); broken `#work` back-link fixed to `/#chapter-4`.
+
 ## Case-story pages joined the system (shipped 2026-06-28)
 
 All 4 pages under `app/case-stories/hirello-ai/` (snapshot, full, interview, networking): light-theme remnants (`#F0EDE8`, `bg-slate-50`, `border-slate-200/300`, dark `text-slate-600..900`) mapped to dark (`bg-white/[0.08]`, `bg-slate-900/50`, `border-white/10`, `text-slate-200/400`); major blocks wrapped in the shared `childRise`/`childRiseHeavy` cascade; H1s use `DecodeText`; `CursorEffect` + `FilmGrain` rendered inside the providers for ambient continuity (no 3D Canvas — keeps these content pages fast). Full-scroll responsiveness preserved.
+
+---
+
+## "Pigment on Charcoal" — Taste pass + résumé update (shipped 2026-09-29)
+
+Brief: update the portfolio to the Sep 2026 résumé (new role: **Product Designer, Design Systems @ TasteMakers by Taste Labs**) and lift the aesthetic toward tastelabs.com / tastemakers.tastelabs.com — restraint, grotesk + mono labels, hairlines, two-tone grey→bone headlines, round arrow chips. **User feedback mid-pass: "don't just go black and white — keep good colour that suits the aesthetic."** So: calm charcoal/bone base + ONE living colour per chapter.
+
+**Single sources of truth (edit these, not section copy):**
+| File | Owns |
+|---|---|
+| `lib/profile.ts` | Résumé as data — PROFILE (email/links/summary), EXPERIENCE (TasteMakers → Hirello → UMBC HCC → Wipro), EDUCATION, SKILLS, CURRENT_ROLE. Hero, Origin ledger, Now panel, navbar, boot screen, contact all read it. |
+| `lib/chapter-palette.ts` | Per-chapter pigments (dusk→dawn arc: amber, terracotta, rose, lavender, periwinkle, sage, champagne), scene bg tints, FORMATION_IDS, `accentHex/accentRgb`, SPECTRUM_GRADIENT. Particles, cursor, burst, rail, telemetry AND the UI pigment all derive from it (was copy-pasted in 6 files). |
+| `components/primitives.tsx` | ArrowChip, ActionLink (mono label + round chip), InBrief (recruiter summary), WordCycle (rolling word slot — all words stay mounted, no AnimatePresence churn). |
+| `components/chapter-tint.tsx` | Sets `--chapter` on <html>. Home follows activeChapterIndex (`<ChapterAccent/>` in page.tsx); case stories pin Work (4); notes pin Notes (5). |
+
+**Tokens (globals.css):** ink scale `--ink-0..3` (#0f0f0e…), bone scale `--bone..bone-4` (bone-4 is decorative only, 3:1), hairlines `--hair/-2/-3`, `--signal` (fixed amber, "live" dots only), and `--chapter` — registered with `@property` so it CROSSFADES (1.4s settle) in step with the particle blend. Tailwind colours: `bone*`, `ink*`, `hair*`, `signal`, `chapter` (e.g. `text-chapter`, `bg-chapter/20`).
+**Type:** Geist (display + text, weight 500, tight tracking) + Azeret Mono (labels/buttons, sentence case). Syne / DM Sans / JetBrains / Press Start 2P removed; `font-pixel` aliases to mono. Display sizes use **container units (cqi)**.
+**Headline recipe:** `<span className="ink-dim">setup</span> <DecodeText text="payoff" className="ink-accent" />` — grey setup, payoff in the chapter pigment easing into bone.
+**Primitive classes:** `.surface` / `.surface-interactive` (hairline glass card, pigment glow on hover), `.btn-solid` / `.btn-ghost` (+`.btn-sm`), `.arrow-chip` (fills with pigment on `.group` hover), `.live-dot`, `.label-mono`, `.keycap`, `.eyebrow` (pigment square bullet).
+
+**Layout:** WindowShell's scroll region is a `@container`; chapter grids use `@xl/@2xl/@3xl/@4xl` variants, NOT viewport `md/lg` — the window's width depends on the rails. Page grid: rail + content at lg, plus the right Now panel at xl (`[184px_1fr_300px]`, 2xl `[200px_1fr_340px]`). WindowShell in chapter mode shows `04 / 06`, prev/next chips and a pigment progress hairline.
+
+**Shell:** navbar = wordmark (PIXELOGIC + pigment OS), Now line (only where the Now panel isn't: lg on home, xl elsewhere; the hero has its own Now card below lg), segmented mode toggle, Résumé. Status strip + UTC clock removed. Footer = one hairline row + ←→ hint + spectrum hairline. Right rail = `NowPanel` (current role + previous roles) above a slim `SystemLogConsole` showing the LIVE log tail (boot lines are initial state in system-log-context; ids from a ref counter). DecodeText now always settles via a timeout even if rAF is throttled.
+
+**Content:** Hirello card rewritten to match the résumé AND its own case pages (AI Career Operating System; +18% completion, −30% drop-off, +14% adoption; real `/hirello-pipeline.png`). Old "AI recruiting / −40% screening time" copy removed. New case card: **AI Policy by Design — UMBC HCC Research** (`/images/ai-policy-by-design.svg`), strictly from résumé bullets. Origin timeline → expandable résumé ledger (Experience + Education). **DevTown (2023) was dropped** to match the résumé — restore in lib/profile.ts if wanted. Capabilities gained a Design Systems column; each Method step cites résumé evidence. Boot screen, OG image, 404s and note pages restyled.
+
+**Revert:** `git stash list` → "pre-taste-refresh snapshot 2026-09-29" holds the prior tracked working tree (`git stash apply` onto a clean tree).
+
+---
+
+## Storyboard pass + cover series (shipped 2026-09-29, same day)
+
+User feedback: "a lot of text — it should feel like moving through a storyboard" + "the preview pictures on case studies and notes look weird" (they were the old navy/cyan SVGs).
+
+**Storyboard vocabulary** (`components/storyboard.tsx`): chapters are **Scenes** (eyebrows read "Scene 04 · Work"). Ideas are told in **Panels** = `Frame` (dotted paper, pigment pool, viewfinder `CropMarks`, "SH 01" shot label) + a one-line caption (+ optional mono `tags` instead of bullet lists). Drawings are `<Sketch name=…/>` (12: logic, deliver, network, components, screens, tokens, abtest, signal, listen, map, prototype, ship) and `<FormationGlyph index/>` (the 7 particle shapes). Everything is drawn in DOTTED strokes (0-length dash + round caps) so it reads as particle matter; `.sb-dots` march on `.group:hover` (globals.css).
+- Prologue: body copy cut to one lede; right column = **contact sheet** of the 6 scenes ahead (glyph frames in each scene's pigment; hover leans the 3D camera via railHover, click plays the transition).
+- Origin: 4 panels (Engineering → Wipro → UMBC → design systems for AI) + one statement line + compact résumé ledger; the long story is behind "Read the long version".
+- Shift: 4 panels with tags + one-line Toolkit. Method: 4-panel sequence with arrows, each caption is résumé evidence; tabs/detail panel removed.
+- Epilogue: one lede + email bar + a 7-frame **credits** strip to replay any scene.
+- Rail = **filmstrip**: mini glyph frames on a spine that fills in the chapter pigment (frames stay opaque; only the glyph dims — otherwise the spine shows through).
+
+**Cover series** (`components/covers.tsx`, data for notes in `lib/note-covers.ts` — plain module so server pages can read it): `CaseCover({file})` keyed by project `file` — Hirello = real screenshot in a tilted browser frame + floating metric chip (periwinkle); AI Policy (lavender), Reddit (terracotta), Dashboard (sage) = composed SVG scenes. `NoteCover({slug, number, tag})` = typographic posters (Reveal. / Systems. / Story. / Measure. / Wait.) + a motif, each in its own pigment; note article pages use the same cover and `ChapterTint` to the note's pigment. The case modal opens on the same cover. Old `public/images/*-mockup.svg` and `notes/thumb-*.svg` are no longer referenced by cards (in-article infographics still are).
 
 ---
 

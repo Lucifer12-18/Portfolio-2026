@@ -106,7 +106,7 @@ export function FormationTelemetry({ active, accent, formation, durationMs }: Fo
           {/* Centre HUD readout — the OS compiling the formation */}
           <div
             className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2 select-none"
-            style={{ fontFamily: "'JetBrains Mono','Fira Code',monospace" }}
+            style={{ fontFamily: "var(--font-mono)" }}
           >
             <span style={{ fontSize: 9, letterSpacing: "0.32em", textTransform: "uppercase", color: `rgba(${rgb}, 0.5)` }}>
               compiling formation

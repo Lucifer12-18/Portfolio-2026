@@ -134,8 +134,8 @@ export default function HirelloFullCaseStudyPage() {
                     Instead of designing features, I designed systems. Two principles guided the work:
                   </p>
                   <ul className="space-y-1.5 text-sm md:text-base text-muted-foreground leading-relaxed">
-                    <li>• Structure reduces anxiety — when everything has a place, users feel in control.</li>
-                    <li>• Feedback accelerates growth — without measurable feedback, practice doesn’t compound.</li>
+                    <li>• Structure reduces anxiety: when everything has a place, users feel in control.</li>
+                    <li>• Feedback accelerates growth: without measurable feedback, practice doesn’t compound.</li>
                   </ul>
                   <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
                     Everything in Hirello maps back to those two ideas.
@@ -145,11 +145,11 @@ export default function HirelloFullCaseStudyPage() {
                 {/* Module 01 — Networking Intelligence System */}
                 <motion.section className="space-y-8 pt-6" variants={childRise} initial="hidden" animate="show" custom={5}>
                   <h2 className="text-sm font-mono uppercase tracking-[0.18em] text-muted-foreground">
-                    Module 1 — Networking Intelligence System
+                    Module 1: Networking Intelligence System
                   </h2>
                   <h3 className="text-base font-semibold text-foreground">Designing a CRM for job seekers</h3>
                   <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
-                    Job seekers don’t need “contacts” — they need strategy. Networking is typically unstructured and
+                    Job seekers don’t need “contacts.” They need strategy. Networking is typically unstructured and
                     reactive. The goal was to create a prioritisation system, a contact tracking system, a guided outreach
                     workflow, and a visual opportunity pipeline.
                   </p>
@@ -194,9 +194,9 @@ export default function HirelloFullCaseStudyPage() {
                       Cold outreach creates decision fatigue. To reduce friction, I designed a three-step guided system:
                     </p>
                     <ul className="space-y-1.5 text-sm md:text-base text-muted-foreground leading-relaxed">
-                      <li>• Step 1 — Select contacts</li>
-                      <li>• Step 2 — Choose template</li>
-                      <li>• Step 3 — Preview and send</li>
+                      <li>• Step 1: Select contacts</li>
+                      <li>• Step 2: Choose template</li>
+                      <li>• Step 3: Preview and send</li>
                     </ul>
                     <p className="text-sm md:text-base font-semibold text-foreground/90">
                       Cold outreach should feel guided, not overwhelming.
@@ -208,21 +208,21 @@ export default function HirelloFullCaseStudyPage() {
                       <div className="rounded-lg border border-white/10 bg-white/[0.05] overflow-hidden inline-block transform scale-[0.95] opacity-90">
                         <img
                           src="/hirello-outreach-step-1.png"
-                          alt="Hirello outreach wizard — step 1 thumbnail"
+                          alt="Hirello outreach wizard, step 1 thumbnail"
                           className="block h-auto w-40 md:w-48"
                         />
                       </div>
                       <div className="rounded-lg border border-white/10 bg-white/[0.05] overflow-hidden inline-block transform scale-[0.95] opacity-90">
                         <img
                           src="/hirello-outreach-step-2.png"
-                          alt="Hirello outreach wizard — step 2 thumbnail"
+                          alt="Hirello outreach wizard, step 2 thumbnail"
                           className="block h-auto w-40 md:w-48"
                         />
                       </div>
                       <div className="rounded-lg border border-white/10 bg-white/[0.05] overflow-hidden inline-block transform scale-[0.95] opacity-90">
                         <img
                           src="/hirello-outreach-step-3.png"
-                          alt="Hirello outreach wizard — step 3 thumbnail"
+                          alt="Hirello outreach wizard, step 3 thumbnail"
                           className="block h-auto w-40 md:w-48"
                         />
                       </div>
@@ -246,7 +246,7 @@ export default function HirelloFullCaseStudyPage() {
                       </div>
                     </div>
                     <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
-                      Networking shifted from reactive to repeatable — a job-seeker-specific CRM with prioritisation logic
+                      Networking shifted from reactive to repeatable: a job-seeker-specific CRM with prioritisation logic
                       and outreach sequencing.
                     </p>
                   </div>
@@ -256,14 +256,14 @@ export default function HirelloFullCaseStudyPage() {
                 <motion.section className="pt-12 md:pt-16" variants={childRise} initial="hidden" animate="show" custom={6}>
                   <div className="border-t border-white/10 mb-6" />
                   <p className="text-[11px] font-mono uppercase tracking-[0.18em] text-center text-muted-foreground">
-                    Module 2 — AI Interview Gym
+                    Module 2: AI Interview Gym
                   </p>
                 </motion.section>
 
                 {/* Module 02 — AI Interview Gym */}
                 <motion.section className="space-y-8 pt-2" variants={childRise} initial="hidden" animate="show" custom={7}>
                   <h2 className="text-sm font-mono uppercase tracking-[0.18em] text-muted-foreground">
-                    Module 2 — AI Interview Gym
+                    Module 2: AI Interview Gym
                   </h2>
                   <h3 className="text-base font-semibold text-foreground">Designing structured AI interview feedback</h3>
                   <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
@@ -347,7 +347,7 @@ export default function HirelloFullCaseStudyPage() {
                     <h4 className="text-sm font-semibold text-foreground">4. Learning loop integration</h4>
                     <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
                       Users are guided to improve via STAR method content, framework guides, sample high-scoring answers,
-                      and a retry answer button — forming a loop of feedback → learn → retry → improve.
+                      and a retry answer button, forming a loop of feedback → learn → retry → improve.
                     </p>
                     <div className="rounded-lg border border-white/10 bg-white/[0.05] overflow-hidden inline-block max-w-xl">
                       <img
@@ -426,7 +426,7 @@ export default function HirelloFullCaseStudyPage() {
                   custom={12}
                 >
                   <Link
-                    href="#work"
+                    href="/#chapter-4"
                     className="text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
                   >
                     ← Back to Case Stories

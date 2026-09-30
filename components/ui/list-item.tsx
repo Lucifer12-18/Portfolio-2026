@@ -54,7 +54,7 @@ const ListItem = React.forwardRef<HTMLLIElement, ListItemProps>(
       >
         {marker === "numbered" ? (
           <span className="flex-shrink-0 mt-[0.1em] font-mono text-[10px] text-muted-foreground/60 min-w-[1.25rem] leading-relaxed">
-            {index !== undefined ? String(index + 1).padStart(2, "0") : "—"}
+            {index !== undefined ? String(index + 1).padStart(2, "0") : "·"}
           </span>
         ) : (
           <span aria-hidden className={markerVariants({ marker })} />

@@ -43,7 +43,7 @@
   <rect x="34" y="219" width="215" height="3.5" rx="1.75" fill="rgba(148,163,184,0.07)"/>
   <rect x="34" y="226" width="170" height="3.5" rx="1.75" fill="rgba(148,163,184,0.05)"/>
 
-  <text x="153" y="263" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#2d3f57">12 data points — users glance away</text>
+  <text x="153" y="263" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#2d3f57">12 data points, users glance away</text>
 
   <!-- Arrow -->
   <text x="350" y="152" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="18" fill="#1e2d44">→</text>

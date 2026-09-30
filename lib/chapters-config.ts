@@ -15,6 +15,17 @@ export interface ChapterConfig {
   sectionId: string // DOM id of the section
 }
 
+/**
+ * Map a URL hash (e.g. "#chapter-4", "chapter-4", "#prologue") to a chapter
+ * index, or -1 when it doesn't name a chapter. Used for deep links: notes and
+ * case-story pages link back to specific chapters via /#chapter-N.
+ */
+export function sectionIdToChapterIndex(hash: string): number {
+  const id = hash.replace(/^#/, "")
+  if (!id) return -1
+  return CHAPTERS.findIndex((c) => c.sectionId === id)
+}
+
 export const CHAPTERS: ChapterConfig[] = [
   {
     id: "prologue",

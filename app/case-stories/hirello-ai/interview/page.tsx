@@ -59,7 +59,7 @@ export default function HirelloInterviewPage() {
                         <P className="max-w-2xl">
                           Most mock interview tools ask questions and return vague scores. This module
                           was designed to replace emotional, unhelpful feedback with a measurable
-                          diagnostic system — turning every practice session into a structured
+                          diagnostic system, turning every practice session into a structured
                           improvement loop.
                         </P>
 
@@ -79,7 +79,7 @@ export default function HirelloInterviewPage() {
                           <span className="h-3 w-px bg-white/15" />
                           <span>status: <span className="text-foreground">Live in production</span></span>
                           <span className="h-3 w-px bg-white/15" />
-                          <span>AI model: <span className="text-foreground">Hiro — career co‑pilot</span></span>
+                          <span>AI model: <span className="text-foreground">Hiro, career co‑pilot</span></span>
                         </div>
                       </motion.header>
 
@@ -100,7 +100,7 @@ export default function HirelloInterviewPage() {
                           <ModuleCard variant="default" eyebrow="Failure mode A">
                             <Lead className="mt-1">Generic feedback</Lead>
                             <P className="mt-1">
-                              "Good answer! Try to be more specific." — tells the user nothing about what
+                              "Good answer! Try to be more specific." That tells the user nothing about what
                               specifically failed or how to fix it.
                             </P>
                           </ModuleCard>
@@ -147,12 +147,12 @@ export default function HirelloInterviewPage() {
 
                       {/* ── 3. Interview experience ──────────────────────── */}
                       <motion.section variants={childRise} initial="hidden" animate="show" custom={4} className="space-y-6">
-                        <SectionLabel>3. The system — four layers</SectionLabel>
-                        <H3>Layer 1 — Interview experience design</H3>
+                        <SectionLabel>3. The system: four layers</SectionLabel>
+                        <H3>Layer 1: Interview experience design</H3>
                         <P>
                           The interview environment needed to feel immersive without being intimidating.
                           Users choose difficulty level, then enter a voice-enabled, conversational
-                          interface with Hiro — Hirello's AI career co‑pilot.
+                          interface with Hiro, Hirello's AI career co‑pilot.
                         </P>
 
                         <List spacing="normal">
@@ -163,7 +163,7 @@ export default function HirelloInterviewPage() {
                             Voice-enabled interaction mirrors a real interview more closely than text alone.
                           </ListItem>
                           <ListItem marker="bullet">
-                            Dark, focused UI during the session reduces environmental distraction — "interview mode".
+                            Dark, focused UI during the session reduces environmental distraction: "interview mode".
                           </ListItem>
                         </List>
 
@@ -175,7 +175,7 @@ export default function HirelloInterviewPage() {
                               className="block h-auto w-full"
                             />
                             <Caption className="px-3 py-2 border-t border-white/10">
-                              Landing screen — difficulty selection before entering the session.
+                              Landing screen: difficulty selection before entering the session.
                             </Caption>
                           </div>
                           <div className="rounded-lg border border-white/10 bg-white/[0.05] overflow-hidden">
@@ -185,7 +185,7 @@ export default function HirelloInterviewPage() {
                               className="block h-auto w-full"
                             />
                             <Caption className="px-3 py-2 border-t border-white/10">
-                              Live session — focused dark UI, voice controls, Hiro as interviewer.
+                              Live session: focused dark UI, voice controls, Hiro as interviewer.
                             </Caption>
                           </div>
                         </div>
@@ -193,9 +193,9 @@ export default function HirelloInterviewPage() {
 
                       {/* ── 4. Performance snapshot ─────────────────────── */}
                       <motion.section variants={childRise} initial="hidden" animate="show" custom={5} className="space-y-6">
-                        <H3>Layer 2 — Performance snapshot system</H3>
+                        <H3>Layer 2: Performance snapshot system</H3>
                         <P>
-                          After each session, users receive a structured evaluation dashboard — not a
+                          After each session, users receive a structured evaluation dashboard, not a
                           pass/fail score, but a multi-dimensional breakdown that shows exactly where
                           to focus improvement efforts.
                         </P>
@@ -221,7 +221,7 @@ export default function HirelloInterviewPage() {
                             className="block h-auto w-full"
                           />
                           <Caption className="px-4 py-2 border-t border-white/10">
-                            Post-session dashboard — multi-dimensional scoring with per-question breakdown.
+                            Post-session dashboard: multi-dimensional scoring with per-question breakdown.
                           </Caption>
                         </div>
 
@@ -237,7 +237,7 @@ export default function HirelloInterviewPage() {
 
                       {/* ── 5. Diagnostic layer ──────────────────────────── */}
                       <motion.section variants={childRise} initial="hidden" animate="show" custom={6} className="space-y-6">
-                        <H3>Layer 3 — "What went wrong" diagnostic layer</H3>
+                        <H3>Layer 3: "What went wrong" diagnostic layer</H3>
                         <Lead>Turning vague criticism into structured growth.</Lead>
                         <P>
                           For each identified issue, the system surfaces a layered breakdown rather
@@ -249,25 +249,25 @@ export default function HirelloInterviewPage() {
                           <ListItem marker="numbered">
                             <div>
                               <span className="font-medium text-foreground">Issue identified</span>
-                              <P className="mt-0.5">What specifically went wrong — named precisely, not vaguely.</P>
+                              <P className="mt-0.5">What specifically went wrong, named precisely, not vaguely.</P>
                             </div>
                           </ListItem>
                           <ListItem marker="numbered">
                             <div>
                               <span className="font-medium text-foreground">Why it matters</span>
-                              <P className="mt-0.5">Connects the issue to interviewer perception — gives it stakes.</P>
+                              <P className="mt-0.5">Connects the issue to interviewer perception, which gives it stakes.</P>
                             </div>
                           </ListItem>
                           <ListItem marker="numbered">
                             <div>
                               <span className="font-medium text-foreground">Missing elements</span>
-                              <P className="mt-0.5">The specific things that were absent — Result, quantification, context, etc.</P>
+                              <P className="mt-0.5">The specific things that were absent: Result, quantification, context, etc.</P>
                             </div>
                           </ListItem>
                           <ListItem marker="numbered">
                             <div>
                               <span className="font-medium text-foreground">Fix instructions</span>
-                              <P className="mt-0.5">Concrete, actionable rewrite guidance — not "be more specific".</P>
+                              <P className="mt-0.5">Concrete, actionable rewrite guidance, not "be more specific".</P>
                             </div>
                           </ListItem>
                         </List>
@@ -275,18 +275,18 @@ export default function HirelloInterviewPage() {
                         <div className="rounded-lg border border-white/10 bg-white/[0.05] overflow-hidden shadow-sm">
                           <img
                             src="/hirello-what-went-wrong.png"
-                            alt="Hirello detailed feedback panel — issue, why it matters, missing elements, fix instructions"
+                            alt="Hirello detailed feedback panel: issue, why it matters, missing elements, fix instructions"
                             className="block h-auto w-full"
                           />
                           <Caption className="px-4 py-2 border-t border-white/10">
-                            Diagnostic panel — four-layer structure turns criticism into a clear repair plan.
+                            Diagnostic panel: a four-layer structure turns criticism into a clear repair plan.
                           </Caption>
                         </div>
                       </motion.section>
 
                       {/* ── 6. Learning loop ─────────────────────────────── */}
                       <motion.section variants={childRise} initial="hidden" animate="show" custom={7} className="space-y-6">
-                        <H3>Layer 4 — Learning loop integration</H3>
+                        <H3>Layer 4: Learning loop integration</H3>
                         <P>
                           Feedback is only valuable if the user can immediately act on it. After
                           reviewing the diagnostic, users are guided into a learning sequence before
@@ -300,7 +300,7 @@ export default function HirelloInterviewPage() {
                             className="block h-auto w-full"
                           />
                           <Caption className="px-4 py-2 border-t border-white/10">
-                            Learn panel — STAR content, sample answers, and retry button form a closed loop.
+                            Learn panel: STAR content, sample answers, and retry button form a closed loop.
                           </Caption>
                         </div>
 
@@ -353,7 +353,7 @@ export default function HirelloInterviewPage() {
                         <P>
                           Designing AI feedback systems is less about making the AI smarter and more
                           about making the output human-readable and actionable. The hardest design
-                          problem wasn't the AI — it was figuring out how much structure was helpful
+                          problem wasn't the AI. It was figuring out how much structure was helpful
                           versus overwhelming, and how to make criticism feel constructive rather
                           than discouraging.
                         </P>
@@ -369,7 +369,7 @@ export default function HirelloInterviewPage() {
                             href="/case-stories/hirello-ai/networking"
                             className="text-xs md:text-sm font-medium inline-flex items-center gap-1.5 rounded-full px-4 py-2 border border-white/10 text-muted-foreground hover:text-foreground hover:border-foreground/40 transition-colors"
                           >
-                            ← Module 01 — Networking Intelligence
+                            ← Module 01: Networking Intelligence
                           </Link>
                           <Link
                             href="/case-stories/hirello-ai/full"

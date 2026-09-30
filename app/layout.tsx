@@ -1,40 +1,60 @@
 import type React from "react"
-import type { Metadata } from "next"
-import { DM_Sans, Syne, JetBrains_Mono, Press_Start_2P } from "next/font/google"
+import type { Metadata, Viewport } from "next"
+import { Geist, Azeret_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
+import { SoundLayer } from "@/components/sound"
 
-// Body font — DM Sans: clean, modern, slightly more character than Inter
-const dmSans = DM_Sans({
+// Geist — one variable family for display AND text. Medium weights + tight
+// tracking carry the editorial voice; no second display face needed.
+const geist = Geist({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
   variable: "--font-sans",
+  display: "swap",
 })
 
-// Display font — Syne: variable weight, geometric editorial, great on dark
-const syne = Syne({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  variable: "--font-display",
-})
-
-// Monospace — kept as-is, it's perfect for the system labels
-const jetbrainsMono = JetBrains_Mono({
+// Azeret Mono — the system voice: labels, buttons, telemetry. Sentence case.
+const azeret = Azeret_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
+  display: "swap",
 })
 
-const pixel = Press_Start_2P({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-pixel",
-})
+// Resolves share-card URLs: explicit site URL → Vercel deployment → localhost.
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3001")
+
+const siteTitle = "Vishal Deshmukh · Product Designer · Pixelogic OS"
+const siteDescription =
+  "Vishal Deshmukh designs customer-facing AI products end-to-end: interaction design, design systems, and research. Product Designer, Design Systems at TasteMakers (Taste Labs); previously Founding Product Designer at Hirello.ai."
+
+export const viewport: Viewport = {
+  themeColor: "#0f0f0e",
+  width: "device-width",
+  initialScale: 1,
+  // no maximum-scale / user-scalable restrictions — pinch zoom stays available
+}
 
 export const metadata: Metadata = {
-  title: "Pixelogic | Vishal Deshmukh – Product & UX Designer",
-  description:
-    "Portfolio of Vishal Deshmukh, a Product/UX Designer focused on UX, AI & systems thinking. Designing calm interfaces for complex systems.",
-  generator: "v0.app",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: siteTitle,
+    template: "%s · Vishal Deshmukh",
+  },
+  description: siteDescription,
+  openGraph: {
+    type: "website",
+    siteName: "Pixelogic OS",
+    title: siteTitle,
+    description: siteDescription,
+    url: "/",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteTitle,
+    description: siteDescription,
+  },
   icons: {
     icon: [
       {
@@ -61,8 +81,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${dmSans.variable} ${syne.variable} ${jetbrainsMono.variable} ${pixel.variable} font-sans antialiased`}>
+      <body className={`${geist.variable} ${azeret.variable} font-sans antialiased`}>
         {children}
+        <SoundLayer />
         <Analytics />
       </body>
     </html>

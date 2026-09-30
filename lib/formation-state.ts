@@ -11,3 +11,12 @@
 // When false → normal idle / transition mode; standard breath-hold rotation.
 //
 export const formationWatchRef = { current: false }
+
+// ── Skip-transition signal ────────────────────────────────────────────────────
+//
+// When true, the next chapter change swaps content INSTANTLY — no formation
+// watch window, no exit/enter choreography. Set by hash deep-links on load
+// (a recruiter following /#chapter-4 shouldn't sit through the transition)
+// and consumed + reset by PageFlipContainer.
+//
+export const skipTransitionRef = { current: false }

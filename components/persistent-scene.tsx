@@ -7,6 +7,8 @@ import * as THREE from "three"
 import { useReadingStore } from "@/contexts/reading-store-context"
 import { damp } from "@/lib/motion"
 import { pointerState, fieldPulse, railHover } from "@/lib/pointer-state"
+import { useReducedMotion } from "@/lib/use-reduced-motion"
+import { CHAPTER_ACCENTS_VEC, CHAPTER_SCENE_BG } from "@/lib/chapter-palette"
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CONFIGURATION
@@ -14,20 +16,10 @@ import { pointerState, fieldPulse, railHover } from "@/lib/pointer-state"
 
 const PARTICLE_COUNT = 1500
 
-const CHAPTER_COLORS: [number, number, number][] = [
-  [0.133, 0.827, 0.933], // 0 Prologue  — cyan
-  [0.024, 0.714, 0.831], // 1 Origin    — teal
-  [0.486, 0.227, 0.929], // 2 Shift     — violet
-  [0.655, 0.545, 0.980], // 3 Method    — lavender
-  [0.220, 0.741, 0.973], // 4 Cases     — sky
-  [0.576, 0.773, 0.992], // 5 Notes     — ice blue
-  [0.878, 0.976, 1.000], // 6 Epilogue  — white
-]
+// Accent + clear colors come from the shared chapter palette (lib/chapter-palette).
+const CHAPTER_COLORS = CHAPTER_ACCENTS_VEC
 
-const CHAPTER_BG = [
-  "#0a0a0c", "#041822", "#0e0520", "#12032a",
-  "#031018", "#061525", "#0a0a0c",
-]
+const CHAPTER_BG = CHAPTER_SCENE_BG
 
 const CHAPTER_BLOOM = [0.75, 1.0, 1.2, 1.0, 0.9, 0.85, 0.65]
 
@@ -325,7 +317,7 @@ void main() {
 
   // Color: blend palettes, bloom brighter during transition
   vColor = mix(uColorFrom, uColorTo, t);
-  vColor += vec3(0.15, 0.18, 0.30) * sin(t * PI);
+  vColor += vec3(0.20, 0.19, 0.17) * sin(t * PI);
 
   vAlpha = 0.5 + aRandom.y * 0.4 + sin(t * PI) * 0.22;
 }
@@ -359,13 +351,20 @@ void main() {
 interface MorphingSceneProps {
   chapterIndex: number
   bloomRef: React.MutableRefObject<number>
+  reduced: boolean
 }
 
-function MorphingScene({ chapterIndex, bloomRef }: MorphingSceneProps) {
+function MorphingScene({ chapterIndex, bloomRef, reduced }: MorphingSceneProps) {
   const groupRef = useRef<THREE.Group>(null!)
 
   const chapterRef = useRef(chapterIndex)
   chapterRef.current = chapterIndex
+
+  // Reduced motion: the field stays as a CALM presence — formations snap
+  // instead of scattering, ambient time runs at ~12%, no rotation/reactivity.
+  const reducedRef = useRef(reduced)
+  reducedRef.current = reduced
+  const timeRef = useRef(0)
 
   const transitionRef = useRef({ from: 0, to: 0, progress: 1.0 })
   const prevChapter = useRef(0)
@@ -413,13 +412,15 @@ function MorphingScene({ chapterIndex, bloomRef }: MorphingSceneProps) {
 
   useFrame((state, delta) => {
     const chapter = chapterRef.current
+    const rm = reducedRef.current
 
-    // Detect chapter change and start a new transition
+    // Detect chapter change and start a new transition.
+    // Reduced motion: snap straight to the destination formation (progress 1).
     if (chapter !== prevChapter.current) {
       transitionRef.current = {
         from: prevChapter.current,
         to: chapter,
-        progress: 0,
+        progress: rm ? 1 : 0,
       }
       prevChapter.current = chapter
       targetBg.current.set(CHAPTER_BG[chapter] ?? CHAPTER_BG[0])
@@ -434,29 +435,38 @@ function MorphingScene({ chapterIndex, bloomRef }: MorphingSceneProps) {
     }
 
     // ── Uniforms ──────────────────────────────────────────────────────────
-    uniforms.uTime.value = state.clock.elapsedTime
+    // Own accumulated clock so reduced-motion can slow ambient drift to ~12%.
+    timeRef.current += delta * (rm ? 0.12 : 1)
+    uniforms.uTime.value = timeRef.current
     uniforms.uChapterFrom.value = tr.from
     uniforms.uChapterTo.value = tr.to
     uniforms.uTransition.value = tr.progress
     uniforms.uPixelRatio.value = state.gl.getPixelRatio()
 
     // Ease mouse uniform toward the SHARED pointer bus (~150ms follow,
-    // frame-rate independent). One signal feeds field + wisps + content.
+    // frame-rate independent). Reduced motion: settle to centre (no parallax).
     const uMouse = uniforms.uMouse.value as THREE.Vector2
-    uMouse.x = damp(uMouse.x, pointerState.x, 5, delta)
-    uMouse.y = damp(uMouse.y, pointerState.y, 5, delta)
+    uMouse.x = damp(uMouse.x, rm ? 0 : pointerState.x, 5, delta)
+    uMouse.y = damp(uMouse.y, rm ? 0 : pointerState.y, 5, delta)
 
-    // ── Pointer / click reactivity (B10) ──────────────────────────────────
-    // Cursor speed → uPointerVel (rises fast, decays); drives the "parting".
-    const pdx = pointerState.x - prevPointer.current.x
-    const pdy = pointerState.y - prevPointer.current.y
-    prevPointer.current.set(pointerState.x, pointerState.y)
-    const speed = Math.hypot(pdx, pdy) / Math.max(delta, 0.001)
-    uniforms.uPointerVel.value = damp(uniforms.uPointerVel.value, Math.min(speed * 0.3, 1.0), 7, delta)
-    // Click ripple — decays toward 0 (~1s); feed origin into the shader.
-    fieldPulse.value = damp(fieldPulse.value, 0, 2.4, delta)
-    uniforms.uClickPulse.value = fieldPulse.value
-    ;(uniforms.uClickOrigin.value as THREE.Vector2).set(fieldPulse.x, fieldPulse.y)
+    // ── Pointer / click reactivity (B10) — off entirely under reduced motion ─
+    if (rm) {
+      uniforms.uPointerVel.value = 0
+      uniforms.uClickPulse.value = 0
+      fieldPulse.value = 0
+      prevPointer.current.set(pointerState.x, pointerState.y)
+    } else {
+      // Cursor speed → uPointerVel (rises fast, decays); drives the "parting".
+      const pdx = pointerState.x - prevPointer.current.x
+      const pdy = pointerState.y - prevPointer.current.y
+      prevPointer.current.set(pointerState.x, pointerState.y)
+      const speed = Math.hypot(pdx, pdy) / Math.max(delta, 0.001)
+      uniforms.uPointerVel.value = damp(uniforms.uPointerVel.value, Math.min(speed * 0.3, 1.0), 7, delta)
+      // Click ripple — decays toward 0 (~1s); feed origin into the shader.
+      fieldPulse.value = damp(fieldPulse.value, 0, 2.4, delta)
+      uniforms.uClickPulse.value = fieldPulse.value
+      ;(uniforms.uClickOrigin.value as THREE.Vector2).set(fieldPulse.x, fieldPulse.y)
+    }
     uniforms.uAspect.value = state.size.width / Math.max(state.size.height, 1)
 
     const fromColor = CHAPTER_COLORS[tr.from] ?? CHAPTER_COLORS[0]
@@ -475,7 +485,7 @@ function MorphingScene({ chapterIndex, bloomRef }: MorphingSceneProps) {
     // chapter's vantage, then return when the hover ends (B10).
     let camX = camTarget[0], camY = camTarget[1], camZ = camTarget[2]
     const hov = railHover.chapter
-    if (hov >= 0 && hov !== tr.to && tr.progress > 0.98 && CAM_TARGETS[hov]) {
+    if (!rm && hov >= 0 && hov !== tr.to && tr.progress > 0.98 && CAM_TARGETS[hov]) {
       const ht = CAM_TARGETS[hov]
       camX += (ht[0] - camX) * 0.14
       camY += (ht[1] - camY) * 0.14
@@ -495,13 +505,13 @@ function MorphingScene({ chapterIndex, bloomRef }: MorphingSceneProps) {
 
     // ── Bloom (synced to PersistentScene via shared ref) ──────────────────
     const baseBloom = CHAPTER_BLOOM[tr.to] ?? CHAPTER_BLOOM[0]
-    const transitionBoost = Math.sin(tr.progress * Math.PI)
+    const transitionBoost = rm ? 0 : Math.sin(tr.progress * Math.PI)
     // Bloom surges at transition peak, creating a brief luminous flash
     const boostedBloom = baseBloom * (1.0 + 0.75 * transitionBoost)
     bloomRef.current = damp(bloomRef.current, boostedBloom, 1.2, delta)
 
-    // ── Rotation ──────────────────────────────────────────────────────────
-    if (groupRef.current) {
+    // ── Rotation — held still under reduced motion ───────────────────────
+    if (groupRef.current && !rm) {
       if (formationWatchRef.current) {
         // Formation watch window: content is absent, the 3D shape is the
         // entire experience. Rotate at a steady showcase speed — fast enough
@@ -525,11 +535,8 @@ function MorphingScene({ chapterIndex, bloomRef }: MorphingSceneProps) {
     <group ref={groupRef}>
       <points frustumCulled={false}>
         <bufferGeometry>
-          {/* @ts-expect-error – R3F bufferAttribute args tuple */}
           <bufferAttribute attach="attributes-position" args={[positions, 3]} />
-          {/* @ts-expect-error – R3F bufferAttribute args tuple */}
           <bufferAttribute attach="attributes-aIndex" args={[indices, 1]} />
-          {/* @ts-expect-error – R3F bufferAttribute args tuple */}
           <bufferAttribute attach="attributes-aRandom" args={[randoms, 3]} />
         </bufferGeometry>
         <shaderMaterial
@@ -549,18 +556,21 @@ function MorphingScene({ chapterIndex, bloomRef }: MorphingSceneProps) {
 // EXPORTED CANVAS WRAPPER
 // ─────────────────────────────────────────────────────────────────────────────
 
-export default function PersistentScene() {
+export default function PersistentScene({ active = true }: { active?: boolean }) {
   const { activeChapterIndex } = useReadingStore()
+  const reduced = useReducedMotion()
   const bloomRef = useRef(0.75)
 
   return (
     <Canvas
       camera={{ position: [0, 0, 8], fov: 65 }}
       dpr={[1, 1.5]}
+      // Paused while the boot gate hides the scene — no wasted GPU during the intro.
+      frameloop={active ? "always" : "never"}
       gl={{ antialias: false, powerPreference: "default" }}
       style={{ width: "100%", height: "100%" }}
     >
-      <MorphingScene chapterIndex={activeChapterIndex} bloomRef={bloomRef} />
+      <MorphingScene chapterIndex={activeChapterIndex} bloomRef={bloomRef} reduced={reduced} />
     </Canvas>
   )
 }

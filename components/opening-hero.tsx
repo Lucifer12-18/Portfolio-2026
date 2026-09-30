@@ -3,6 +3,9 @@
 import { useState, useEffect, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import dynamic from "next/dynamic"
+import { useReducedMotion } from "@/lib/use-reduced-motion"
+import { CURRENT_ROLE, PROFILE } from "@/lib/profile"
+import { sfx } from "@/lib/sound"
 
 const ThreeDScene = dynamic(() => import("./three-scene"), { ssr: false })
 
@@ -13,6 +16,7 @@ interface OpeningHeroProps {
 export function OpeningHero({ onDismiss }: OpeningHeroProps) {
   const [isVisible, setIsVisible] = useState(true)
   const [showContent, setShowContent] = useState(false)
+  const reduced = useReducedMotion()
 
   useEffect(() => {
     // Small delay for entrance animation
@@ -21,6 +25,8 @@ export function OpeningHero({ onDismiss }: OpeningHeroProps) {
   }, [])
 
   const handleEnter = useCallback(() => {
+    sfx.unlock()
+    sfx.boot()
     setIsVisible(false)
     setTimeout(() => {
       onDismiss()
@@ -65,170 +71,118 @@ export function OpeningHero({ onDismiss }: OpeningHeroProps) {
           className="fixed inset-0 z-[100] min-h-[100svh] flex items-center justify-center overflow-hidden"
         >
           {/* Base background — visible instantly before 3D loads */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0c] via-[#0a0a0c] to-[#0a0a0c]" />
+          <div className="absolute inset-0 bg-ink-0" />
 
-          {/* 3D scene — Vishal's system map (Design ↔ AI/Systems via translation layer) */}
-          <div className="absolute inset-0">
-            <ThreeDScene />
+          {/* 3D scene — Vishal's system map (Design ↔ AI/Systems via translation layer).
+              Decorative; skipped under reduced motion (static background remains). */}
+          <div className="absolute inset-0" aria-hidden>
+            {!reduced && <ThreeDScene />}
           </div>
 
-          {/* Vignette — darkens edges so terminal card pops */}
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(0,0,0,0.65)_100%)]" />
+          {/* Vignette — darkens edges so the card reads */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_25%,rgba(10,10,9,0.8)_100%)]" />
 
-          {/* Subtle noise overlay */}
-          <div className="absolute inset-0 opacity-[0.025] noise-texture" />
-
-          {/* Corner brackets */}
-          <div className="absolute top-6 left-6 w-12 h-12 border-t-2 border-l-2 border-cyan-400/60" />
-          <div className="absolute top-6 right-6 w-12 h-12 border-t-2 border-r-2 border-cyan-400/60" />
-          <div className="absolute bottom-6 left-6 w-12 h-12 border-b-2 border-l-2 border-cyan-400/60" />
-          <div className="absolute bottom-6 right-6 w-12 h-12 border-b-2 border-r-2 border-cyan-400/60" />
+          {/* Frame chrome — wordmark + version, like the cover of a document */}
+          <div className="absolute inset-x-0 top-0 flex items-center justify-between px-6 sm:px-8 h-16 font-mono text-[11px] text-bone-3" aria-hidden>
+            <span className="font-sans text-[15px] font-semibold uppercase tracking-[0.02em]">
+              <span className="text-bone">Pixelogic</span> <span className="text-chapter">OS</span>
+            </span>
+            <span>v2.0 · {new Date().getFullYear()}</span>
+          </div>
+          <div className="absolute inset-x-0 bottom-0 flex items-center justify-between px-6 sm:px-8 h-14 font-mono text-[11px] text-bone-4" aria-hidden>
+            <span>{PROFILE.location}</span>
+            <span className="hidden sm:inline">Designing clarity inside complex systems</span>
+          </div>
 
           {/* Centered content */}
-          <div className="relative z-10 w-full max-w-4xl mx-auto px-6 py-20">
+          <div className="relative z-10 w-full max-w-3xl mx-auto px-6 py-24">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: showContent ? 1 : 0 }}
               transition={{ duration: 0.4 }}
-              className="flex flex-col items-center space-y-8"
+              className="flex flex-col items-center text-center"
             >
-              {/* SYSTEM ONLINE label */}
               <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: showContent ? 1 : 0, y: showContent ? 0 : -10 }}
-                transition={{ delay: 0.1, duration: 0.35 }}
-                className="flex items-center gap-2"
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: showContent ? 1 : 0, y: showContent ? 0 : -8 }}
+                transition={{ delay: 0.1, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                className="flex items-center gap-2.5 label-mono"
               >
-                <div className="flex gap-1">
-                  {[...Array(8)].map((_, i) => (
-                    <div key={i} className="w-1.5 h-1.5 bg-cyan-400/70" />
-                  ))}
-                </div>
-                <span className="text-xs font-mono text-cyan-400/80 tracking-wider">SYSTEM ONLINE</span>
-                <div className="flex gap-1">
-                  {[...Array(8)].map((_, i) => (
-                    <div key={i} className="w-1.5 h-1.5 bg-cyan-400/70" />
-                  ))}
-                </div>
+                <span className="live-dot" aria-hidden />
+                System online
               </motion.div>
 
-              {/* Main headline */}
               <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: showContent ? 1 : 0, y: showContent ? 0 : 20 }}
-                transition={{ delay: 0.2, duration: 0.45 }}
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white font-mono tracking-[0.15em] text-center whitespace-nowrap"
-                style={{
-                  textShadow: "0 0 20px rgba(34, 211, 238, 0.3), 0 0 40px rgba(34, 211, 238, 0.15)",
-                }}
+                initial={{ opacity: 0, y: 18, filter: "blur(8px)" }}
+                animate={{ opacity: showContent ? 1 : 0, y: showContent ? 0 : 18, filter: showContent ? "blur(0px)" : "blur(8px)" }}
+                transition={{ delay: 0.2, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+                className="mt-6 display-xl text-bone"
               >
-                VISHAL//DESHMUKH
+                {PROFILE.name}
               </motion.h1>
 
-              {/* Subtitle */}
-              <motion.div
+              <motion.p
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: showContent ? 1 : 0, y: showContent ? 0 : 10 }}
-                transition={{ delay: 0.3, duration: 0.35 }}
-                className="flex items-center gap-2"
+                transition={{ delay: 0.32, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                className="mt-4 text-[clamp(1.05rem,1.6vw,1.35rem)] tracking-[-0.02em] text-bone-3"
               >
-                <span className="text-sm font-mono text-cyan-400/70 tracking-wider">
-                  DESIGNER • DEVELOPER • CREATOR
-                </span>
-              </motion.div>
+                Product designer · <span className="text-bone-2">design systems &amp; AI products</span>
+              </motion.p>
 
               {/* Terminal card */}
               <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: showContent ? 1 : 0, scale: showContent ? 1 : 0.95 }}
-                transition={{ delay: 0.4, duration: 0.4 }}
-                className="w-full max-w-2xl mt-8"
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: showContent ? 1 : 0, y: showContent ? 0 : 16 }}
+                transition={{ delay: 0.45, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                className="mt-10 w-full max-w-xl text-left"
               >
-                <div
-                  className="rounded-2xl bg-slate-900/90 border-2 border-cyan-400/40 shadow-[0_0_30px_rgba(34,211,238,0.2)] backdrop-blur-sm overflow-hidden"
-                  style={{
-                    boxShadow: "0 0 30px rgba(34, 211, 238, 0.2), inset 0 0 60px rgba(34, 211, 238, 0.05)",
-                  }}
-                >
-                  {/* Terminal header */}
-                  <div className="flex items-center justify-between px-4 py-2.5 bg-slate-800/50 border-b border-cyan-400/20">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-mono text-cyan-400/80">{'>'} PIXELOGIC_OS</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <div className="w-3 h-3 rounded-full bg-red-500/80" />
-                      <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-                      <div className="w-3 h-3 rounded-full bg-green-500/80" />
-                    </div>
+                <div className="surface overflow-hidden">
+                  <div className="flex items-center justify-between px-4 h-9 border-b border-hair font-mono text-[10.5px] text-bone-3">
+                    <span>~/pixelogic</span>
+                    <span className="text-bone-4">zsh</span>
                   </div>
-
-                  {/* Terminal body */}
-                  <div className="p-5 font-mono text-sm text-cyan-300/90 space-y-3">
-                    <div className="flex items-center gap-2">
-                      <span className="text-cyan-400">$</span>
-                      <span className="text-cyan-300">cat about.txt</span>
-                    </div>
-                    <div className="pl-6 space-y-1.5 text-cyan-200/80">
-                      <div className="flex items-center gap-2">
-                        <span className="text-cyan-400">{'>'}</span>
-                        <span>Designing clarity inside complex systems.</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-cyan-400">{'>'}</span>
-                        <span>Founding Product Designer → Hirello.ai</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-cyan-400">{'>'}</span>
-                        <span>AI workflows · data-heavy tools · multi-step UX</span>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 pt-2">
-                      <span className="text-cyan-400">$</span>
-                      <span className="text-cyan-300">status</span>
-                    </div>
-                    <div className="pl-6 space-y-1.5">
-                      <div className="flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                        <span className="text-green-400">System: OPERATIONAL</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                        <span className="text-green-400">Mode: OPEN_TO_WORK</span>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 pt-1">
-                      <span className="text-cyan-400">$</span>
-                      <span className="inline-block w-2 h-4 bg-cyan-400/60 animate-pulse" />
-                    </div>
+                  <div className="p-5 font-mono text-[12.5px] leading-[1.9]">
+                    <p className="text-bone-3">
+                      <span className="text-bone-4">$</span> cat about.txt
+                    </p>
+                    <p className="text-bone-2 pl-4">Designing clarity inside complex systems.</p>
+                    <p className="text-bone-2 pl-4">
+                      <span className="text-bone-3">now&nbsp;&nbsp;&nbsp;</span> {CURRENT_ROLE.role} @ {CURRENT_ROLE.org}
+                    </p>
+                    <p className="text-bone-2 pl-4">
+                      <span className="text-bone-3">before</span> Founding Product Designer @ Hirello.ai
+                    </p>
+                    <p className="text-bone-3 pt-2">
+                      <span className="text-bone-4">$</span> status
+                    </p>
+                    <p className="text-bone pl-4 flex items-center gap-2.5">
+                      <span className="live-dot" aria-hidden /> open to product design roles
+                    </p>
+                    <p className="text-bone-3 pt-1">
+                      <span className="text-bone-4">$</span> <span className="crt-cursor" />
+                    </p>
                   </div>
                 </div>
               </motion.div>
 
-              {/* CTA Buttons */}
+              {/* CTA */}
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: showContent ? 1 : 0, y: showContent ? 0 : 20 }}
-                transition={{ delay: 0.6, duration: 0.35 }}
-                className="flex flex-col items-center gap-3 mt-8"
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: showContent ? 1 : 0, y: showContent ? 0 : 16 }}
+                transition={{ delay: 0.6, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                className="mt-10 flex flex-col items-center gap-4"
               >
                 <motion.button
                   onClick={handleEnter}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-8 py-3 text-sm font-mono text-white bg-cyan-400/20 border border-cyan-400/60 rounded-lg 
-                           hover:bg-cyan-400/30 hover:border-cyan-400/80 hover:shadow-[0_0_20px_rgba(34,211,238,0.4)] 
-                           transition-all duration-200"
+                  data-sfx-skip
+                  whileTap={{ scale: 0.97 }}
+                  className="btn-solid h-12 px-7 text-[13px]"
                 >
                   Enter Pixelogic OS
+                  <span className="keycap !border-[#111110]/20 !text-[#111110]/60" aria-hidden>↵</span>
                 </motion.button>
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: showContent ? 1 : 0 }}
-                  transition={{ delay: 0.7, duration: 0.35 }}
-                  className="text-xs font-mono text-cyan-400/50 text-center max-w-md"
-                >
-                  Navigate by chapter · Arrow keys or click to move through the story.
-                </motion.p>
+                <p className="font-mono text-[11px] text-bone-3">Seven chapters · ← → to move through the story</p>
               </motion.div>
             </motion.div>
           </div>

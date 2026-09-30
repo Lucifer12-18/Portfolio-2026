@@ -1,10 +1,10 @@
 The thing that tipped me off was the arm crossing.
 
-I was watching usability sessions for Hirello's interview feedback panel — the screen that appears after you practice an answer. User submits, AI processes, panel loads. Simple. In three separate sessions I watched users shift in their seat the moment it appeared. One crossed her arms. They'd look at the panel, then look away.
+I was watching usability sessions for Hirello's interview feedback panel, the screen that appears after you practice an answer. User submits, AI processes, panel loads. Simple. In three separate sessions I watched users shift in their seat the moment it appeared. One crossed her arms. They'd look at the panel, then look away.
 
 When I asked people to think aloud, I kept hearing "okay so there's a lot here" followed by silence. And then they'd move on.
 
-The feedback wasn't bad. The AI was catching real things — missing structure, no concrete examples, pacing way too fast. But users were skimming past it like terms and conditions.
+The feedback wasn't bad. The AI was catching real things: missing structure, no concrete examples, pacing way too fast. But users were skimming past it like terms and conditions.
 
 ---
 
@@ -18,7 +18,7 @@ Turns out showing everything is what made it useless.
 
 ---
 
-The rebuild took two days. The panel now opens to one line — the most critical diagnostic. "Your answer was missing a concrete example." Below that, three dots. One lit, two dimmed. There's more, but you have to choose to go get it.
+The rebuild took two days. The panel now opens to one line: the most critical diagnostic. "Your answer was missing a concrete example." Below that, three dots. One lit, two dimmed. There's more, but you have to choose to go get it.
 
 That's it. That's the whole change.
 
@@ -28,6 +28,6 @@ Users who'd been glossing over a full feedback panel started spending three or f
 
 I've been sitting with why this wasn't obvious earlier. I think it's that when you build an AI product, there's this quiet pressure to demonstrate intelligence. The model worked hard to generate these insights. It feels wrong to hide them. Like you're shortchanging the user.
 
-But that's about the builder's confidence, not the user's capacity. The AI earns trust one correct insight at a time. You can show it all — just not all at once, before the user has any reason to care.
+But that's about the builder's confidence, not the user's capacity. The AI earns trust one correct insight at a time. You can show it all, just not all at once, before the user has any reason to care.
 
 I don't know that I have a clean rule for this. The closest I've gotten is: figure out what the user's actual next step is, and make that the only visible thing until they're ready for more.

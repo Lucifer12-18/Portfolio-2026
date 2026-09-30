@@ -35,61 +35,61 @@ const CONNECTION_DISTANCE = 4.2
 // Fixed positions — deterministic, same every render (no hydration issues)
 const NODE_DEFINITIONS: NodeData[] = [
   // ── CENTRAL CONVERGENCE NODE ─────────────────────────────────────
-  { position: [0, 0, 0],      size: 0.22, color: "#e0f9ff", shape: "icosahedron", floatSpeed: 0.18, floatOffset: 0.00, floatAmp: 0.05, emissiveIntensity: 3.5 },
+  { position: [0, 0, 0],      size: 0.22, color: "#f7f3ea", shape: "icosahedron", floatSpeed: 0.18, floatOffset: 0.00, floatAmp: 0.05, emissiveIntensity: 3.5 },
 
   // ── DESIGN CLUSTER — cyan (left) ─────────────────────────────────
   // Anchor octahedron
-  { position: [-3.8, 0.4, 0.3],  size: 0.18, color: "#22d3ee", shape: "octahedron", floatSpeed: 0.28, floatOffset: 0.0, floatAmp: 0.12, emissiveIntensity: 3.0 },
+  { position: [-3.8, 0.4, 0.3],  size: 0.18, color: "#dea860", shape: "octahedron", floatSpeed: 0.28, floatOffset: 0.0, floatAmp: 0.12, emissiveIntensity: 3.0 },
   // Hero spheres
-  { position: [-5.2, 1.8, -0.8], size: 0.13, color: "#06b6d4", shape: "sphere",    floatSpeed: 0.35, floatOffset: 1.2, floatAmp: 0.10, emissiveIntensity: 2.5 },
-  { position: [-2.4, 2.2, 1.1],  size: 0.12, color: "#22d3ee", shape: "sphere",    floatSpeed: 0.30, floatOffset: 2.5, floatAmp: 0.11, emissiveIntensity: 2.5 },
-  { position: [-4.5, -1.2, 0.6], size: 0.11, color: "#0ea5e9", shape: "sphere",    floatSpeed: 0.25, floatOffset: 3.8, floatAmp: 0.09, emissiveIntensity: 2.2 },
+  { position: [-5.2, 1.8, -0.8], size: 0.13, color: "#c98f45", shape: "sphere",    floatSpeed: 0.35, floatOffset: 1.2, floatAmp: 0.10, emissiveIntensity: 2.5 },
+  { position: [-2.4, 2.2, 1.1],  size: 0.12, color: "#dea860", shape: "sphere",    floatSpeed: 0.30, floatOffset: 2.5, floatAmp: 0.11, emissiveIntensity: 2.5 },
+  { position: [-4.5, -1.2, 0.6], size: 0.11, color: "#b98244", shape: "sphere",    floatSpeed: 0.25, floatOffset: 3.8, floatAmp: 0.09, emissiveIntensity: 2.2 },
   // Medium nodes
-  { position: [-1.8, -0.5, -1.2],size: 0.09, color: "#67e8f9", shape: "sphere",    floatSpeed: 0.42, floatOffset: 0.8, floatAmp: 0.08, emissiveIntensity: 2.0 },
-  { position: [-5.8, -0.3, 1.0], size: 0.08, color: "#a5f3fc", shape: "sphere",    floatSpeed: 0.38, floatOffset: 4.1, floatAmp: 0.07, emissiveIntensity: 1.8 },
-  { position: [-3.0, 3.1, -0.5], size: 0.07, color: "#67e8f9", shape: "sphere",    floatSpeed: 0.33, floatOffset: 1.9, floatAmp: 0.08, emissiveIntensity: 1.8 },
-  { position: [-6.0, 2.4, 0.2],  size: 0.06, color: "#a5f3fc", shape: "sphere",    floatSpeed: 0.45, floatOffset: 5.2, floatAmp: 0.07, emissiveIntensity: 1.5 },
-  { position: [-4.2, -2.8, -0.3],size: 0.06, color: "#67e8f9", shape: "sphere",    floatSpeed: 0.50, floatOffset: 2.7, floatAmp: 0.06, emissiveIntensity: 1.5 },
+  { position: [-1.8, -0.5, -1.2],size: 0.09, color: "#e6b877", shape: "sphere",    floatSpeed: 0.42, floatOffset: 0.8, floatAmp: 0.08, emissiveIntensity: 2.0 },
+  { position: [-5.8, -0.3, 1.0], size: 0.08, color: "#ecd3a4", shape: "sphere",    floatSpeed: 0.38, floatOffset: 4.1, floatAmp: 0.07, emissiveIntensity: 1.8 },
+  { position: [-3.0, 3.1, -0.5], size: 0.07, color: "#e6b877", shape: "sphere",    floatSpeed: 0.33, floatOffset: 1.9, floatAmp: 0.08, emissiveIntensity: 1.8 },
+  { position: [-6.0, 2.4, 0.2],  size: 0.06, color: "#ecd3a4", shape: "sphere",    floatSpeed: 0.45, floatOffset: 5.2, floatAmp: 0.07, emissiveIntensity: 1.5 },
+  { position: [-4.2, -2.8, -0.3],size: 0.06, color: "#e6b877", shape: "sphere",    floatSpeed: 0.50, floatOffset: 2.7, floatAmp: 0.06, emissiveIntensity: 1.5 },
   // Micro nodes
-  { position: [-2.0, 1.5, 2.2],  size: 0.05, color: "#a5f3fc", shape: "sphere",    floatSpeed: 0.48, floatOffset: 0.3, floatAmp: 0.06, emissiveIntensity: 1.4 },
-  { position: [-5.5, 0.8, -1.5], size: 0.05, color: "#67e8f9", shape: "sphere",    floatSpeed: 0.40, floatOffset: 3.3, floatAmp: 0.05, emissiveIntensity: 1.4 },
-  { position: [-3.5, -1.8, 1.8], size: 0.05, color: "#a5f3fc", shape: "sphere",    floatSpeed: 0.44, floatOffset: 1.5, floatAmp: 0.06, emissiveIntensity: 1.3 },
-  { position: [-1.5, 3.5, 0.8],  size: 0.04, color: "#67e8f9", shape: "sphere",    floatSpeed: 0.52, floatOffset: 4.7, floatAmp: 0.05, emissiveIntensity: 1.3 },
-  { position: [-6.2, -1.5, 0.8], size: 0.04, color: "#a5f3fc", shape: "sphere",    floatSpeed: 0.46, floatOffset: 2.1, floatAmp: 0.05, emissiveIntensity: 1.2 },
-  { position: [-2.8, -3.2, -0.9],size: 0.04, color: "#67e8f9", shape: "sphere",    floatSpeed: 0.55, floatOffset: 5.8, floatAmp: 0.04, emissiveIntensity: 1.2 },
-  { position: [-4.8, 3.0, 1.2],  size: 0.04, color: "#a5f3fc", shape: "sphere",    floatSpeed: 0.43, floatOffset: 3.0, floatAmp: 0.05, emissiveIntensity: 1.2 },
+  { position: [-2.0, 1.5, 2.2],  size: 0.05, color: "#ecd3a4", shape: "sphere",    floatSpeed: 0.48, floatOffset: 0.3, floatAmp: 0.06, emissiveIntensity: 1.4 },
+  { position: [-5.5, 0.8, -1.5], size: 0.05, color: "#e6b877", shape: "sphere",    floatSpeed: 0.40, floatOffset: 3.3, floatAmp: 0.05, emissiveIntensity: 1.4 },
+  { position: [-3.5, -1.8, 1.8], size: 0.05, color: "#ecd3a4", shape: "sphere",    floatSpeed: 0.44, floatOffset: 1.5, floatAmp: 0.06, emissiveIntensity: 1.3 },
+  { position: [-1.5, 3.5, 0.8],  size: 0.04, color: "#e6b877", shape: "sphere",    floatSpeed: 0.52, floatOffset: 4.7, floatAmp: 0.05, emissiveIntensity: 1.3 },
+  { position: [-6.2, -1.5, 0.8], size: 0.04, color: "#ecd3a4", shape: "sphere",    floatSpeed: 0.46, floatOffset: 2.1, floatAmp: 0.05, emissiveIntensity: 1.2 },
+  { position: [-2.8, -3.2, -0.9],size: 0.04, color: "#e6b877", shape: "sphere",    floatSpeed: 0.55, floatOffset: 5.8, floatAmp: 0.04, emissiveIntensity: 1.2 },
+  { position: [-4.8, 3.0, 1.2],  size: 0.04, color: "#ecd3a4", shape: "sphere",    floatSpeed: 0.43, floatOffset: 3.0, floatAmp: 0.05, emissiveIntensity: 1.2 },
 
   // ── AI / SYSTEMS CLUSTER — violet (right) ────────────────────────
   // Anchor octahedron
-  { position: [3.8, 0.4, 0.3],   size: 0.18, color: "#a78bfa", shape: "octahedron", floatSpeed: 0.28, floatOffset: 0.6, floatAmp: 0.12, emissiveIntensity: 3.0 },
+  { position: [3.8, 0.4, 0.3],   size: 0.18, color: "#92a0ec", shape: "octahedron", floatSpeed: 0.28, floatOffset: 0.6, floatAmp: 0.12, emissiveIntensity: 3.0 },
   // Hero spheres
-  { position: [5.2, 1.8, -0.8],  size: 0.13, color: "#8b5cf6", shape: "sphere",    floatSpeed: 0.35, floatOffset: 1.8, floatAmp: 0.10, emissiveIntensity: 2.5 },
-  { position: [2.4, 2.2, 1.1],   size: 0.12, color: "#a78bfa", shape: "sphere",    floatSpeed: 0.30, floatOffset: 3.1, floatAmp: 0.11, emissiveIntensity: 2.5 },
-  { position: [4.5, -1.2, 0.6],  size: 0.11, color: "#7c3aed", shape: "sphere",    floatSpeed: 0.25, floatOffset: 4.4, floatAmp: 0.09, emissiveIntensity: 2.2 },
+  { position: [5.2, 1.8, -0.8],  size: 0.13, color: "#7f8fe0", shape: "sphere",    floatSpeed: 0.35, floatOffset: 1.8, floatAmp: 0.10, emissiveIntensity: 2.5 },
+  { position: [2.4, 2.2, 1.1],   size: 0.12, color: "#92a0ec", shape: "sphere",    floatSpeed: 0.30, floatOffset: 3.1, floatAmp: 0.11, emissiveIntensity: 2.5 },
+  { position: [4.5, -1.2, 0.6],  size: 0.11, color: "#6f7fd6", shape: "sphere",    floatSpeed: 0.25, floatOffset: 4.4, floatAmp: 0.09, emissiveIntensity: 2.2 },
   // Medium nodes
-  { position: [1.8, -0.5, -1.2], size: 0.09, color: "#c4b5fd", shape: "sphere",    floatSpeed: 0.42, floatOffset: 1.4, floatAmp: 0.08, emissiveIntensity: 2.0 },
-  { position: [5.8, -0.3, 1.0],  size: 0.08, color: "#ddd6fe", shape: "sphere",    floatSpeed: 0.38, floatOffset: 4.7, floatAmp: 0.07, emissiveIntensity: 1.8 },
-  { position: [3.0, 3.1, -0.5],  size: 0.07, color: "#c4b5fd", shape: "sphere",    floatSpeed: 0.33, floatOffset: 2.5, floatAmp: 0.08, emissiveIntensity: 1.8 },
-  { position: [6.0, 2.4, 0.2],   size: 0.06, color: "#ddd6fe", shape: "sphere",    floatSpeed: 0.45, floatOffset: 5.8, floatAmp: 0.07, emissiveIntensity: 1.5 },
-  { position: [4.2, -2.8, -0.3], size: 0.06, color: "#c4b5fd", shape: "sphere",    floatSpeed: 0.50, floatOffset: 3.3, floatAmp: 0.06, emissiveIntensity: 1.5 },
+  { position: [1.8, -0.5, -1.2], size: 0.09, color: "#b4bff2", shape: "sphere",    floatSpeed: 0.42, floatOffset: 1.4, floatAmp: 0.08, emissiveIntensity: 2.0 },
+  { position: [5.8, -0.3, 1.0],  size: 0.08, color: "#d3d9f7", shape: "sphere",    floatSpeed: 0.38, floatOffset: 4.7, floatAmp: 0.07, emissiveIntensity: 1.8 },
+  { position: [3.0, 3.1, -0.5],  size: 0.07, color: "#b4bff2", shape: "sphere",    floatSpeed: 0.33, floatOffset: 2.5, floatAmp: 0.08, emissiveIntensity: 1.8 },
+  { position: [6.0, 2.4, 0.2],   size: 0.06, color: "#d3d9f7", shape: "sphere",    floatSpeed: 0.45, floatOffset: 5.8, floatAmp: 0.07, emissiveIntensity: 1.5 },
+  { position: [4.2, -2.8, -0.3], size: 0.06, color: "#b4bff2", shape: "sphere",    floatSpeed: 0.50, floatOffset: 3.3, floatAmp: 0.06, emissiveIntensity: 1.5 },
   // Micro nodes
-  { position: [2.0, 1.5, 2.2],   size: 0.05, color: "#ddd6fe", shape: "sphere",    floatSpeed: 0.48, floatOffset: 0.9, floatAmp: 0.06, emissiveIntensity: 1.4 },
-  { position: [5.5, 0.8, -1.5],  size: 0.05, color: "#c4b5fd", shape: "sphere",    floatSpeed: 0.40, floatOffset: 3.9, floatAmp: 0.05, emissiveIntensity: 1.4 },
-  { position: [3.5, -1.8, 1.8],  size: 0.05, color: "#ddd6fe", shape: "sphere",    floatSpeed: 0.44, floatOffset: 2.1, floatAmp: 0.06, emissiveIntensity: 1.3 },
-  { position: [1.5, 3.5, 0.8],   size: 0.04, color: "#c4b5fd", shape: "sphere",    floatSpeed: 0.52, floatOffset: 5.3, floatAmp: 0.05, emissiveIntensity: 1.3 },
-  { position: [6.2, -1.5, 0.8],  size: 0.04, color: "#ddd6fe", shape: "sphere",    floatSpeed: 0.46, floatOffset: 2.7, floatAmp: 0.05, emissiveIntensity: 1.2 },
-  { position: [2.8, -3.2, -0.9], size: 0.04, color: "#c4b5fd", shape: "sphere",    floatSpeed: 0.55, floatOffset: 6.4, floatAmp: 0.04, emissiveIntensity: 1.2 },
-  { position: [4.8, 3.0, 1.2],   size: 0.04, color: "#ddd6fe", shape: "sphere",    floatSpeed: 0.43, floatOffset: 3.6, floatAmp: 0.05, emissiveIntensity: 1.2 },
+  { position: [2.0, 1.5, 2.2],   size: 0.05, color: "#d3d9f7", shape: "sphere",    floatSpeed: 0.48, floatOffset: 0.9, floatAmp: 0.06, emissiveIntensity: 1.4 },
+  { position: [5.5, 0.8, -1.5],  size: 0.05, color: "#b4bff2", shape: "sphere",    floatSpeed: 0.40, floatOffset: 3.9, floatAmp: 0.05, emissiveIntensity: 1.4 },
+  { position: [3.5, -1.8, 1.8],  size: 0.05, color: "#d3d9f7", shape: "sphere",    floatSpeed: 0.44, floatOffset: 2.1, floatAmp: 0.06, emissiveIntensity: 1.3 },
+  { position: [1.5, 3.5, 0.8],   size: 0.04, color: "#b4bff2", shape: "sphere",    floatSpeed: 0.52, floatOffset: 5.3, floatAmp: 0.05, emissiveIntensity: 1.3 },
+  { position: [6.2, -1.5, 0.8],  size: 0.04, color: "#d3d9f7", shape: "sphere",    floatSpeed: 0.46, floatOffset: 2.7, floatAmp: 0.05, emissiveIntensity: 1.2 },
+  { position: [2.8, -3.2, -0.9], size: 0.04, color: "#b4bff2", shape: "sphere",    floatSpeed: 0.55, floatOffset: 6.4, floatAmp: 0.04, emissiveIntensity: 1.2 },
+  { position: [4.8, 3.0, 1.2],   size: 0.04, color: "#d3d9f7", shape: "sphere",    floatSpeed: 0.43, floatOffset: 3.6, floatAmp: 0.05, emissiveIntensity: 1.2 },
 
   // ── BRIDGE NODES — sky blue (center) — the translation layer ─────
-  { position: [0.8,  1.5,  0.5], size: 0.09, color: "#7dd3fc", shape: "sphere",    floatSpeed: 0.32, floatOffset: 1.0, floatAmp: 0.13, emissiveIntensity: 2.2 },
-  { position: [-0.6,-1.8,  0.3], size: 0.08, color: "#93c5fd", shape: "sphere",    floatSpeed: 0.28, floatOffset: 2.2, floatAmp: 0.12, emissiveIntensity: 2.0 },
-  { position: [1.2, -0.8,  1.5], size: 0.07, color: "#7dd3fc", shape: "sphere",    floatSpeed: 0.35, floatOffset: 3.5, floatAmp: 0.10, emissiveIntensity: 2.0 },
-  { position: [-1.0, 0.9, -1.0], size: 0.07, color: "#93c5fd", shape: "sphere",    floatSpeed: 0.25, floatOffset: 4.8, floatAmp: 0.11, emissiveIntensity: 2.0 },
-  { position: [0.5,  2.8, -0.8], size: 0.06, color: "#7dd3fc", shape: "sphere",    floatSpeed: 0.40, floatOffset: 0.5, floatAmp: 0.09, emissiveIntensity: 1.8 },
-  { position: [-0.3,-2.5,  1.2], size: 0.05, color: "#93c5fd", shape: "sphere",    floatSpeed: 0.45, floatOffset: 1.7, floatAmp: 0.08, emissiveIntensity: 1.6 },
-  { position: [1.5,  0.3, -1.8], size: 0.05, color: "#7dd3fc", shape: "sphere",    floatSpeed: 0.38, floatOffset: 5.1, floatAmp: 0.09, emissiveIntensity: 1.6 },
-  { position: [-1.3, 2.0,  1.3], size: 0.05, color: "#93c5fd", shape: "sphere",    floatSpeed: 0.42, floatOffset: 2.9, floatAmp: 0.08, emissiveIntensity: 1.6 },
+  { position: [0.8,  1.5,  0.5], size: 0.09, color: "#ece4d4", shape: "sphere",    floatSpeed: 0.32, floatOffset: 1.0, floatAmp: 0.13, emissiveIntensity: 2.2 },
+  { position: [-0.6,-1.8,  0.3], size: 0.08, color: "#f2f1ec", shape: "sphere",    floatSpeed: 0.28, floatOffset: 2.2, floatAmp: 0.12, emissiveIntensity: 2.0 },
+  { position: [1.2, -0.8,  1.5], size: 0.07, color: "#ece4d4", shape: "sphere",    floatSpeed: 0.35, floatOffset: 3.5, floatAmp: 0.10, emissiveIntensity: 2.0 },
+  { position: [-1.0, 0.9, -1.0], size: 0.07, color: "#f2f1ec", shape: "sphere",    floatSpeed: 0.25, floatOffset: 4.8, floatAmp: 0.11, emissiveIntensity: 2.0 },
+  { position: [0.5,  2.8, -0.8], size: 0.06, color: "#ece4d4", shape: "sphere",    floatSpeed: 0.40, floatOffset: 0.5, floatAmp: 0.09, emissiveIntensity: 1.8 },
+  { position: [-0.3,-2.5,  1.2], size: 0.05, color: "#f2f1ec", shape: "sphere",    floatSpeed: 0.45, floatOffset: 1.7, floatAmp: 0.08, emissiveIntensity: 1.6 },
+  { position: [1.5,  0.3, -1.8], size: 0.05, color: "#ece4d4", shape: "sphere",    floatSpeed: 0.38, floatOffset: 5.1, floatAmp: 0.09, emissiveIntensity: 1.6 },
+  { position: [-1.3, 2.0,  1.3], size: 0.05, color: "#f2f1ec", shape: "sphere",    floatSpeed: 0.42, floatOffset: 2.9, floatAmp: 0.08, emissiveIntensity: 1.6 },
 ]
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -143,10 +143,9 @@ function NetworkScene() {
       {/* Connection lines */}
       <lineSegments>
         <bufferGeometry>
-          {/* @ts-expect-error – R3F bufferAttribute via args tuple */}
           <bufferAttribute attach="attributes-position" args={[linePositions, 3]} />
         </bufferGeometry>
-        <lineBasicMaterial color="#22d3ee" transparent opacity={0.07} />
+        <lineBasicMaterial color="#f2f1ec" transparent opacity={0.06} />
       </lineSegments>
 
       {/* Nodes */}
@@ -193,10 +192,11 @@ export default function ThreeDScene() {
   return (
     <Canvas
       camera={{ position: [0, 0, 11], fov: 65 }}
+      dpr={[1, 1.5]}
       style={{ width: "100%", height: "100%" }}
     >
       {/* Dark background matching the boot screen palette */}
-      <color attach="background" args={["#0a0a0c"]} />
+      <color attach="background" args={["#0f0f0e"]} />
 
       <ambientLight intensity={0.04} />
 

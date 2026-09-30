@@ -3,121 +3,123 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Font variables — loaded via next/font in layout.tsx */
-:root {
-  --font-sans: var(--font-sans, "DM Sans", system-ui, sans-serif);
-  --font-display: var(--font-display, "Syne", system-ui, sans-serif);
-  --font-mono: var(--font-mono, "JetBrains Mono", monospace);
+/* ═══════════════════════════════════════════════════════════════════════════
+   PIXELOGIC OS — "PIGMENT ON CHARCOAL" (Taste pass, 2026-09-29)
+
+   A calm base — charcoal surfaces, bone type, hairline structure — carrying ONE
+   living color: the active chapter's pigment (--chapter). It crossfades with
+   the particle field on every chapter change (lib/chapter-palette.ts →
+   <ChapterAccent/> in page.tsx), so type, rail, progress, chips and field all
+   shift hue together. A fixed signal amber marks "live" states only.
+
+   Type: Geist (display + text, medium weights, tight tracking) + Azeret Mono
+   (labels, buttons, system voice — sentence case, not shouty caps).
+   Headlines are two-tone: the setup in grey, the payoff in bone.
+
+   Revert: `git stash show -p stash@{0} -- app/globals.css` holds the
+   pre-pass version (warm-amber iter 2).
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* The chapter pigment — registered so it can TRANSITION (a plain custom
+   property would snap). Default = Prologue amber, which is also what
+   standalone pages (case stories, notes) wear. */
+@property --chapter {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #f2a65a;
 }
 
-body {
-  font-family: var(--font-sans);
-}
-
-/* Dark-native palette — the 3D world is always the background.
-   SHIFTED 2026-04-20 (iter 2): full warm-neutral pass. Background moved to near-black
-   graphite, brand accent (`--primary`) shifted from electric blue (#4a7bf7) to amber
-   (#f59e0b) so the site no longer reads blue overall. Cyan is preserved as a contextual
-   accent (system-log chrome, chapter 0 content, particle system). Lavender + coral
-   remain for chromatic variety. To revert: see _docs/Sessions/Session Log.md. */
 :root {
-  --background: #08080a;
-  --foreground: #e8eaed;
-  --card: rgba(20, 20, 23, 0.72);
-  --card-foreground: #e8eaed;
-  --popover: #121215;
-  --popover-foreground: #e8eaed;
-  --primary: #f59e0b;
-  --primary-foreground: #0a0a0c;
-  --secondary: rgba(28, 28, 32, 0.62);
-  --secondary-foreground: #d4d4d8;
-  --muted: rgba(28, 28, 32, 0.55);
-  --muted-foreground: #9ca0a8;
-  --accent: #f97362;
-  --accent-foreground: #ffffff;
-  --lavender: #a78bfa;
-  --lavender-light: #3d3260;
+  transition: --chapter 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ── Ink scale (surfaces) ── */
+  --ink-0: #0f0f0e;
+  --ink-1: #161615;
+  --ink-2: #1d1d1b;
+  --ink-3: #262624;
+
+  /* ── Bone scale (type) — contrast on --ink-0 noted ── */
+  --bone: #f2f1ec;   /* 17:1 — primary text, payoff words */
+  --bone-2: #c9c8c1; /* 11:1 — body copy */
+  --bone-3: #8f8e88; /* 5.8:1 — secondary, the grey half of headlines */
+  --bone-4: #5f5e5a; /* 3:1 — decorative only, never body text */
+
+  /* ── Structure ── */
+  --hair: rgba(242, 241, 236, 0.08);
+  --hair-2: rgba(242, 241, 236, 0.14);
+  --hair-3: rgba(242, 241, 236, 0.22);
+
+  /* ── The one UI accent ── */
+  --signal: #f0a647;
+
+  /* ── shadcn token bridge ── */
+  --background: var(--ink-0);
+  --foreground: var(--bone);
+  --card: rgba(22, 22, 21, 0.72);
+  --card-foreground: var(--bone);
+  --popover: var(--ink-1);
+  --popover-foreground: var(--bone);
+  --primary: var(--bone);
+  --primary-foreground: #111110;
+  --secondary: rgba(38, 38, 36, 0.6);
+  --secondary-foreground: #dcdbd4;
+  --muted: rgba(38, 38, 36, 0.5);
+  --muted-foreground: #9a9993;
+  --accent: var(--signal);
+  --accent-foreground: #111110;
+  --lavender: #b7b3d9;
+  --lavender-light: #2c2a3a;
   --destructive: #dc2626;
   --destructive-foreground: #fecaca;
-  --border: rgba(255, 255, 255, 0.07);
-  --input: rgba(255, 255, 255, 0.07);
-  --ring: #f59e0b;
-  --chart-1: #e76f35;
-  --chart-2: #2ba39e;
-  --chart-3: #2d5a7b;
-  --chart-4: #e5b82a;
-  --chart-5: #dfa02f;
+  --border: var(--hair);
+  --input: var(--hair);
+  --ring: rgba(242, 241, 236, 0.6);
+  --chart-1: #e8a15a;
+  --chart-2: #96c4ac;
+  --chart-3: #92a0ec;
+  --chart-4: #d68eaa;
+  --chart-5: #ecE4d4;
   --radius: 0.75rem;
-  --sidebar: #121215;
-  --sidebar-foreground: #e8eaed;
-  --sidebar-primary: #f59e0b;
-  --sidebar-primary-foreground: #0a0a0c;
-  --sidebar-accent: rgba(28, 28, 32, 0.62);
-  --sidebar-accent-foreground: #e8eaed;
-  --sidebar-border: rgba(255, 255, 255, 0.07);
-  --sidebar-ring: #f59e0b;
+  --sidebar: var(--ink-1);
+  --sidebar-foreground: var(--bone);
+  --sidebar-primary: var(--bone);
+  --sidebar-primary-foreground: #111110;
+  --sidebar-accent: rgba(38, 38, 36, 0.6);
+  --sidebar-accent-foreground: var(--bone);
+  --sidebar-border: var(--hair);
+  --sidebar-ring: rgba(242, 241, 236, 0.6);
+
+  /* ── Motion (CSS side of lib/motion.ts) ── */
+  --ease-settle: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-editorial: var(--ease-settle);
+  --ease-cinematic: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.dark {
-  --background: #08080a;
-  --foreground: #e8eaed;
-  --card: rgba(20, 20, 23, 0.72);
-  --card-foreground: #e8eaed;
-  --popover: #121215;
-  --popover-foreground: #e8eaed;
-  --primary: #f59e0b;
-  --primary-foreground: #0a0a0c;
-  --secondary: rgba(28, 28, 32, 0.62);
-  --secondary-foreground: #d4d4d8;
-  --muted: rgba(28, 28, 32, 0.55);
-  --muted-foreground: #9ca0a8;
-  --accent: #f97362;
-  --accent-foreground: #ffffff;
-  --lavender: #a78bfa;
-  --lavender-light: #3d3260;
-  --destructive: #7f1d1d;
-  --destructive-foreground: #fecaca;
-  --border: rgba(255, 255, 255, 0.07);
-  --input: rgba(255, 255, 255, 0.07);
-  --ring: #f59e0b;
-  --sidebar: #121215;
-  --sidebar-foreground: #e8eaed;
-  --sidebar-primary: #f59e0b;
-  --sidebar-primary-foreground: #0a0a0c;
-  --sidebar-accent: rgba(28, 28, 32, 0.62);
-  --sidebar-accent-foreground: #e8eaed;
-  --sidebar-border: rgba(255, 255, 255, 0.07);
-  /* palette-shift-marker: 2026-04-20-amber */
-  --sidebar-ring: #f59e0b;
-}
-
-/* ── Neutral-dark overrides for Tailwind's slate bg utilities ──────────────
-   The section components and shell chrome lean on bg-slate-950 / bg-slate-900
-   (blue-tinted). These overrides retarget the *background-color* side of
-   those utilities to neutral near-black so the chapter accents pop.
-   `text-slate-*`, `border-slate-*`, and gradient stops (*-slate-950) are
-   left alone — those are used for type and structure, not surface fill.
-   Revert: delete this entire block. */
+/* ── Neutral overrides for Tailwind's slate bg utilities ───────────────────
+   Shell chrome and case-story pages lean on bg-slate-950/900 (blue-tinted).
+   Retarget the fill side to the ink scale so everything sits on one charcoal. */
 @layer utilities {
-  .bg-slate-950            { background-color: #08080a; }
-  .bg-slate-950\/95        { background-color: rgb(8 8 10 / 0.95); }
-  .bg-slate-950\/85        { background-color: rgb(8 8 10 / 0.85); }
-  .bg-slate-950\/80        { background-color: rgb(8 8 10 / 0.80); }
-  .bg-slate-950\/\[0\.87\] { background-color: rgb(8 8 10 / 0.87); }
-  .bg-slate-950\/60        { background-color: rgb(8 8 10 / 0.60); }
-  .bg-slate-900            { background-color: #121215; }
-  .bg-slate-900\/90        { background-color: rgb(18 18 21 / 0.90); }
-  .bg-slate-900\/80        { background-color: rgb(18 18 21 / 0.80); }
-  .bg-slate-900\/70        { background-color: rgb(18 18 21 / 0.70); }
-  .bg-slate-900\/60        { background-color: rgb(18 18 21 / 0.60); }
-  .bg-slate-900\/50        { background-color: rgb(18 18 21 / 0.50); }
+  .bg-slate-950            { background-color: var(--ink-0); }
+  .bg-slate-950\/95        { background-color: rgb(15 15 14 / 0.95); }
+  .bg-slate-950\/85        { background-color: rgb(15 15 14 / 0.85); }
+  .bg-slate-950\/80        { background-color: rgb(15 15 14 / 0.80); }
+  .bg-slate-950\/\[0\.87\] { background-color: rgb(15 15 14 / 0.87); }
+  .bg-slate-950\/60        { background-color: rgb(15 15 14 / 0.60); }
+  .bg-slate-900            { background-color: var(--ink-1); }
+  .bg-slate-900\/90        { background-color: rgb(22 22 21 / 0.90); }
+  .bg-slate-900\/80        { background-color: rgb(22 22 21 / 0.80); }
+  .bg-slate-900\/70        { background-color: rgb(22 22 21 / 0.70); }
+  .bg-slate-900\/60        { background-color: rgb(22 22 21 / 0.60); }
+  .bg-slate-900\/50        { background-color: rgb(22 22 21 / 0.50); }
+  .bg-slate-800            { background-color: var(--ink-2); }
+  .bg-slate-800\/80        { background-color: rgb(29 29 27 / 0.80); }
+  .bg-slate-800\/50        { background-color: rgb(29 29 27 / 0.50); }
 }
 
 @theme inline {
   --font-sans: var(--font-sans);
   --font-display: var(--font-display);
   --font-mono: var(--font-mono);
-  --font-pixel: var(--font-pixel);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -132,7 +134,6 @@ body {
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
-  /* Add lavender to theme */
   --color-lavender: var(--lavender);
   --color-lavender-light: var(--lavender-light);
   --color-destructive: var(--destructive);
@@ -145,6 +146,18 @@ body {
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+  --color-bone: var(--bone);
+  --color-bone-2: var(--bone-2);
+  --color-bone-3: var(--bone-3);
+  --color-bone-4: var(--bone-4);
+  --color-ink-0: var(--ink-0);
+  --color-ink-1: var(--ink-1);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-hair: var(--hair);
+  --color-hair-2: var(--hair-2);
+  --color-signal: var(--signal);
+  --color-chapter: var(--chapter);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -163,497 +176,445 @@ html {
   scroll-behavior: smooth;
 }
 
+::selection {
+  background: var(--chapter);
+  color: #111110;
+}
+
+/* ── Focus visibility ──────────────────────────────────────────────────────
+   The custom cursor hides the system pointer, so a designed keyboard focus
+   indicator is non-negotiable. Bone on charcoal ≈ 17:1; mouse clicks don't
+   trigger it. */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+:focus-visible {
+  outline: 1.5px solid rgba(242, 241, 236, 0.9);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* ── Reduced motion — global accommodation (WCAG 2.3.3) ────────────────────
+   Kills every CSS keyframe/transition loop. Framer-motion is governed by
+   MotionConfig + useReducedMotion; the 3D field has its own calm path. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
   body {
+    /* One family: display resolves to Geist too (set here, where next/font
+       defines --font-sans, so the reference resolves). */
+    --font-display: var(--font-sans);
     @apply bg-background text-foreground antialiased;
     font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
     overflow-x: hidden;
-    /* Subtle dot pattern — warm amber whisper before the 3D world loads */
-    background-image: radial-gradient(circle, rgba(245, 158, 11, 0.04) 1px, transparent 1px);
-    background-size: 20px 20px;
-    animation: grid-drift 16s linear infinite;
+    /* A whisper of dot grid before the 3D world loads */
+    background-image: radial-gradient(circle, rgba(242, 241, 236, 0.035) 1px, transparent 1px);
+    background-size: 22px 22px;
+    animation: grid-drift 18s linear infinite;
   }
 }
 
-/* ── Typography system ──────────────────────────────────────────────────── */
+/* ═══ TYPOGRAPHY ═══════════════════════════════════════════════════════════ */
 
-/* Display headings use Syne — cinematic, editorial */
 h1, h2, h3 {
   font-family: var(--font-display);
-  letter-spacing: -0.02em;
-}
-
-h1 {
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: -0.03em;
 }
 
-h2 {
-  font-weight: 700;
-  letter-spacing: -0.025em;
-}
-
-h3 {
-  font-weight: 600;
-  letter-spacing: -0.015em;
-}
-
-/* Body text — DM Sans with comfortable reading rhythm */
 p, li, blockquote {
   font-family: var(--font-sans);
   font-weight: 400;
-  line-height: 1.75;
+  line-height: 1.65;
 }
 
-/* Monospace system labels — JetBrains Mono */
 .font-mono, code, pre, kbd {
   font-family: var(--font-mono);
 }
 
-/* ── Editorial type scale — cinematic display sizes ─────────────────────── */
-
-/* Massive editorial headline — section openers
-   NOTE: tuned for windowed chapter viewport (~640-840px tall). */
+/* Display scale — medium weight + tight tracking is the whole "taste" move.
+   Sized in container units (cqi): chapters live in a window whose width depends
+   on the side rails, so type scales with the WINDOW, not the viewport. Outside
+   a container, cqi falls back to the small viewport. */
 .display-xl {
   font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(2.5rem, 5vw, 4.25rem);
-  line-height: 1.02;
-  letter-spacing: -0.04em;
+  font-weight: 500;
+  font-size: clamp(2.4rem, 8.4cqi, 4.75rem);
+  line-height: 0.98;
+  letter-spacing: -0.048em;
 }
 
-/* Large display — primary section titles */
 .display-lg {
   font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(2rem, 4vw, 3.125rem);
-  line-height: 1.05;
+  font-weight: 500;
+  font-size: clamp(2rem, 6.6cqi, 3.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.042em;
+}
+
+.display-md {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.4rem, 3.8cqi, 2rem);
+  line-height: 1.08;
   letter-spacing: -0.032em;
 }
 
-/* Medium display — subsections */
-.display-md {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: clamp(1.5rem, 2.6vw, 2.125rem);
-  line-height: 1.1;
-  letter-spacing: -0.025em;
+/* Two-tone headlines: wrap the SETUP in .ink-dim; the payoff stays bone. */
+.ink-dim {
+  color: var(--bone-3);
+}
+.ink-soft {
+  color: var(--bone-2);
 }
 
-/* Eyebrow — unified kicker label above headlines */
+/* The payoff word — the chapter pigment easing into bone. The ONE place a
+   headline carries color; the setup stays grey, the rest bone. */
+.ink-accent {
+  background: linear-gradient(
+    100deg,
+    var(--chapter) 0%,
+    color-mix(in oklab, var(--chapter) 62%, var(--bone)) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+.text-chapter-solid {
+  color: var(--chapter);
+}
+
+/* Eyebrow — mono kicker, sentence case, quiet */
 .eyebrow {
   font-family: var(--font-mono);
   font-size: 0.6875rem;
-  font-weight: 500;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: rgba(148, 163, 184, 0.7);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--bone-3);
   display: inline-flex;
   align-items: center;
-  gap: 0.65rem;
+  gap: 0.6rem;
 }
-
 .eyebrow::before {
   content: "";
   display: inline-block;
-  width: 1.75rem;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, currentColor);
-  opacity: 0.6;
+  width: 5px;
+  height: 5px;
+  border-radius: 1px;
+  background: var(--chapter);
 }
 
-/* Lede — intro paragraph below a section headline */
+/* Small mono label (no bullet) — metadata, table heads, field names */
+.label-mono {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.03em;
+  color: var(--bone-3);
+}
+
+/* Lede — the opening paragraph under a headline */
 .lede {
   font-family: var(--font-sans);
-  font-weight: 300;
-  font-size: clamp(1rem, 1.2vw, 1.125rem);
-  line-height: 1.6;
-  letter-spacing: -0.005em;
-  color: rgba(203, 213, 225, 0.92);
-  max-width: 44ch;
+  font-weight: 400;
+  font-size: clamp(1.02rem, 1.2vw, 1.15rem);
+  line-height: 1.55;
+  letter-spacing: -0.012em;
+  color: var(--bone-2);
+  max-width: 46ch;
 }
 
-/* Pull quote — editorial emphasis block */
+/* Pull quote — set in the display face, no italics, one hairline */
 .pull-quote {
   font-family: var(--font-display);
-  font-weight: 500;
-  font-size: clamp(1.35rem, 2.2vw, 1.875rem);
-  line-height: 1.25;
-  letter-spacing: -0.02em;
-  color: rgb(226, 232, 240);
-  font-style: italic;
-  padding-left: 1.5rem;
-  border-left: 2px solid rgba(245, 158, 11, 0.55);
-  margin: 2.5rem 0;
-  max-width: 36ch;
+  font-weight: 400;
+  font-size: clamp(1.25rem, 1.9vw, 1.6rem);
+  line-height: 1.3;
+  letter-spacing: -0.025em;
+  color: var(--bone);
+  padding-left: 1.25rem;
+  border-left: 1px solid var(--hair-3);
+  margin: 2rem 0;
+  max-width: 38ch;
 }
 
-/* Drop cap — first letter treatment for first paragraph of an article */
 .drop-cap::first-letter {
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 500;
   float: left;
-  font-size: 4.5rem;
+  font-size: 4.25rem;
   line-height: 0.9;
-  padding-right: 0.6rem;
-  padding-top: 0.35rem;
-  background: linear-gradient(135deg, rgb(245, 158, 11), rgb(167, 139, 250));
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
+  padding-right: 0.55rem;
+  padding-top: 0.3rem;
+  color: var(--bone);
 }
 
-/* Oversized decorative chapter numeral — anchors each section visually.
-   Kept subtle (low-alpha gradient) so it reads as a watermark, not content. */
+/* Chapter numeral watermark — thin outline figures, never louder than type */
 .marquee-num {
   font-family: var(--font-display);
-  font-weight: 800;
-  font-style: italic;
-  font-size: clamp(4.5rem, 8.5vw, 7.5rem);
+  font-weight: 300;
+  font-style: normal;
+  font-size: clamp(4.5rem, 8vw, 7rem);
   line-height: 0.8;
   letter-spacing: -0.06em;
-  background: linear-gradient(180deg, rgba(226, 232, 240, 0.07) 0%, rgba(226, 232, 240, 0) 90%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
   color: transparent;
+  -webkit-text-stroke: 1px color-mix(in oklab, var(--chapter) 22%, transparent);
   pointer-events: none;
   user-select: none;
   z-index: 0;
 }
 
-/* Editorial rule — thin divider with tick mark, magazine style */
+/* Hairline divider with a small square tick */
 .rule-tick {
   position: relative;
   height: 1px;
-  background: linear-gradient(90deg, rgba(255,255,255,0.14), rgba(255,255,255,0.02));
+  background: var(--hair);
   margin: 1.5rem 0;
 }
 .rule-tick::before {
   content: "";
   position: absolute;
-  top: -3px;
+  top: -2px;
   left: 0;
-  width: 7px;
-  height: 7px;
-  background: rgb(245, 158, 11);
-  border-radius: 50%;
-  box-shadow: 0 0 12px rgba(245, 158, 11, 0.7);
+  width: 5px;
+  height: 5px;
+  border-radius: 1px;
+  background: var(--chapter);
 }
 
-/* Reading column — constrained width for prose */
-.col-reading {
-  max-width: 42rem;
-}
-.col-narrow {
-  max-width: 32rem;
-}
+.col-reading { max-width: 42rem; }
+.col-narrow  { max-width: 32rem; }
 
-/* Editorial easing token */
-:root {
-  --ease-editorial: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-cinematic: cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-/* ── Text gradient — amber → coral → lavender, warm-to-cool arc ──────── */
-.text-gradient {
-  background: linear-gradient(
-    135deg,
-    rgb(245, 158, 11) 0%,
-    rgb(249, 115, 98) 50%,
-    rgb(167, 139, 250) 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-}
-
-/* Warmer variant — used for personal/about sections, even more amber-heavy */
+/* Emphasis text — tonal sheen (bone → warm grey), no rainbow. Kept under the
+   old class names so case-story + notes pages inherit the new language. */
+.text-gradient,
 .text-gradient-warm {
-  background: linear-gradient(
-    135deg,
-    rgb(252, 211, 77) 0%,
-    rgb(249, 115, 98) 55%,
-    rgb(167, 139, 250) 100%
-  );
+  background: linear-gradient(100deg, var(--chapter) 0%, color-mix(in oklab, var(--chapter) 55%, var(--bone)) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
 }
 
-/* ── Shimmer text — animated light sweep across gradient text ─────────── */
+/* Shimmer — a single slow light pass across bone type */
 @keyframes text-shimmer {
-  0%   { background-position: -200% center; }
-  100% { background-position: 200% center; }
+  0%   { background-position: 120% center; }
+  100% { background-position: -120% center; }
 }
-
 .text-shimmer {
   background: linear-gradient(
-    90deg,
-    rgb(245, 158, 11) 0%,
-    rgb(249, 115, 98) 30%,
-    rgb(254, 243, 199) 50%,
-    rgb(249, 115, 98) 70%,
-    rgb(167, 139, 250) 100%
+    100deg,
+    var(--chapter) 0%,
+    color-mix(in oklab, var(--chapter) 70%, var(--bone)) 40%,
+    #fffaf0 50%,
+    color-mix(in oklab, var(--chapter) 70%, var(--bone)) 60%,
+    var(--chapter) 100%
   );
-  background-size: 200% auto;
+  background-size: 260% auto;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
-  animation: text-shimmer 4s linear infinite;
+  animation: text-shimmer 7s var(--ease-settle) infinite;
 }
 
-/* ── Display utility — applies Syne to any element ───────────────────── */
 @utility font-display {
   font-family: var(--font-display);
   letter-spacing: -0.02em;
 }
 
-/* Font pixel utility class */
+/* Retired pixel face — aliased to mono so any stragglers stay legible */
 @utility font-pixel {
-  font-family: var(--font-pixel), system-ui, sans-serif;
+  font-family: var(--font-mono);
 }
 
-/* Dark mode — same as root since we're always dark */
-.dark body {
-  background-image: radial-gradient(circle, rgba(245, 158, 11, 0.04) 1px, transparent 1px);
-  background-size: 20px 20px;
-  animation: grid-drift 16s linear infinite;
-}
+/* ═══ PRIMITIVES ═══════════════════════════════════════════════════════════ */
 
-/* Slowly drifting background grid — makes the inner screens feel alive */
-@keyframes grid-drift {
-  0%   { background-position: 0px 0px; }
-  100% { background-position: 16px 16px; }
-}
-
-/* ── Cinematic intro — "press anywhere" pulsing line ─────────────────────── */
-@keyframes cinematic-pulse {
-  0%, 100% { opacity: 0.25; transform: scaleX(1);   }
-  50%       { opacity: 0.55; transform: scaleX(1.45); }
-}
-.cinematic-pulse-line {
-  width: 48px;
-  height: 1px;
-  background: rgba(255,255,255,0.4);
-  transform-origin: center;
-  animation: cinematic-pulse 2.6s ease-in-out infinite;
-}
-
-/* Film grain drift — steps() gives the classic pixel-shift flicker */
-@keyframes film-grain-drift {
-  0%   { transform: translate(0, 0); }
-  25%  { transform: translate(-4%, 2%); }
-  50%  { transform: translate(3%, -3%); }
-  75%  { transform: translate(-2%, 4%); }
-  100% { transform: translate(0, 0); }
-}
-
-/* Shimmer sweep — used on card hover accents */
-@keyframes shimmer-sweep {
-  0%   { background-position: -200% center; }
-  100% { background-position: 200% center; }
-}
-
-/* Gentle float — used on feature cards / mini windows */
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-5px); }
-}
-
-/* Soft glow pulse — used on interactive highlights */
-@keyframes glow-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
-  50%       { box-shadow: 0 0 18px 4px rgba(245, 158, 11, 0.28); }
-}
-
-/* Chapter in — chapter content appears with a reveal */
-@keyframes chapter-reveal {
-  0%   { opacity: 0; clip-path: inset(0 0 100% 0); }
-  100% { opacity: 1; clip-path: inset(0 0 0% 0); }
-}
-
-/* Underline grow — animated underline for section titles */
-@keyframes underline-grow {
-  0%   { transform: scaleX(0); }
-  100% { transform: scaleX(1); }
-}
-
-/* Component utilities layer */
 @layer components {
-  /* Animated shimmer highlight */
-  .shimmer-line {
-    background: linear-gradient(90deg, transparent 0%, rgba(245,158,11,0.7) 50%, transparent 100%);
-    background-size: 200% 100%;
-    animation: shimmer-sweep 1.8s ease infinite;
+  /* Hairline surface — the one card recipe */
+  .surface {
+    background: rgba(22, 22, 21, 0.72);
+    border: 1px solid var(--hair);
+    border-radius: 16px;
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+  .surface-interactive {
+    transition: border-color 0.35s var(--ease-settle), background-color 0.35s var(--ease-settle),
+      box-shadow 0.5s var(--ease-settle);
+  }
+  .surface-interactive:hover {
+    border-color: color-mix(in oklab, var(--chapter) 35%, transparent);
+    background: rgba(29, 29, 27, 0.78);
+    box-shadow: 0 0 0 1px color-mix(in oklab, var(--chapter) 10%, transparent),
+      0 24px 60px -24px color-mix(in oklab, var(--chapter) 28%, transparent);
   }
 
-  /* Float animation utility */
-  .animate-float {
-    animation: float 4s ease-in-out infinite;
+  /* Buttons — mono label, small radius, two weights only */
+  .btn-solid,
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    height: 2.5rem;
+    padding: 0 1.1rem;
+    border-radius: 8px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    transition: background-color 0.25s var(--ease-settle), color 0.25s var(--ease-settle),
+      border-color 0.25s var(--ease-settle);
+  }
+  .btn-solid {
+    background: var(--bone);
+    color: #111110;
+    border: 1px solid var(--bone);
+  }
+  .btn-solid:hover {
+    background: var(--chapter);
+    border-color: var(--chapter);
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--bone);
+    border: 1px solid var(--hair-3);
+  }
+  .btn-ghost:hover {
+    border-color: var(--chapter);
+    background: color-mix(in oklab, var(--chapter) 8%, transparent);
+  }
+  .btn-sm {
+    height: 2rem;
+    padding: 0 0.8rem;
+    font-size: 0.6875rem;
   }
 
-  /* Glow pulse utility */
-  .animate-glow-pulse {
-    animation: glow-pulse 2.5s ease-in-out infinite;
+  /* Arrow chip — the round "↗" that sits beside a mono label. Fills bone on
+     hover of its nearest .group, and the arrow swings from ↗ to →. */
+  .arrow-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 9999px;
+    border: 1px solid var(--hair-3);
+    color: var(--bone);
+    transition: background-color 0.3s var(--ease-settle), border-color 0.3s var(--ease-settle),
+      color 0.3s var(--ease-settle);
+  }
+  .arrow-chip > svg {
+    width: 0.8rem;
+    height: 0.8rem;
+    transition: transform 0.35s var(--ease-settle);
+  }
+  .group:hover .arrow-chip,
+  .group:focus-visible .arrow-chip {
+    background: var(--chapter);
+    border-color: var(--chapter);
+    color: #111110;
+  }
+  .group:hover .arrow-chip > svg,
+  .group:focus-visible .arrow-chip > svg {
+    transform: rotate(45deg);
+  }
+  .arrow-chip-lg {
+    width: 2.25rem;
+    height: 2.25rem;
   }
 
-  /* Card with glowing border on hover */
-  .card-glow-hover {
-    transition: box-shadow 0.35s ease, border-color 0.35s ease, transform 0.25s ease;
+  /* Live dot — the signal accent, with a slow halo */
+  .live-dot {
+    position: relative;
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: var(--signal);
+    flex-shrink: 0;
   }
-  .card-glow-hover:hover {
-    box-shadow:
-      0 0 0 1px rgba(245, 158, 11, 0.32),
-      0 8px 32px rgba(245, 158, 11, 0.14),
-      0 2px 8px rgba(0, 0, 0, 0.4);
-    border-color: rgba(245, 158, 11, 0.32) !important;
-    transform: translateY(-3px);
+  .live-dot::after {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border-radius: inherit;
+    border: 1px solid var(--signal);
+    opacity: 0;
+    animation: live-halo 2.8s var(--ease-settle) infinite;
   }
 
-  /* Softer button hover with subtle brightness shift */
+  /* Keycap — for the navigation hint */
+  .keycap {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.25rem;
+    height: 1.25rem;
+    padding: 0 0.3rem;
+    border-radius: 4px;
+    border: 1px solid var(--hair-2);
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    color: var(--bone-2);
+  }
+
+  /* Vertical word cycle — fades words in and out at the mask edges */
+  .word-cycle-mask {
+    -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 22%, #000 78%, transparent 100%);
+    mask-image: linear-gradient(180deg, transparent 0%, #000 22%, #000 78%, transparent 100%);
+  }
+
+  /* Legacy helpers still referenced by a few components — now monochrome */
   .btn-soft-hover {
     @apply transition-all duration-200;
   }
   .btn-soft-hover:hover {
-    filter: brightness(1.08);
+    filter: brightness(1.06);
   }
-
-  /* Added glowing icon utilities */
   .icon-glow {
-    filter: drop-shadow(0 0 4px var(--primary));
-    transition: filter 0.2s ease;
+    transition: color 0.2s ease;
   }
-
-  .icon-glow:hover {
-    filter: drop-shadow(0 0 8px var(--primary)) drop-shadow(0 0 12px var(--primary));
-  }
-
-  .icon-glow-lavender {
-    filter: drop-shadow(0 0 4px var(--lavender));
-    transition: filter 0.2s ease;
-  }
-
-  .icon-glow-lavender:hover {
-    filter: drop-shadow(0 0 8px var(--lavender)) drop-shadow(0 0 12px var(--lavender));
-  }
-
-  .icon-glow-accent {
-    filter: drop-shadow(0 0 4px var(--accent));
-    transition: filter 0.2s ease;
-  }
-
-  .icon-glow-accent:hover {
-    filter: drop-shadow(0 0 8px var(--accent)) drop-shadow(0 0 12px var(--accent));
-  }
-
-  .icon-glow-green {
-    filter: drop-shadow(0 0 4px #22c55e);
-    transition: filter 0.2s ease;
-  }
-
-  /* Glowing icon container with background glow */
   .icon-container-glow {
     position: relative;
   }
 
-  .icon-container-glow::before {
-    content: "";
-    position: absolute;
-    inset: -2px;
-    background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
-    opacity: 0.15;
-    border-radius: inherit;
-    transition: opacity 0.2s ease;
-  }
-
-  .icon-container-glow:hover::before {
-    opacity: 0.3;
-  }
-
-  /* Dark frosted glass card — elevated panel over the 3D world */
-  .glass-card {
-    background: rgba(10, 10, 12, 0.6);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    transition: box-shadow 0.35s ease, border-color 0.35s ease;
-  }
-  .glass-card:hover {
-    box-shadow:
-      0 0 0 1px rgba(245, 158, 11, 0.14),
-      0 8px 36px rgba(0, 0, 0, 0.6);
-  }
-
-  /* Glass card with colored glow on hover — Draftly-inspired */
-  .glass-card-glow {
-    position: relative;
-    background: rgba(10, 10, 12, 0.6);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    transition: box-shadow 0.4s ease, border-color 0.4s ease;
-  }
-  .glass-card-glow::before {
-    content: "";
-    position: absolute;
-    inset: -1px;
-    border-radius: inherit;
-    background: linear-gradient(135deg, rgba(245, 158, 11, 0.10), rgba(167, 139, 250, 0.10));
-    z-index: -1;
-    filter: blur(24px);
-    opacity: 0;
-    transition: opacity 0.5s ease;
-    pointer-events: none;
-  }
-  .glass-card-glow:hover {
-    border-color: rgba(255, 255, 255, 0.12);
-    box-shadow:
-      0 0 0 1px rgba(245, 158, 11, 0.12),
-      0 8px 40px rgba(0, 0, 0, 0.55),
-      0 0 60px rgba(245, 158, 11, 0.05);
-  }
-  .glass-card-glow:hover::before {
-    opacity: 1;
-  }
-
-  /* Hide scrollbar for horizontal scroll carousel */
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
-
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
-
-  /* Scroll snapping - desktop only */
-  @media (min-width: 1024px) {
-    .snap-y {
-      scroll-snap-type: y mandatory;
-    }
-
-    .snap-proximity {
-      scroll-snap-type: y proximity;
-    }
-
-    .snap-start {
-      scroll-snap-align: start;
-    }
-  }
 }
 
-/* Modal scrollbar — thin, dark, blends with the panel */
+@keyframes live-halo {
+  0%   { transform: scale(0.6); opacity: 0.7; }
+  70%  { transform: scale(1.6); opacity: 0; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+/* Scrollbars — thin, neutral */
 .modal-scroll {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.08) transparent;
+  scrollbar-color: rgba(242, 241, 236, 0.1) transparent;
 }
 .modal-scroll::-webkit-scrollbar {
   width: 6px;
@@ -662,17 +623,11 @@ p, li, blockquote {
   background: transparent;
 }
 .modal-scroll::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.10);
+  background: rgba(242, 241, 236, 0.1);
   border-radius: 3px;
 }
 .modal-scroll::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.18);
-}
-
-/* Section separator — gradient line that fades in/out */
-.section-separator {
-  height: 1px;
-  background: linear-gradient(90deg, transparent 0%, rgba(245, 158, 11, 0.14) 30%, rgba(167, 139, 250, 0.12) 70%, transparent 100%);
+  background: rgba(242, 241, 236, 0.2);
 }
 
 /* ── Cursor-follow spotlight — paints a radial wash through the wrapper ─── */
@@ -689,13 +644,12 @@ p, li, blockquote {
   border-radius: inherit;
   background: radial-gradient(
     var(--spot-size, 260px) circle at var(--mx, -9999px) var(--my, -9999px),
-    rgba(var(--spot-color, 34, 211, 238), var(--spot-intensity, 0.14)),
+    rgba(var(--spot-color, 242, 166, 90), var(--spot-intensity, 0.08)),
     transparent 60%
   );
   z-index: 1;
   transition: background 120ms ease-out;
 }
-/* Content must sit above the spotlight layer */
 .spotlight-root > * {
   position: relative;
   z-index: 2;
@@ -704,36 +658,40 @@ p, li, blockquote {
   .spotlight-root::before { display: none; }
 }
 
-/* System log console entrance animation */
+/* ═══ KEYFRAMES still referenced by components ═════════════════════════════ */
+
+@keyframes grid-drift {
+  0%   { background-position: 0px 0px; }
+  100% { background-position: 22px 22px; }
+}
+
+/* Cinematic intro — "press anywhere" pulsing line */
+@keyframes cinematic-pulse {
+  0%, 100% { opacity: 0.25; transform: scaleX(1);   }
+  50%      { opacity: 0.55; transform: scaleX(1.45); }
+}
+.cinematic-pulse-line {
+  width: 48px;
+  height: 1px;
+  background: rgba(242, 241, 236, 0.4);
+  transform-origin: center;
+  animation: cinematic-pulse 2.6s ease-in-out infinite;
+}
+
+@keyframes film-grain-drift {
+  0%   { transform: translate(0, 0); }
+  25%  { transform: translate(-4%, 2%); }
+  50%  { transform: translate(3%, -3%); }
+  75%  { transform: translate(-2%, 4%); }
+  100% { transform: translate(0, 0); }
+}
+
 @keyframes system-log-in {
-  from {
-    opacity: 0;
-    transform: translateY(-8px) scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+  from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
-
 .animate-system-log-in {
-  animation: system-log-in 380ms ease-out forwards;
-}
-
-/* Breathing animation */
-@keyframes breathe {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.03);
-    opacity: 0.95;
-  }
-}
-
-.animate-breathe {
-  animation: breathe 3.2s ease-in-out infinite;
+  animation: system-log-in 380ms var(--ease-settle) forwards;
 }
 
 /* Typewriter effect */
@@ -746,113 +704,36 @@ p, li, blockquote {
     typing 2.2s steps(32, end) 0.2s forwards,
     caret-pulse 1.1s steps(1, end) infinite;
 }
-
 @keyframes typing {
   from { width: 0; }
-  to { width: 100%; }
+  to   { width: 100%; }
 }
-
 @keyframes caret-pulse {
-  0%, 50% { border-color: transparent; }
+  0%, 50%   { border-color: transparent; }
   51%, 100% { border-color: currentColor; }
 }
 
-/* Breathing animation for cards */
-.breathing {
-  animation: breathing 4.5s ease-in-out infinite;
-}
-
-@keyframes breathing {
-  0%, 100% {
-    transform: translateY(0);
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.36);
-  }
-  50% {
-    transform: translateY(-3px);
-    box-shadow: 0 32px 80px rgba(0, 0, 0, 0.44);
-  }
-}
-
-/* ── CRT Transition Effects ─────────────────────────────────────────────── */
-
-/* Horizontal scanline sweep — moves from top to bottom continuously */
+/* Formation telemetry scanline */
 @keyframes crt-scanline-sweep {
   0%   { transform: translateY(-100%); }
   100% { transform: translateY(100vh); }
 }
 
-/* CRT static noise flicker */
-@keyframes crt-flicker {
-  0%,  100% { opacity: 1;    }
-  8%         { opacity: 0.92; }
-  22%        { opacity: 1;    }
-  35%        { opacity: 0.88; }
-  48%        { opacity: 1;    }
-  60%        { opacity: 0.94; }
-  75%        { opacity: 1;    }
-  88%        { opacity: 0.90; }
-}
-
-/* Terminal cursor blink */
 @keyframes cursor-blink {
-  0%, 49% { opacity: 1; }
+  0%, 49%   { opacity: 1; }
   50%, 100% { opacity: 0; }
 }
-
-/* CRT turn-on brightness flash */
-@keyframes crt-boot {
-  0%   { filter: brightness(3) blur(4px); opacity: 0.6; }
-  15%  { filter: brightness(1.6) blur(1px); opacity: 0.9; }
-  100% { filter: brightness(1) blur(0px); opacity: 1; }
-}
-
-/* CRT turn-off collapse */
-@keyframes crt-shutdown {
-  0%   { filter: brightness(1.4); opacity: 1;   transform: scaleY(1); }
-  30%  { filter: brightness(2.5); opacity: 1;   transform: scaleY(0.6); }
-  60%  { filter: brightness(1.8); opacity: 0.9; transform: scaleY(0.08); }
-  100% { filter: brightness(0.4); opacity: 0;   transform: scaleY(0.01); }
-}
-
-.crt-scanlines {
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    to bottom,
-    transparent 0px,
-    transparent 3px,
-    rgba(0, 0, 0, 0.28) 3px,
-    rgba(0, 0, 0, 0.28) 4px
-  );
-  pointer-events: none;
-}
-
-.crt-sweep-line {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 120px;
-  background: linear-gradient(
-    to bottom,
-    transparent 0%,
-    rgba(100, 220, 255, 0.04) 30%,
-    rgba(100, 220, 255, 0.07) 50%,
-    rgba(100, 220, 255, 0.04) 70%,
-    transparent 100%
-  );
-  animation: crt-scanline-sweep 2.4s linear infinite;
-}
-
 .crt-cursor::after {
-  content: '█';
-  animation: cursor-blink 0.8s step-end infinite;
+  content: "▍";
+  animation: cursor-blink 0.9s step-end infinite;
   color: inherit;
   margin-left: 1px;
 }
 
-/* Note prose — typography for individual note pages */
+/* ═══ NOTE PROSE — long-form article pages ═════════════════════════════════ */
+
 .note-prose {
-  color: rgb(203, 213, 225);
+  color: var(--bone-2);
   line-height: 1.8;
   font-size: 1.0625rem;
   font-family: var(--font-sans);
@@ -861,34 +742,28 @@ p, li, blockquote {
 
 .note-prose p {
   margin-bottom: 1.6rem;
-  color: rgb(203, 213, 225);
+  color: var(--bone-2);
   line-height: 1.8;
 }
 
-/* Drop cap on the first paragraph of a note */
 .note-prose > p:first-of-type::first-letter {
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 500;
   float: left;
   font-size: 4.25rem;
   line-height: 0.9;
   padding: 0.35rem 0.55rem 0 0;
-  background: linear-gradient(135deg, rgb(245, 158, 11), rgb(167, 139, 250));
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
+  color: var(--chapter);
 }
 
-/* Elevated blockquote — pull quote style for notes */
 .note-prose blockquote {
   font-family: var(--font-display);
-  font-style: italic;
+  font-style: normal;
   font-size: 1.375rem;
-  line-height: 1.3;
-  letter-spacing: -0.02em;
-  color: rgb(226, 232, 240);
-  border-left: 2px solid rgba(245, 158, 11, 0.6);
+  line-height: 1.32;
+  letter-spacing: -0.025em;
+  color: var(--bone);
+  border-left: 2px solid var(--chapter);
   padding: 0.25rem 0 0.25rem 1.4rem;
   margin: 2.5rem 0;
   max-width: 36ch;
@@ -896,22 +771,22 @@ p, li, blockquote {
 
 .note-prose h2 {
   font-family: var(--font-display);
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: rgb(226, 232, 240);
+  font-size: 1.35rem;
+  font-weight: 500;
+  color: var(--bone);
   margin-top: 3rem;
   margin-bottom: 1rem;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.03em;
 }
 
 .note-prose h3 {
   font-family: var(--font-display);
   font-size: 1.05rem;
-  font-weight: 600;
-  color: rgb(226, 232, 240);
+  font-weight: 500;
+  color: var(--bone);
   margin-top: 2rem;
   margin-bottom: 0.75rem;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.02em;
 }
 
 .note-prose ul,
@@ -919,57 +794,57 @@ p, li, blockquote {
   padding-left: 1.5rem;
   margin-bottom: 1.5rem;
 }
-
-.note-prose ul {
-  list-style-type: disc;
-}
-
-.note-prose ol {
-  list-style-type: decimal;
-}
+.note-prose ul { list-style-type: disc; }
+.note-prose ol { list-style-type: decimal; }
+.note-prose li::marker { color: var(--bone-4); }
 
 .note-prose li {
   margin-bottom: 0.5rem;
-  color: rgb(203, 213, 225);
+  color: var(--bone-2);
 }
 
 .note-prose code {
-  font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 0.875em;
-  background: rgba(24, 24, 28, 0.8);
-  color: rgb(245, 158, 11);
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: var(--ink-2);
+  color: var(--bone);
   padding: 0.15em 0.4em;
   border-radius: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--hair);
 }
 
 .note-prose strong {
-  color: rgb(226, 232, 240);
-  font-weight: 600;
+  color: var(--bone);
+  font-weight: 500;
 }
 
 .note-prose em {
-  color: rgb(148, 163, 184);
+  color: var(--bone-3);
   font-style: italic;
 }
 
 .note-prose a {
-  color: rgb(245, 158, 11);
+  color: var(--bone);
   text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--chapter) 60%, transparent);
   text-underline-offset: 3px;
+  transition: text-decoration-color 0.2s ease;
+}
+.note-prose a:hover {
+  text-decoration-color: var(--chapter);
 }
 
 .note-prose hr {
   border: none;
-  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  border-top: 1px solid var(--hair);
   margin: 2rem 0;
 }
 
 .note-prose img {
   width: 100%;
   height: auto;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  border: 1px solid var(--hair);
   margin: 2rem 0;
   display: block;
 }
@@ -978,8 +853,45 @@ p, li, blockquote {
   display: block;
   text-align: center;
   font-size: 0.8rem;
-  color: rgb(71, 85, 105);
+  color: var(--bone-3);
   margin-top: -1.25rem;
   margin-bottom: 2rem;
   font-style: normal;
+}
+
+/* ═══ STORYBOARD ═══════════════════════════════════════════════════════════ */
+
+/* Dotted "particle" strokes march when their panel/cover is hovered —
+   the drawing comes alive the way the field does. */
+@keyframes sb-march {
+  to { stroke-dashoffset: -7.2; }
+}
+.group:hover .sb-dots {
+  animation: sb-march 1.1s linear infinite;
+}
+
+/* Covers — the preview pictures on case + note cards. One series:
+   charcoal stage, dotted paper, a pool of the cover's pigment, crop marks. */
+.cover-stage {
+  position: relative;
+  overflow: hidden;
+  background: #121211;
+}
+.cover-stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(242, 241, 236, 0.055) 1px, transparent 1px);
+  background-size: 14px 14px;
+  pointer-events: none;
+}
+
+/* Sound toggle — the bars breathe while sound is on */
+@keyframes sfx-bar {
+  0%, 100% { transform: scaleY(0.35); }
+  50%      { transform: scaleY(1); }
+}
+.sfx-bar {
+  transform-origin: bottom;
+  animation: sfx-bar 1.1s ease-in-out infinite;
 }

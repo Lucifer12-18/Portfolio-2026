@@ -10,6 +10,7 @@ import {
 import { motion, useMotionValue, useSpring, useTransform, type MotionValue } from "framer-motion"
 import { FOLLOW_SPRING } from "@/lib/motion"
 import { pointerState, fieldPulse } from "@/lib/pointer-state"
+import { prefersReducedMotion } from "@/lib/use-reduced-motion"
 
 // ─────────────────────────────────────────────────────────────────────────────
 // The single pointer signal. One listener, one source of truth. DOM consumers
@@ -35,7 +36,7 @@ export function PointerProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (typeof window === "undefined") return
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    const reduce = prefersReducedMotion()
 
     const onMove = (e: MouseEvent) => {
       const nx = (e.clientX / window.innerWidth) * 2 - 1

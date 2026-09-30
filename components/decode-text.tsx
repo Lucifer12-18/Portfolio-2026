@@ -1,6 +1,8 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import { prefersReducedMotion } from "@/lib/use-reduced-motion"
+import { sfx } from "@/lib/sound"
 
 // ─────────────────────────────────────────────────────────────────────────────
 // DECODE TEXT — scramble-resolve reveal.
@@ -32,7 +34,7 @@ export function DecodeText({ text, className, duration = 460, delay = 0 }: Decod
   const rafRef = useRef<number>(0)
 
   useEffect(() => {
-    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (prefersReducedMotion()) {
       setDisplay(text)
       return
     }
@@ -51,6 +53,7 @@ export function DecodeText({ text, className, duration = 460, delay = 0 }: Decod
       if (!started) {
         started = true
         startTime = now
+        sfx.decode(duration)
       }
       const p = Math.min(1, (now - startTime) / duration)
       const revealCount = Math.floor(p * text.length)
@@ -60,12 +63,24 @@ export function DecodeText({ text, className, duration = 460, delay = 0 }: Decod
     }
 
     rafRef.current = requestAnimationFrame(run)
-    return () => cancelAnimationFrame(rafRef.current)
+    // rAF is paused in background tabs / hidden panes — never leave a headline
+    // stranded mid-scramble. The real text lands on schedule regardless.
+    const settle = setTimeout(() => {
+      cancelAnimationFrame(rafRef.current)
+      setDisplay(text)
+    }, delay + duration + 250)
+    return () => {
+      cancelAnimationFrame(rafRef.current)
+      clearTimeout(settle)
+    }
   }, [text, duration, delay])
 
+  // Screen readers get the REAL text (sr-only span); the scramble is pure
+  // visual theater and stays aria-hidden throughout.
   return (
-    <span className={className} aria-label={text}>
-      {display}
+    <span className={className}>
+      <span aria-hidden>{display}</span>
+      <span className="sr-only">{text}</span>
     </span>
   )
 }

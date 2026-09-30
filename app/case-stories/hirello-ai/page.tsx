@@ -16,16 +16,16 @@ import { CursorEffect } from "@/components/cursor-effect"
 import { FilmGrain } from "@/components/film-grain"
 
 const hirelloSnapshot = {
-  title: "Hirello – AI Career Operating System",
+  title: "Hirello: AI Career Operating System",
   tags: ["Product Design", "AI & UX", "Systems Thinking"],
   tools: ["Figma", "FigJam", "Maze"],
   imagePath: "/hirello-hero.png",
   problem:
-    "Job seekers rely on 3–5 fragmented tools with no system connecting them. User interviews revealed two core gaps: no structured flow for networking outreach, and no practice tool that gives detailed, diagnostic feedback. Existing platforms like LinkedIn handle messaging but offer no guided pipeline — and interview tools like Huru.ai work in isolation. No product combined both with a structured guide.",
+    "Job seekers rely on 3–5 fragmented tools with no system connecting them. User interviews revealed two core gaps: no structured flow for networking outreach, and no practice tool that gives detailed, diagnostic feedback. Existing platforms like LinkedIn handle messaging but offer no guided pipeline, and interview tools like Huru.ai work in isolation. No product combined both with a structured guide.",
   approach: [
-    "Designed a Networking Intelligence System with contact tiers, guided outreach wizards, and a visual opportunity pipeline — giving users the repeatable workflow they were missing.",
-    "Built an AI Interview Gym that delivers layered, diagnostic feedback: analysis on structure, pacing, STAR compliance, and clear 'what went wrong + how to fix it' loops — not just a score.",
-    "Connected both modules into one career operating system, so networking conversations directly inform interview prep — making practice contextual and high-stakes, not generic.",
+    "Designed a Networking Intelligence System with contact tiers, guided outreach wizards, and a visual opportunity pipeline, giving users the repeatable workflow they were missing.",
+    "Built an AI Interview Gym that delivers layered, diagnostic feedback: analysis on structure, pacing, STAR compliance, and clear 'what went wrong + how to fix it' loops, not just a score.",
+    "Connected both modules into one career operating system, so networking conversations directly inform interview prep, making practice contextual and high-stakes, not generic.",
   ],
   outcome:
     "During early testing and demos, users consistently described the experience as 'something new we actually needed.' Structured outreach replaced ad-hoc spreadsheets, and interview prep gained measurable diagnostics for the first time. The product fills a gap no existing tool addresses: networking + interview coaching + a guided system in one place.",
@@ -71,10 +71,10 @@ export default function HirelloSnapshotPage() {
                             animate="show"
                             custom={2}
                           >
-                            <DecodeText text="Hirello – AI-First Hiring & Career Flow" delay={250} />
+                            <DecodeText text="Hirello: AI-First Hiring & Career Flow" delay={250} />
                           </motion.h1>
                           <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
-                            How I designed two connected systems — Networking Intelligence and AI Interview Gym — to turn a
+                            How I designed two connected systems (Networking Intelligence and AI Interview Gym) to turn a
                             chaotic job search into a structured, feedback-driven workflow.
                           </p>
 

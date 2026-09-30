@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils"
 type SpotlightProps = PropsWithChildren<{
   /** Spotlight radius in px (default 260) */
   size?: number
-  /** Override tint — rgb triple "r, g, b". Default: cyan */
+  /** Override tint — rgb triple "r, g, b". Default: bone */
   color?: string
   /** Strength of the spotlight fill, 0–1. Default 0.14 */
   intensity?: number
@@ -26,8 +26,8 @@ type SpotlightProps = PropsWithChildren<{
 export function Spotlight({
   children,
   size = 260,
-  color = "34, 211, 238",
-  intensity = 0.14,
+  color = "242, 241, 236",
+  intensity = 0.07,
   className,
   style,
   as = "div",

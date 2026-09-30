@@ -18,16 +18,21 @@ import { ChapterRail } from "@/components/chapter-rail"
 import { ViewModeProvider } from "@/contexts/view-mode-context"
 import { SystemLogProvider } from "@/contexts/system-log-context"
 import { ReadingStoreProvider, useReadingStore } from "@/contexts/reading-store-context"
-import { CHAPTERS } from "@/lib/chapters-config"
+import { CHAPTERS, sectionIdToChapterIndex } from "@/lib/chapters-config"
 import { ModalProvider, useModal } from "@/contexts/modal-context"
 import { ProjectModal } from "@/components/project-modal"
 import { CursorEffect } from "@/components/cursor-effect"
 import { FilmGrain } from "@/components/film-grain"
 import { CinematicIntro } from "@/components/cinematic-intro"
-import { formationWatchRef } from "@/lib/formation-state"
+import { formationWatchRef, skipTransitionRef } from "@/lib/formation-state"
 import { EASE_SETTLE } from "@/lib/motion"
+import { useReducedMotion, prefersReducedMotion } from "@/lib/use-reduced-motion"
 import { PointerProvider, PointerParallax } from "@/contexts/pointer-context"
 import { FormationTelemetry } from "@/components/formation-telemetry"
+import { NowPanel } from "@/components/now-panel"
+import { ChapterTint } from "@/components/chapter-tint"
+import { sfx } from "@/lib/sound"
+import { CHAPTER_ACCENTS as ACCENT_COLORS, FORMATION_IDS } from "@/lib/chapter-palette"
 
 // ── CRT module IDs shown during transition ────────────────────────────────────
 const MODULE_IDS = [
@@ -43,16 +48,6 @@ const MODULE_IDS = [
 const PersistentScene = dynamic(() => import("@/components/persistent-scene"), { ssr: false })
 const ForegroundParticles = dynamic(() => import("@/components/foreground-particles"), { ssr: false })
 
-const ACCENT_COLORS = [
-  { r: 34, g: 211, b: 238 },
-  { r: 6, g: 182, b: 212 },
-  { r: 124, g: 58, b: 237 },
-  { r: 167, g: 139, b: 250 },
-  { r: 56, g: 189, b: 248 },
-  { r: 147, g: 197, b: 253 },
-  { r: 224, g: 249, b: 255 },
-]
-
 const CHAPTER_COMPONENTS: ComponentType[] = [
   HeroSection,
   AboutSection,
@@ -61,19 +56,6 @@ const CHAPTER_COMPONENTS: ComponentType[] = [
   WorkSection,
   NotesSection,
   ContactSection,
-]
-
-// ── Particle formation IDs — mirror the GLSL shape names ────────────────────
-// Using the actual formation names creates coherence: the status line speaks
-// the same language as the 3D engine. A detail only a designer would notice.
-const FORMATION_IDS = [
-  "fibonacci_sphere",
-  "double_helix",
-  "torus",
-  "trefoil_knot",
-  "crystal_lattice",
-  "wave_surface",
-  "starburst",
 ]
 
 // ── Formation watch timing ────────────────────────────────────────────────────
@@ -112,6 +94,7 @@ const BURST_MS           = 2200
 // physical weight and direction.
 function LuminousBurst() {
   const { activeChapterIndex } = useReadingStore()
+  const reduced = useReducedMotion()
   const [color, setColor] = useState<{ r: number; g: number; b: number } | null>(null)
   const [key, setKey] = useState(0)
   const prevIdx = useRef(activeChapterIndex)
@@ -128,7 +111,8 @@ function LuminousBurst() {
     return () => { if (timer.current) clearTimeout(timer.current) }
   }, [activeChapterIndex])
 
-  if (!color) return null
+  // Reduced motion: the burst is a full-viewport brightness flash — skip it.
+  if (reduced || !color) return null
   const { r, g, b } = color
 
   return (
@@ -141,7 +125,7 @@ function LuminousBurst() {
       animate={{
         // Bell-shaped surge (rise → hold through scatter peak → long fade) that
         // mirrors the field bloom's sin(progress·π) envelope — one light event.
-        opacity: [0, 0.5, 0.55, 0.22, 0],
+        opacity: [0, 0.3, 0.34, 0.14, 0],
         scale:   [0.3, 0.9, 1.4, 1.8, 2.1],
       }}
       transition={{
@@ -179,6 +163,11 @@ function ParticleSystemStatus() {
     prevIdx.current = activeChapterIndex
     timers.current.forEach(clearTimeout)
 
+    // Instant paths (deep-link jump / reduced motion): the full-length
+    // "compiling…" countdown would appear AFTER the content did. This child's
+    // effect runs before PageFlipContainer consumes skipTransitionRef.
+    if (skipTransitionRef.current || prefersReducedMotion()) return
+
     const formation = FORMATION_IDS[activeChapterIndex] ?? "fibonacci_sphere"
     setStatus(`compiling.${formation}`)
     // Switch to "render.complete" 680ms before the content enters so it
@@ -202,14 +191,14 @@ function ParticleSystemStatus() {
           className="absolute bottom-5 left-0 right-0 flex justify-center z-20 pointer-events-none select-none"
           aria-hidden
         >
-          <span style={{
-            fontFamily: "'JetBrains Mono','Fira Code',monospace",
-            fontSize: 9,
-            letterSpacing: "0.13em",
-            color: status === "render.complete"
-              ? "rgba(34,211,238,0.6)"
-              : "rgba(34,211,238,0.28)",
-          }}>
+          <span
+            className="font-mono"
+            style={{
+              fontSize: 10,
+              letterSpacing: "0.04em",
+              color: status === "render.complete" ? "rgba(242,241,236,0.7)" : "rgba(242,241,236,0.35)",
+            }}
+          >
             ▸ {status}{status !== "render.complete" && <span className="crt-cursor" />}
           </span>
         </motion.div>
@@ -272,6 +261,23 @@ const pageFlipVariants = {
   },
 }
 
+// ── Reduced-motion transition — WCAG accommodation ───────────────────────────
+// Users with OS "reduce motion" get a quick opacity crossfade instead of the
+// implosion/burst/watch-window choreography: no clip-path contraction, no
+// brightness flashes, no 3s exposure gap. Everyone else is unchanged.
+const reducedFadeVariants = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1, transition: { duration: 0.25 } },
+  exit:    { opacity: 0, transition: { duration: 0.15 } },
+}
+const REDUCED_ENTER_DELAY_MS = 200
+
+// Interface pigment follows the reader — same index that drives the field.
+function ChapterAccent() {
+  const { activeChapterIndex } = useReadingStore()
+  return <ChapterTint index={activeChapterIndex} />
+}
+
 function GradientOverlay() {
   const { activeChapterIndex } = useReadingStore()
   const c = ACCENT_COLORS[activeChapterIndex] ?? ACCENT_COLORS[0]
@@ -282,7 +288,7 @@ function GradientOverlay() {
       style={{ zIndex: 1 }}
       aria-hidden="true"
       animate={{
-        background: `radial-gradient(ellipse at 50% 30%, rgba(${c.r},${c.g},${c.b},0.06) 0%, transparent 65%)`,
+        background: `radial-gradient(ellipse at 50% 30%, rgba(${c.r},${c.g},${c.b},0.09) 0%, transparent 65%)`,
       }}
       transition={{ duration: 1.2, ease: EASE_SETTLE }}
     />
@@ -291,6 +297,14 @@ function GradientOverlay() {
 
 function PageFlipContainer() {
   const { activeChapterIndex, goToNextChapter, goToPrevChapter, setActiveChapterIndex } = useReadingStore()
+  const { isOpen: modalIsOpen } = useModal()
+  const reduced = useReducedMotion()
+
+  // Ref mirrors so stable callbacks/effects read fresh values without re-binding
+  const modalOpenRef = useRef(modalIsOpen)
+  modalOpenRef.current = modalIsOpen
+  const reducedRef = useRef(reduced)
+  reducedRef.current = reduced
 
   // ── Formation-watch pattern ───────────────────────────────────────────────
   //
@@ -315,6 +329,11 @@ function PageFlipContainer() {
   //
   const [displayedIndex, setDisplayedIndex] = useState(activeChapterIndex)
   const [isWatching,     setIsWatching]     = useState(false)
+  // Content mounts only after the mount effect resolved any hash deep-link, so
+  // a /#chapter-4 visit renders Work as the FIRST child AnimatePresence ever
+  // sees — no chapter-0 flash, no interrupted enter, no hydration mismatch
+  // (server and first client render both show an empty slot).
+  const [hydrated,       setHydrated]       = useState(false)
   const enterTimerRef      = useRef<ReturnType<typeof setTimeout> | null>(null)
   const targetIndexRef     = useRef(activeChapterIndex)
   const displayedIndexRef  = useRef(activeChapterIndex)   // mirrors displayedIndex state
@@ -323,6 +342,32 @@ function PageFlipContainer() {
   targetIndexRef.current    = activeChapterIndex
   displayedIndexRef.current = displayedIndex
 
+  // ── Hash deep-links (#chapter-4 etc.) ─────────────────────────────────────
+  // Mount: resolve the hash BEFORE content ever mounts — both indices update in
+  // the same batch as setHydrated, so the landed chapter is AnimatePresence's
+  // first child (idempotent under Strict Mode's double-invoke).
+  // In-page hash navigation afterwards (e.g. a Link to /#chapter-5) goes
+  // through the quick unmount-gap flow via skipTransitionRef.
+  useEffect(() => {
+    if (typeof window === "undefined") return
+    const idx = sectionIdToChapterIndex(window.location.hash)
+    if (idx >= 0) {
+      setActiveChapterIndex(idx)
+      setDisplayedIndex(idx)
+    }
+    setHydrated(true)
+
+    const onHashChange = () => {
+      const i = sectionIdToChapterIndex(window.location.hash)
+      if (i >= 0 && i !== displayedIndexRef.current) {
+        skipTransitionRef.current = true
+        setActiveChapterIndex(i)
+      }
+    }
+    window.addEventListener("hashchange", onHashChange)
+    return () => window.removeEventListener("hashchange", onHashChange)
+  }, [setActiveChapterIndex])
+
   useEffect(() => {
     // Guard: skip if there is no real chapter change.
     // - Fires correctly on first mount  (displayedIndex === activeChapterIndex)
@@ -330,16 +375,36 @@ function PageFlipContainer() {
     // - Only runs the watch logic when the user actually navigates to a new chapter
     if (displayedIndexRef.current === activeChapterIndex) return
 
-    // 1. Unmount current content → AnimatePresence fires the exit variant.
-    //    Signal the 3D scene to switch into showcase-rotation mode.
-    setIsWatching(true)
-    formationWatchRef.current = true
-
-    // 2. Clear any pending enter timer (handles rapid chapter-changes cleanly —
-    //    the timer always resolves to the LATEST targetIndexRef.current)
     if (enterTimerRef.current) clearTimeout(enterTimerRef.current)
 
-    // 3. After exit (380ms) + formation-watch window (2600ms) → mount new content
+    // Instant jump (hash deep-link) and reduced motion both reuse the SAME
+    // unmount-gap flow as the full transition (absent → remount) — the one
+    // path AnimatePresence mode="wait" handles reliably. Swapping the child
+    // key directly (without the gap) can wedge its exit bookkeeping forever.
+    // Jump ≈ one frame; reduced motion ≈ 200ms crossfade.
+    if (skipTransitionRef.current || reducedRef.current) {
+      const gap = skipTransitionRef.current ? 30 : REDUCED_ENTER_DELAY_MS
+      skipTransitionRef.current = false
+      setIsWatching(true)
+      enterTimerRef.current = setTimeout(() => {
+        setDisplayedIndex(targetIndexRef.current)
+        setIsWatching(false)
+      }, gap)
+      return () => {
+        if (enterTimerRef.current) clearTimeout(enterTimerRef.current)
+      }
+    }
+
+    // 1. Unmount current content → AnimatePresence fires the exit variant.
+    //    Signal the 3D scene to switch into showcase-rotation mode, and score
+    //    the window (inhale → bloom → compile → land, pitched per chapter).
+    setIsWatching(true)
+    formationWatchRef.current = true
+    sfx.transition(activeChapterIndex)
+
+    // 2. After exit (380ms) + formation-watch window (2600ms) → mount new content.
+    //    The timer always resolves to the LATEST targetIndexRef.current, which
+    //    handles rapid chapter-changes cleanly.
     enterTimerRef.current = setTimeout(() => {
       formationWatchRef.current = false            // back to normal rotation before content enters
       setDisplayedIndex(targetIndexRef.current)   // React 18 batches these two
@@ -351,13 +416,41 @@ function PageFlipContainer() {
     }
   }, [activeChapterIndex])
 
+  // ── Hash sync — keep the URL shareable ────────────────────────────────────
+  // replaceState only (no history spam); clean "/" for the prologue. Never
+  // writes while a deep-link jump is pending or a transition is in flight —
+  // otherwise the mount-time sync (displayedIndex still 0) would wipe the
+  // very hash the jump effect is about to consume.
+  useEffect(() => {
+    if (typeof window === "undefined") return
+    if (skipTransitionRef.current || displayedIndex !== targetIndexRef.current) return
+    const id = CHAPTERS[displayedIndex]?.sectionId
+    if (!id) return
+    const target = displayedIndex === 0 ? "" : `#${id}`
+    if (window.location.hash === target || (target === "" && !window.location.hash)) return
+    history.replaceState(null, "", target === "" ? window.location.pathname + window.location.search : target)
+  }, [displayedIndex])
+
   // ── Keyboard navigation ───────────────────────────────────────────────────
+  // Arrows flip chapters ONLY when nothing else owns them: no modifier keys,
+  // no open modal, and focus is on <body> (or inside the chapter nav). When a
+  // scroll region / control is focused, arrows do their native thing — this is
+  // what lets keyboard users scroll the chapter window (WindowShell is focusable).
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
+      const isArrow =
+        e.key === "ArrowDown" || e.key === "ArrowRight" || e.key === "ArrowUp" || e.key === "ArrowLeft"
+      if (!isArrow) return
+      if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return
+      if (modalOpenRef.current) return
+      const ae = document.activeElement as HTMLElement | null
+      const inChapterNav = !!ae?.closest?.("[data-chapter-nav]")
+      if (ae && ae !== document.body && !inChapterNav) return
+
       if (e.key === "ArrowDown" || e.key === "ArrowRight") {
         e.preventDefault()
         goToNextChapter()
-      } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+      } else {
         e.preventDefault()
         goToPrevChapter()
       }
@@ -402,23 +495,34 @@ function PageFlipContainer() {
       <ParticleSystemStatus />
 
       {/* Formation telemetry — diegetic HUD over the exposed field during the
-          watch window. Shows the DESTINATION chapter's formation + accent. */}
+          watch window. Shows the DESTINATION chapter's formation + accent.
+          (Skipped under reduced motion — there is no watch window to instrument.) */}
       <FormationTelemetry
-        active={isWatching}
+        active={isWatching && !reduced}
         accent={ACCENT_COLORS[activeChapterIndex] ?? ACCENT_COLORS[0]}
         formation={FORMATION_IDS[activeChapterIndex] ?? "fibonacci_sphere"}
         durationMs={ENTER_DELAY_MS}
       />
 
-      <AnimatePresence mode="wait">
+      {/* Chapter-change announcement for screen readers — persistent node
+          OUTSIDE AnimatePresence so it never unmounts mid-announcement. */}
+      <div aria-live="polite" className="sr-only">
+        {!isWatching ? CHAPTERS[displayedIndex]?.fullLabel : ""}
+      </div>
+
+      {/* Default mode (not "wait"): sequencing is already enforced by the
+          isWatching gap (exit → empty window → enter), children are absolutely
+          positioned so rare overlaps crossfade cleanly — and mode="wait" has a
+          failure mode where an exit interrupting a just-started enter loses its
+          completion callback and wedges the slot forever (blank chapter). */}
+      <AnimatePresence>
         {/* Content is absent (isWatching=true) during the formation-watch window.
             AnimatePresence sees the removal and fires the exit variant on the
-            outgoing motion.div, then holds the empty slot until isWatching flips
-            back and the new key mounts with the enter variant. */}
-        {!isWatching && (
+            outgoing motion.div, then mounts the next key whenever it appears. */}
+        {hydrated && !isWatching && (
           <motion.div
             key={displayedIndex}
-            variants={pageFlipVariants}
+            variants={reduced ? reducedFadeVariants : pageFlipVariants}
             initial="initial"
             animate="animate"
             exit="exit"
@@ -429,20 +533,32 @@ function PageFlipContainer() {
         )}
       </AnimatePresence>
 
-      {/* Page indicator dots (mobile) */}
-      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 lg:hidden z-20">
+      {/* Page indicator dots (mobile) — padded buttons so tap targets are ≥24px
+          while the visual dot stays small. data-chapter-nav keeps arrow-key
+          chapter flipping active while a dot is focused. */}
+      <nav
+        aria-label="Chapters"
+        data-chapter-nav
+        className="absolute bottom-0.5 left-1/2 -translate-x-1/2 flex lg:hidden z-20"
+      >
         {CHAPTERS.map((_, i) => (
           <button
             key={i}
             onClick={() => setActiveChapterIndex(i)}
-            className={`h-1.5 rounded-full transition-all duration-300 ${i === activeChapterIndex
-              ? "w-6 bg-primary"
-              : "w-1.5 bg-slate-600 hover:bg-slate-400"
-              }`}
+            className="flex items-center justify-center p-2.5"
             aria-label={`Go to ${CHAPTERS[i].label}`}
-          />
+            aria-current={i === activeChapterIndex ? "true" : undefined}
+          >
+            <span
+              aria-hidden
+              className={`h-1.5 rounded-full transition-all duration-300 ${i === activeChapterIndex
+                ? "w-6 bg-chapter"
+                : "w-1.5 bg-bone-4 hover:bg-bone-3"
+                }`}
+            />
+          </button>
         ))}
-      </div>
+      </nav>
     </div>
   )
 }
@@ -456,35 +572,99 @@ export default function Home() {
   const [cinematicDone, setCinematicDone]     = useState(false)
   const [bootScreenDismissed, setBootScreenDismissed] = useState(false)
 
+  // ── Unified gate logic ───────────────────────────────────────────────────
+  // The cinematic intro + boot screen play ONCE PER SESSION. Skip both gates when:
+  //   · this session already saw them (sessionStorage) — so "Back to home" from
+  //     a case story never replays the ~16s sequence,
+  //   · `?skipIntro` (persistent dev skip, localStorage),
+  //   · the URL deep-links to a chapter (#chapter-4 …) — a recruiter following
+  //     a link should land on the content, not a gate,
+  //   · the visitor prefers reduced motion (the intro is heavy motion + flashes).
+  // `?showIntro` clears the stored flags and forces the full sequence.
+  useEffect(() => {
+    if (typeof window === "undefined") return
+    const params = new URLSearchParams(window.location.search)
+    if (params.has("showIntro")) {
+      try {
+        window.localStorage.removeItem("skipIntro")
+        window.sessionStorage.removeItem("plx.introSeen")
+      } catch {}
+      return
+    }
+    let skip = false
+    try {
+      if (params.has("skipIntro")) window.localStorage.setItem("skipIntro", "1")
+      skip =
+        params.has("skipIntro") ||
+        window.localStorage.getItem("skipIntro") === "1" ||
+        window.sessionStorage.getItem("plx.introSeen") === "1" ||
+        sectionIdToChapterIndex(window.location.hash) >= 0 ||
+        prefersReducedMotion()
+    } catch {
+      skip = prefersReducedMotion()
+    }
+    if (skip) {
+      setCinematicDone(true)
+      setBootScreenDismissed(true)
+      try {
+        window.sessionStorage.setItem("plx.introSeen", "1")
+      } catch {}
+    }
+  }, [])
+
+  const handleBootDismiss = useCallback(() => {
+    setBootScreenDismissed(true)
+    // Mark the gates as seen for this session — returning to "/" won't replay them.
+    try {
+      window.sessionStorage.setItem("plx.introSeen", "1")
+    } catch {}
+  }, [])
+
   return (
     <MotionConfig reducedMotion="user">
     <SystemLogProvider>
       <ReadingStoreProvider>
         <ViewModeProvider>
           <ModalProvider>
+            {/* Skip link — first focusable element; critical since the custom
+                cursor hides the pointer and the navbar/rail precede content. */}
+            <a
+              href="#main-content"
+              className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[10000] focus:rounded-md focus:border focus:border-hair-3 focus:bg-ink-1 focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-bone"
+            >
+              Skip to content
+            </a>
+
+            {/* Document h1 — chapters render their visible headings as h2 */}
+            <h1 className="sr-only">Vishal Deshmukh, Product Designer · Pixelogic OS</h1>
+
             {/* ── Cinematic intro — z-[9999] overlay, covers OpeningHero until done ── */}
             {!cinematicDone && (
               <CinematicIntro onComplete={() => setCinematicDone(true)} />
             )}
 
-            {/* Boot screen — always in the tree (prevents SSR/hydration mismatch) */}
-            <OpeningHero onDismiss={() => setBootScreenDismissed(true)} />
+            {/* Boot screen — unmounts once dismissed (or when gates are skipped:
+                session flag, deep link, ?skipIntro, reduced motion) */}
+            {!bootScreenDismissed && <OpeningHero onDismiss={handleBootDismiss} />}
 
             <PointerProvider>
             <div
               className={bootScreenDismissed ? "" : "invisible pointer-events-none fixed inset-0 overflow-hidden"}
               aria-hidden={!bootScreenDismissed}
             >
-              {/* Persistent 3D scene — fixed behind all content */}
+              {/* Persistent 3D scene — fixed behind all content. Decorative
+                  (aria-hidden); its frame loop pauses while the boot gate hides it. */}
               <div
                 className="fixed inset-0 pointer-events-none"
                 style={{ zIndex: 1 }}
+                aria-hidden
               >
-                <PersistentScene />
+                <PersistentScene active={bootScreenDismissed} />
               </div>
 
-              {/* Index-reactive gradient overlay */}
+              {/* Index-reactive gradient overlay + the interface pigment */}
               <GradientOverlay />
+              <ChapterAccent />
 
               {/* Luminous burst — fires on chapter change, syncs with particle bloom */}
               <LuminousBurst />
@@ -493,8 +673,9 @@ export default function Home() {
               <div
                 className="fixed inset-0 pointer-events-none"
                 style={{ zIndex: 3 }}
+                aria-hidden
               >
-                <ForegroundParticles />
+                <ForegroundParticles active={bootScreenDismissed} />
               </div>
 
               {/* All content above the 3D background — flex column so navbar /
@@ -505,12 +686,14 @@ export default function Home() {
                 <main
                   className="mx-auto w-full max-w-[1440px] lg:max-w-[1680px] px-6 lg:px-4
                  flex-1 min-h-0 flex flex-col
-                 lg:grid lg:grid-cols-[220px_1fr_360px] lg:gap-7"
+                 lg:grid lg:grid-cols-[184px_1fr] xl:grid-cols-[184px_1fr_300px] 2xl:grid-cols-[200px_1fr_340px] lg:gap-6 2xl:gap-8"
                 >
-                  {/* Left column: sticky ChapterRail — subtlest parallax depth */}
+                  {/* Left column: sticky ChapterRail — subtlest parallax depth.
+                      data-chapter-nav keeps arrow-key flipping active while a
+                      rail button is focused. */}
                   <PointerParallax strength={2} className="hidden lg:block">
-                    <div className="sticky top-0 h-full min-h-0 flex items-center justify-center">
-                      <div className="w-full max-h-full overflow-y-auto pb-4">
+                    <div className="sticky top-0 h-full min-h-0 flex items-center" data-chapter-nav>
+                      <div className="w-full max-h-full overflow-y-auto pb-4 scrollbar-hide">
                         <ChapterRail />
                       </div>
                     </div>
@@ -518,17 +701,19 @@ export default function Home() {
 
                   {/* Middle column: single page at a time with flip animation.
                       flex-1 fills the column on mobile (flex-col main); on lg the
-                      grid stretches it. */}
+                      grid stretches it. id="main-content" is the skip-link target. */}
                   <PointerParallax strength={5} className="min-w-0 flex-1 min-h-0">
-                    <PageFlipContainer />
+                    <div id="main-content" tabIndex={-1} className="h-full min-h-0 outline-none">
+                      <PageFlipContainer />
+                    </div>
                   </PointerParallax>
 
-                  {/* Right column: SystemLogConsole — subtlest parallax depth */}
-                  <PointerParallax strength={2} className="hidden lg:block min-w-0">
-                    <div className="sticky top-0 self-start z-40">
-                      <div className="pt-6 flex justify-end">
-                        <SystemLogConsole />
-                      </div>
+                  {/* Right column: Now panel (résumé at a glance) + the live system
+                      log — subtlest parallax depth, vertically centred like the rail */}
+                  <PointerParallax strength={2} className="hidden xl:block min-w-0 min-h-0">
+                    <div className="h-full min-h-0 flex flex-col justify-center gap-4 py-3 z-40">
+                      <NowPanel />
+                      <SystemLogConsole />
                     </div>
                   </PointerParallax>
                 </main>

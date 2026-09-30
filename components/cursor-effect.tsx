@@ -4,21 +4,14 @@ import { useEffect, useRef, useState } from "react"
 import { motion, useMotionValue, useSpring, AnimatePresence } from "framer-motion"
 import { useReadingStore } from "@/contexts/reading-store-context"
 import { FOLLOW_SPRING, SNAP } from "@/lib/motion"
+import { useReducedMotion, prefersReducedMotion } from "@/lib/use-reduced-motion"
+import { accentAt } from "@/lib/chapter-palette"
 
-// Matches the chapter accent palette in page.tsx exactly
-const CHAPTER_ACCENTS: [number, number, number][] = [
-  [34,  211, 238],  // cyan     — Prologue
-  [6,   182, 212],  // dk-cyan  — Origin
-  [124, 58,  237],  // purple   — Shift
-  [167, 139, 250],  // lavender — Method
-  [56,  189, 248],  // sky      — Work
-  [147, 197, 253],  // lt-blue  — Notes
-  [224, 249, 255],  // ice      — Epilogue
-]
 
 export function CursorEffect() {
   const { activeChapterIndex } = useReadingStore()
-  const [r, g, b] = CHAPTER_ACCENTS[activeChapterIndex] ?? CHAPTER_ACCENTS[0]
+  const reduced = useReducedMotion()
+  const { r, g, b } = accentAt(activeChapterIndex)
 
   // Raw cursor position — dot snaps here instantly
   const cursorX = useMotionValue(-200)
@@ -50,6 +43,9 @@ export function CursorEffect() {
       setIsTouch(true)
       return
     }
+    // Reduced motion — keep the SYSTEM cursor (never hide it) and skip the
+    // trail/ring machinery entirely.
+    if (prefersReducedMotion()) return
 
     // Hide system cursor
     document.documentElement.style.cursor = "none"
@@ -138,7 +134,7 @@ export function CursorEffect() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  if (!mounted || isTouch) return null
+  if (!mounted || isTouch || reduced) return null
 
   const accent    = `rgba(${r},${g},${b}`
   const ringSize  = isHover ? 44 : isClick ? 16 : 28

@@ -1,296 +1,200 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
 import { SectionWrapper } from "@/components/section-wrapper"
 import { ArrowRight } from "lucide-react"
 import { motion } from "framer-motion"
 import { useViewMode } from "@/contexts/view-mode-context"
 import { useReadingStore } from "@/contexts/reading-store-context"
 import { Magnetic } from "@/components/magnetic"
-import { Spotlight } from "@/components/spotlight"
 import { childRise, childRiseHeavy, childSlide } from "@/lib/motion"
 import { DecodeText } from "@/components/decode-text"
-import Image from "next/image"
-
-const roles = ["Product Design", "UX Research", "AI & Systems Thinking", "Information Systems @ UMBC"]
+import { ActionLink, ArrowChip, InBrief, WordCycle } from "@/components/primitives"
+import { Frame, FormationGlyph } from "@/components/storyboard"
+import { CHAPTERS } from "@/lib/chapters-config"
+import { accentHex } from "@/lib/chapter-palette"
+import { railHover } from "@/lib/pointer-state"
+import { CURRENT_ROLE, EXPERIENCE, PROFILE } from "@/lib/profile"
 
 type ViewMode = "recruiter" | "designer"
 
-type HeroCopy = {
-  eyebrow: string
-  headline: [string, string, string] // [pre, emphasis, post] — middle word gets the shimmer
-  lede: string
-  description: string
-  bullets?: string[]
+const FOCUS_WORDS = ["AI products", "design systems", "research-led flows", "complex workflows"] as const
+
+// Evidence, not adjectives — every figure is on the résumé.
+const STATS = [
+  { value: "2+", unit: "yrs", label: "AI products, end-to-end" },
+  { value: "+18", unit: "%", label: "Onboarding completion" },
+  { value: "−30", unit: "%", label: "User drop-off" },
+  { value: "+14", unit: "%", label: "Feature adoption" },
+]
+
+// 2×2 on phones, 1×4 from @lg — hairlines between cells, never on the outer edge.
+const STAT_CELL = [
+  "",
+  "pl-4 border-l",
+  "border-t @lg:border-t-0 @lg:pl-4 @lg:border-l",
+  "pl-4 border-l border-t @lg:border-t-0",
+]
+
+const hirello = EXPERIENCE.find((r) => r.org === "Hirello.ai")
+
+const LEDE: Record<ViewMode, string> = {
+  designer: "I design calm interfaces for products where the complexity lives under the hood.",
+  recruiter: "Product designer with 2+ years shipping customer-facing AI products, end to end.",
 }
 
-const heroContent: Record<ViewMode, HeroCopy> = {
-  recruiter: {
-    eyebrow: "Chapter 00 · Prologue · Pixelogic OS",
-    headline: ["Designing", "clarity", "inside complex systems."],
-    lede:
-      "Product Designer with an engineering + systems background. I design calm, trustworthy interfaces for AI workflows, data-heavy tools, and multi-step user journeys.",
-    description:
-      "Currently Founding Product Designer at Hirello, building AI-driven career tools end-to-end.",
-    bullets: [
-      "Founding Product Designer at Hirello (AI-driven career tools)",
-      "Information Systems background — data, APIs, architecture",
-      "Focus: AI + product + complexity; systems-thinking narrative",
-    ],
-  },
-  designer: {
-    eyebrow: "Chapter 00 · Prologue · Pixelogic OS",
-    headline: ["Designing", "clarity", "inside complex systems."],
-    lede:
-      "I'm Vishal Deshmukh. I design calm, trustworthy interfaces for products where the complexity lives under the hood — AI workflows, data-heavy tools, multi-step journeys.",
-    description: `I started in Information Systems, learning how data moves, how APIs connect, and how architecture quietly keeps things running. Over time I realized the real challenge wasn't just making systems work — it was making them understandable.
+const BRIEF = [
+  `${CURRENT_ROLE.role} · ${CURRENT_ROLE.org}`,
+  `Previously ${hirello?.role} · Hirello.ai`,
+  "Research → flows → prototypes → handoff",
+]
 
-Right now, I'm Founding Product Designer at Hirello, designing AI-driven career tools end-to-end — from research and flow mapping to high-fidelity UI.
+/** The contact sheet — every scene ahead as a small frame in its own pigment.
+ *  Hover leans the 3D camera toward that scene (railHover bus); click plays
+ *  the full formation transition. */
+function ContactSheet() {
+  const { setActiveChapterIndex } = useReadingStore()
+  const scenes = CHAPTERS.slice(1)
 
-This portfolio is a record of how I think and ship: from "how it works" → to "how it feels to use."`,
-  },
+  return (
+    <motion.div variants={childSlide} initial="hidden" animate="show" custom={3} className="space-y-3">
+      <div className="flex items-baseline justify-between">
+        <span className="label-mono">The storyboard</span>
+        <span className="label-mono tabular-nums">{scenes.length} scenes</span>
+      </div>
+      <ol className="grid grid-cols-3 @xl:grid-cols-6 @4xl:grid-cols-2 gap-2.5">
+        {scenes.map((scene) => {
+          const i = scene.chapterNumber
+          const subtitle = scene.fullLabel.split(" · ")[1] ?? ""
+          return (
+            <li key={scene.id}>
+              <button
+                type="button"
+                onClick={() => setActiveChapterIndex(i)}
+                onMouseEnter={() => (railHover.chapter = i)}
+                onMouseLeave={() => {
+                  if (railHover.chapter === i) railHover.chapter = -1
+                }}
+                className="group w-full text-left rounded-[12px]"
+                aria-label={`Go to scene ${i}: ${scene.fullLabel}`}
+              >
+                <Frame
+                  shot={`SC ${String(i).padStart(2, "0")}`}
+                  pigment={accentHex(i)}
+                  className="aspect-[16/10] transition-colors duration-500 group-hover:border-hair-3"
+                >
+                  <div className="absolute inset-x-[18%] inset-y-[20%] transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-110">
+                    <FormationGlyph index={i} dot={2.4} gap={4.4} />
+                  </div>
+                </Frame>
+                <span className="mt-2 flex items-baseline justify-between gap-2 px-0.5">
+                  <span className="text-[13px] tracking-[-0.01em] text-bone">{scene.label}</span>
+                  <span className="hidden @5xl:inline truncate font-mono text-[9.5px] text-bone-4">{subtitle}</span>
+                </span>
+              </button>
+            </li>
+          )
+        })}
+      </ol>
+    </motion.div>
+  )
 }
 
 export function HeroSection() {
   const { viewMode } = useViewMode()
   const { setActiveChapterIndex } = useReadingStore()
-  const content = heroContent[viewMode as ViewMode]
-
-  const miniWindows = [
-    { filename: "system_arch.fig", image: "/images/prologue-system-arch.svg" },
-    { filename: "ai_integration.ai", image: "/images/prologue-ai-integration.svg" },
-  ]
+  const mode = viewMode as ViewMode
 
   return (
-    <SectionWrapper
-      id="prologue"
-      className="pt-4 sm:pt-10 md:pt-24"
-      windowTitle="PROLOGUE · PIXELOGIC OS"
-      moduleLabel="PROLOGUE · PIXELOGIC OS"
-    >
-      {/* Decorative chapter numeral — anchors the composition */}
-      <div
-        aria-hidden="true"
-        className="absolute top-4 right-6 md:right-10 marquee-num select-none"
-      >
-        00
-      </div>
-
-      <div className="relative grid lg:grid-cols-12 gap-6 lg:gap-10 items-start">
-        {/* Left Column — editorial text block (7 cols) */}
-        <div className="lg:col-span-7 space-y-5">
+    <SectionWrapper id="prologue" windowTitle="PROLOGUE · PIXELOGIC OS" moduleLabel="PROLOGUE · PIXELOGIC OS">
+      <div className="relative grid @4xl:grid-cols-12 gap-10 @4xl:gap-12 items-start">
+        {/* ── Left — the statement ─────────────────────────────────── */}
+        <div className="@4xl:col-span-7 space-y-7">
           <motion.div variants={childRise} initial="hidden" animate="show" custom={0}>
-            <span className="eyebrow">{content.eyebrow}</span>
+            <span className="eyebrow">Scene 00 · Prologue</span>
           </motion.div>
 
-          {/* Editorial headline — the heaviest element, leads the cascade */}
-          <motion.h1
-            key={viewMode}
-            variants={childRiseHeavy}
-            initial="hidden"
-            animate="show"
-            custom={1}
-            className="display-xl text-slate-50"
-          >
-            {content.headline[0]}{" "}
+          {/* h2: the document's single h1 lives (sr-only) in page.tsx */}
+          <motion.h2 variants={childRiseHeavy} initial="hidden" animate="show" custom={1} className="display-xl text-bone">
+            Designing{" "}
             <em className="not-italic text-shimmer">
-              <DecodeText text={content.headline[1]} delay={300} />
-            </em>{" "}
-            <span className="text-slate-300/90">{content.headline[2]}</span>
-          </motion.h1>
+              <DecodeText text="clarity" delay={300} />
+            </em>
+            <br />
+            <span className="ink-dim">inside complex systems.</span>
+          </motion.h2>
 
-          {/* System boot line — keeps the Pixelogic OS voice */}
           <motion.p
             variants={childRise}
             initial="hidden"
             animate="show"
             custom={2}
-            className="text-[11px] font-mono text-slate-500 tracking-wide"
+            className="text-[clamp(1.05rem,1.4vw,1.3rem)] leading-tight tracking-[-0.02em] text-bone-3"
           >
-            <span className="text-cyan-400/70">$</span> boot: designing clarity inside complex systems
-            <span className="inline-block w-[2px] h-3 bg-cyan-400/60 animate-pulse ml-1 align-middle rounded-full" />
+            Product designer for <WordCycle words={FOCUS_WORDS} className="text-bone" />
           </motion.p>
 
-          {/* Lede */}
-          <motion.p
-            variants={childRise}
-            initial="hidden"
-            animate="show"
-            custom={3}
-            className="lede"
-          >
-            {content.lede}
-          </motion.p>
-
-          {/* Rule + body */}
-          <div className="rule-tick" />
-
-          <motion.div
-            key={`desc-${viewMode}`}
-            variants={childRise}
-            initial="hidden"
-            animate="show"
-            custom={4}
-            className="space-y-5"
-          >
-            {viewMode === "recruiter" && content.bullets && (
-              <div className="flex flex-col gap-2 p-4 bg-primary/5 rounded-xl border border-primary/10">
-                <span className="eyebrow" style={{ color: "rgba(245, 158, 11, 0.9)" }}>
-                  Quick Summary
+          <motion.div key={`copy-${mode}`} variants={childRise} initial="hidden" animate="show" custom={3} className="space-y-5">
+            {/* Phones/tablets: the Now panel (xl) and navbar Now line (lg) are
+                hidden, so the current role surfaces here instead. */}
+            <button
+              type="button"
+              onClick={() => setActiveChapterIndex(1)}
+              className="group lg:hidden flex w-full items-start gap-3 rounded-[12px] border border-hair-2 px-4 py-3 text-left transition-colors hover:border-chapter"
+            >
+              <span className="live-dot mt-[7px]" aria-hidden />
+              <span className="min-w-0 flex-1 text-[13px] leading-[1.45] text-bone-3">
+                Now · <span className="text-bone">{CURRENT_ROLE.role}</span> at{" "}
+                <span className="text-bone">{CURRENT_ROLE.org}</span>
+                <span className="block font-mono text-[10.5px] text-bone-3 mt-0.5">
+                  {CURRENT_ROLE.orgNote} · since {CURRENT_ROLE.start}
                 </span>
-                <ul className="space-y-1.5 mt-2">
-                  {content.bullets.map((bullet, i) => (
-                    <li key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <span className="h-1.5 w-1.5 rounded-full bg-primary flex-shrink-0" />
-                      {bullet}
-                    </li>
-                  ))}
-                </ul>
+              </span>
+              <ArrowChip />
+            </button>
+            <p className="lede">{LEDE[mode]}</p>
+            {mode === "recruiter" && <InBrief items={BRIEF} className="max-w-xl" />}
+          </motion.div>
+
+          {/* Evidence row */}
+          <motion.dl variants={childRise} initial="hidden" animate="show" custom={4} className="grid grid-cols-2 @lg:grid-cols-4 border-y border-hair">
+            {STATS.map((s, i) => (
+              <div key={s.label} className={`py-4 pr-4 border-hair ${STAT_CELL[i]}`}>
+                <dt className="sr-only">{s.label}</dt>
+                <dd className="text-[28px] leading-none tracking-[-0.04em] text-bone tabular-nums">
+                  {s.value}
+                  <span className="text-chapter text-[18px] ml-0.5">{s.unit}</span>
+                </dd>
+                <dd aria-hidden className="mt-2 font-mono text-[10.5px] leading-[1.45] text-bone-3">
+                  {s.label}
+                </dd>
               </div>
-            )}
-            <p className="text-[15px] lg:text-base text-muted-foreground leading-[1.75] max-w-xl whitespace-pre-line">
-              {content.description}
-            </p>
-          </motion.div>
-
-          {/* Role pills — restrained */}
-          <motion.div
-            variants={childRise}
-            initial="hidden"
-            animate="show"
-            custom={5}
-            className="flex flex-wrap gap-x-4 gap-y-2 text-xs font-mono text-slate-400 uppercase tracking-[0.18em]"
-          >
-            {roles.map((role, i) => (
-              <span key={role} className="inline-flex items-center gap-2">
-                {i > 0 && <span className="text-slate-600">·</span>}
-                <span className={i === 2 ? "text-[#c7b7ff]" : ""}>{role}</span>
-              </span>
             ))}
-          </motion.div>
+          </motion.dl>
 
-          {/* Status */}
-          <motion.div
-            variants={childRise}
-            initial="hidden"
-            animate="show"
-            custom={6}
-            className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 py-2.5 px-4 bg-secondary/50 rounded-xl border border-border"
-          >
-            <div className="flex items-center gap-2">
-              <span className="relative flex h-2.5 w-2.5">
-                <motion.span
-                  className="absolute inline-flex h-full w-full rounded-full bg-green-400"
-                  style={{ filter: "drop-shadow(0 0 6px #22c55e)" }}
-                  animate={{ scale: [1, 1.5, 1], opacity: [0.75, 0, 0.75] }}
-                  transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY, ease: "easeOut" }}
-                />
-                <span
-                  className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"
-                  style={{ filter: "drop-shadow(0 0 4px #22c55e)" }}
-                />
-              </span>
-              <span className="text-sm font-medium text-foreground font-mono">status: available</span>
-            </div>
-            <div className="text-sm text-muted-foreground font-mono">Baltimore, MD · remote: true</div>
-          </motion.div>
-
-          {/* CTAs — magnetic pull for tactile hero moment */}
-          <motion.div
-            variants={childRise}
-            initial="hidden"
-            animate="show"
-            custom={7}
-            className="flex flex-col sm:flex-row gap-4 pt-2"
-          >
-            <Magnetic strength={10} range={110}>
-              <motion.div whileTap={{ scale: 0.97 }} transition={{ duration: 0.15 }}>
-                <Button
-                  size="lg"
-                  className="gap-2 shadow-md hover:shadow-lg transition-all rounded-full px-8 py-6 text-base btn-soft-hover"
-                  onClick={() => setActiveChapterIndex(4)}
-                >
-                  View Case Stories
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              </motion.div>
-            </Magnetic>
+          {/* CTAs + status */}
+          <motion.div variants={childRise} initial="hidden" animate="show" custom={5} className="flex flex-wrap items-center gap-x-7 gap-y-4">
             <Magnetic strength={8} range={100}>
-              <motion.div whileTap={{ scale: 0.97 }} transition={{ duration: 0.15 }}>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="bg-transparent rounded-full px-8 py-6 text-base hover:bg-[#EDE9FE]/50 hover:border-[#A78BFA]/30 transition-all"
-                  onClick={() => setActiveChapterIndex(3)}
-                >
-                  See How I Work
-                </Button>
-              </motion.div>
+              <motion.button
+                type="button"
+                whileTap={{ scale: 0.97 }}
+                onClick={() => setActiveChapterIndex(4)}
+                className="btn-solid h-11 px-5 text-[12.5px]"
+              >
+                View case stories
+                <ArrowRight className="h-3.5 w-3.5" strokeWidth={1.6} aria-hidden />
+              </motion.button>
             </Magnetic>
+            <ActionLink onClick={() => setActiveChapterIndex(1)}>Start the story</ActionLink>
           </motion.div>
+          <motion.p variants={childRise} initial="hidden" animate="show" custom={6} className="flex items-center gap-2 font-mono text-[11px] text-bone-3">
+            <span className="live-dot" aria-hidden />
+            Open to product design roles · {PROFILE.location}
+          </motion.p>
         </div>
 
-        {/* Right Column — mini windows (5 cols, small offset for asymmetry) */}
-        <div className="lg:col-span-5 lg:pt-10 space-y-5">
-          {miniWindows.map((window, index) => (
-            <motion.div
-              key={window.filename}
-              variants={childSlide}
-              initial="hidden"
-              animate="show"
-              custom={3 + index}
-              whileHover={{ y: -5, scale: 1.015 }}
-            >
-              <Spotlight size={240} color={index === 0 ? "34, 211, 238" : "167, 139, 250"} intensity={0.18} className="rounded-xl">
-              <Card className="overflow-hidden border-white/8 bg-slate-900/70 shadow-[0_4px_24px_rgba(0,0,0,0.5)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.65)] transition-all">
-                <div className="flex items-center gap-2 px-3 py-2 bg-slate-900/80 border-b border-white/5">
-                  <div className="flex items-center gap-1">
-                    <div className="w-2 h-2 rounded-full bg-[#FF5F57]" />
-                    <div className="w-2 h-2 rounded-full bg-[#FEBC2E]" />
-                    <div className="w-2 h-2 rounded-full bg-[#28C840]" />
-                  </div>
-                  <span className="text-xs font-mono text-slate-500">{window.filename}</span>
-                </div>
-                <div className="aspect-[16/10] relative overflow-hidden bg-slate-800/50 flex items-center justify-center">
-                  <Image
-                    src={window.image}
-                    alt={window.filename}
-                    fill
-                    className="object-cover object-center"
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                  />
-                </div>
-              </Card>
-              </Spotlight>
-            </motion.div>
-          ))}
-
-          {/* Skill tags — editorial, inline, restrained */}
-          <motion.div
-            variants={childSlide}
-            initial="hidden"
-            animate="show"
-            custom={6}
-            className="pt-4 border-t border-white/5"
-          >
-            <span className="eyebrow mb-4 block">Skill Set</span>
-            <p className="mt-3 text-sm text-slate-400 leading-[1.9]">
-              <span className="text-slate-200">UX Research</span>
-              <span className="text-slate-600 mx-2">/</span>
-              <span className="text-slate-200">Systems Design</span>
-              <span className="text-slate-600 mx-2">/</span>
-              <span className="text-cyan-300/90">AI · ML UX</span>
-              <span className="text-slate-600 mx-2">/</span>
-              <span className="text-slate-200">Figma</span>
-              <span className="text-slate-600 mx-2">/</span>
-              <span className="text-slate-200">Prototyping</span>
-              <span className="text-slate-600 mx-2">/</span>
-              <span className="text-slate-200">Design Ops</span>
-              <span className="text-slate-600 mx-2">/</span>
-              <span className="text-violet-300/90">Data Viz</span>
-            </p>
-          </motion.div>
+        {/* ── Right — the contact sheet ────────────────────────────── */}
+        <div className="@4xl:col-span-5 @4xl:pt-14">
+          <ContactSheet />
         </div>
       </div>
     </SectionWrapper>

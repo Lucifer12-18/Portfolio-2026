@@ -12,7 +12,7 @@
   <!-- Timeline axis labels -->
   <text x="165" y="22" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="9" fill="#2d3a4d" letter-spacing="1">0s</text>
   <text x="335" y="22" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="9" fill="#2d3a4d" letter-spacing="1">1.5s</text>
-  <text x="505" y="22" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="9" fill="#2d3a4d" letter-spacing="1">3s — results</text>
+  <text x="505" y="22" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="9" fill="#2d3a4d" letter-spacing="1">3s: results</text>
   <line x1="90" y1="26" x2="660" y2="26" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
 
   <!-- Row labels -->
@@ -63,7 +63,7 @@
   <line x1="440" y1="173" x2="450" y2="173" stroke="rgba(56,189,248,0.1)" stroke-width="1" stroke-dasharray="2,2"/>
 
   <!-- User reaction: engaged -->
-  <text x="350" y="245" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#1e4a5c" font-style="italic">feels like a coach taking notes — nobody mentions the wait</text>
+  <text x="350" y="245" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#1e4a5c" font-style="italic">feels like a coach taking notes, nobody mentions the wait</text>
 
   <!-- Caption -->
   <text x="350" y="262" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#1e2d3d">same 3-second wait, completely different experience</text>

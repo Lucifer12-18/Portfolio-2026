@@ -2,236 +2,70 @@
 
 import { useState } from "react"
 import { SectionWrapper } from "@/components/section-wrapper"
-import { ArrowUpRight } from "lucide-react"
-import { motion } from "framer-motion"
-import Image from "next/image"
+import { motion, LayoutGroup } from "framer-motion"
+import { NoteCover } from "@/components/covers"
+import { notePigment } from "@/lib/note-covers"
 import Link from "next/link"
 import { NOTES, type NoteMetadata } from "@/lib/notes-data"
 import { Spotlight } from "@/components/spotlight"
 import { DecodeText } from "@/components/decode-text"
-import { childRise, childRiseHeavy, childSlide } from "@/lib/motion"
-
-/** Convert an #rrggbb hex into "r, g, b" for Spotlight's `color` prop. */
-function hexToRgb(hex: string): string {
-  const h = hex.replace("#", "")
-  const full = h.length === 3 ? h.split("").map((c) => c + c).join("") : h
-  const r = parseInt(full.slice(0, 2), 16)
-  const g = parseInt(full.slice(2, 4), 16)
-  const b = parseInt(full.slice(4, 6), 16)
-  return `${r}, ${g}, ${b}`
-}
+import { ArrowChip } from "@/components/primitives"
+import { childRise, childRiseHeavy, childSlide, SNAP } from "@/lib/motion"
 
 const filters = ["All", "UX", "AI", "Systems", "Career"]
 
-const ease = [0.16, 1, 0.3, 1] as [number, number, number, number]
+/** "#rrggbb" → "r, g, b" for Spotlight. */
+const hexToRgbTriple = (hex: string) =>
+  [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16)).join(", ")
 
-/**
- * Featured note — oversized editorial treatment for the first article.
- */
-function FeaturedNote({ note }: { note: NoteMetadata }) {
-  const [hovered, setHovered] = useState(false)
-
+/** Featured note — the first article gets the wide editorial treatment. */
+function FeaturedNote({ note, number }: { note: NoteMetadata; number: number }) {
   return (
-    <motion.div
-      variants={childSlide}
-      initial="hidden"
-      animate="show"
-      custom={3}
-      onHoverStart={() => setHovered(true)}
-      onHoverEnd={() => setHovered(false)}
-    >
-      <Link href={`/notes/${note.slug}`}>
-        <Spotlight size={420} color={hexToRgb(note.accentColor)} intensity={0.13} className="rounded-2xl">
-        <motion.article
-          whileHover={{ y: -4 }}
-          transition={{ duration: 0.3, ease }}
-          className="relative rounded-2xl overflow-hidden group cursor-pointer"
-          style={{
-            background: "rgba(16, 16, 20, 0.72)",
-            backdropFilter: "blur(16px)",
-            WebkitBackdropFilter: "blur(16px)",
-            border: hovered
-              ? `1px solid ${note.accentColor}`
-              : "1px solid rgba(255, 255, 255, 0.07)",
-            boxShadow: hovered
-              ? `0 0 0 1px ${note.accentColor}22, 0 16px 48px rgba(0,0,0,0.5)`
-              : "0 2px 12px rgba(0,0,0,0.25)",
-            transition: "box-shadow 0.4s ease, border-color 0.4s ease",
-          }}
-        >
-          <div
-            className="absolute top-0 left-0 right-0 h-[1px] z-10"
-            style={{
-              background: `linear-gradient(90deg, transparent, ${note.accentColor}, transparent)`,
-              opacity: hovered ? 1 : 0,
-              transition: "opacity 0.35s ease",
-            }}
-          />
-
-          <div className="grid md:grid-cols-5 gap-0">
-            <div className="md:col-span-2 relative aspect-[4/3] md:aspect-auto overflow-hidden">
-              <Image
-                src={note.imagePath}
-                alt={note.title}
-                fill
-                sizes="(max-width: 768px) 100vw, 40vw"
-                className="object-cover transition-transform duration-700 group-hover:scale-[1.05]"
-              />
-              <div
-                className="absolute inset-0"
-                style={{
-                  background: `linear-gradient(to right, transparent 60%, rgba(10,10,12,0.55))`,
-                }}
-              />
+    <motion.div variants={childSlide} initial="hidden" animate="show" custom={3}>
+      <Link href={`/notes/${note.slug}`} className="group block rounded-2xl">
+        <Spotlight size={420} color={hexToRgbTriple(notePigment(note.slug))} intensity={0.09} className="rounded-2xl">
+          <article className="surface surface-interactive overflow-hidden grid @2xl:grid-cols-5">
+            <div className="@2xl:col-span-3 relative aspect-[16/10] @2xl:aspect-auto @2xl:min-h-[280px] overflow-hidden border-b @2xl:border-b-0 @2xl:border-r border-hair">
+              <NoteCover slug={note.slug} number={number} tag={note.tag} />
             </div>
 
-            <div className="md:col-span-3 p-7 md:p-10 flex flex-col justify-between gap-6">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span
-                    className="text-[10px] font-mono uppercase tracking-[0.28em]"
-                    style={{ color: note.accentColor }}
-                  >
-                    Featured Note · {note.tag}
-                  </span>
-                  <span className="text-[11px] font-mono text-slate-500">{note.date}</span>
-                </div>
-
-                <h3
-                  className="font-display font-bold leading-[1.08] tracking-[-0.025em] transition-colors duration-300"
-                  style={{
-                    fontSize: "clamp(1.5rem, 2.6vw, 2rem)",
-                    color: hovered ? note.accentColor : "rgb(240, 244, 252)",
-                  }}
-                >
-                  {note.title}
-                </h3>
-
-                <p className="text-[15px] text-slate-400 leading-[1.65] max-w-xl">
-                  {note.excerpt}
-                </p>
+            <div className="@2xl:col-span-2 p-6 @2xl:p-7 flex flex-col justify-between gap-6">
+              <div className="space-y-3.5">
+                <p className="label-mono tabular-nums">Latest · {note.date}</p>
+                <h3 className="text-[clamp(1.35rem,2.2vw,1.7rem)] leading-[1.12] tracking-[-0.035em] text-bone">{note.title}</h3>
+                <p className="text-[14px] text-bone-3 leading-[1.6] line-clamp-3">{note.excerpt}</p>
               </div>
 
-              <div className="flex items-center justify-between pt-4 border-t border-white/5">
-                <span className="text-[10px] font-mono text-slate-500 uppercase tracking-[0.2em]">
-                  {note.file}
-                </span>
-                <motion.span
-                  className="inline-flex items-center gap-1.5 text-xs font-semibold"
-                  style={{ color: note.accentColor }}
-                  animate={{ x: hovered ? 3 : 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  Read note
-                  <ArrowUpRight className="h-3.5 w-3.5" />
-                </motion.span>
+              <div className="flex items-center justify-between pt-4 border-t border-hair">
+                <span className="font-mono text-[12px] text-bone">Read note</span>
+                <ArrowChip />
               </div>
             </div>
-          </div>
-        </motion.article>
+          </article>
         </Spotlight>
       </Link>
     </motion.div>
   )
 }
 
-function NoteCard({ note, index }: { note: NoteMetadata; index: number }) {
-  const [hovered, setHovered] = useState(false)
-
+function NoteCard({ note, index, number }: { note: NoteMetadata; index: number; number: number }) {
   return (
-    <motion.div
-      variants={childSlide}
-      initial="hidden"
-      animate="show"
-      custom={3 + index}
-      onHoverStart={() => setHovered(true)}
-      onHoverEnd={() => setHovered(false)}
-      whileHover={{ y: -4 }}
-      transition={{ duration: 0.25, ease }}
-    >
-      <Link href={`/notes/${note.slug}`}>
-        <Spotlight size={300} color={hexToRgb(note.accentColor)} intensity={0.13} className="rounded-xl h-full block">
-        <article
-          className="relative rounded-xl overflow-hidden group cursor-pointer h-full flex flex-col"
-          style={{
-            background: "rgba(16, 16, 20, 0.72)",
-            backdropFilter: "blur(16px)",
-            WebkitBackdropFilter: "blur(16px)",
-            border: hovered
-              ? `1px solid ${note.accentColor}`
-              : "1px solid rgba(255, 255, 255, 0.07)",
-            boxShadow: hovered
-              ? `0 0 0 1px ${note.accentColor}22, 0 10px 36px rgba(0,0,0,0.4)`
-              : "0 2px 8px rgba(0,0,0,0.2)",
-            transition: "box-shadow 0.4s ease, border-color 0.4s ease",
-          }}
-        >
-          <div
-            className="absolute top-0 left-0 right-0 h-[1px] z-10"
-            style={{
-              background: `linear-gradient(90deg, transparent, ${note.accentColor}, transparent)`,
-              opacity: hovered ? 1 : 0,
-              transition: "opacity 0.3s ease",
-            }}
-          />
-
-          <div className="w-full aspect-[16/9] relative overflow-hidden">
-            <Image
-              src={note.imagePath || "/placeholder.svg"}
-              alt={note.title}
-              fill
-              sizes="(max-width: 768px) 100vw, 50vw"
-              className="object-cover transition-transform duration-700 group-hover:scale-[1.05]"
-            />
-            <div
-              className="absolute inset-0"
-              style={{
-                background: `linear-gradient(to bottom, transparent 55%, rgba(10,10,12,0.55))`,
-              }}
-            />
-          </div>
-
-          <div className="p-6 flex flex-col flex-1 gap-3">
-            <div className="flex items-center justify-between">
-              <span
-                className="text-[10px] font-mono uppercase tracking-[0.24em]"
-                style={{ color: note.accentColor }}
-              >
-                {note.tag}
-              </span>
-              <span className="text-[10px] font-mono text-slate-500">{note.date}</span>
+    <motion.div variants={childSlide} initial="hidden" animate="show" custom={3 + index} className="h-full">
+      <Link href={`/notes/${note.slug}`} className="group block h-full rounded-2xl">
+        <Spotlight size={300} color={hexToRgbTriple(notePigment(note.slug))} intensity={0.09} className="rounded-2xl h-full">
+          <article className="surface surface-interactive h-full overflow-hidden flex flex-col">
+            <div className="w-full aspect-[16/10] relative overflow-hidden border-b border-hair">
+              <NoteCover slug={note.slug} number={number} tag={note.tag} />
             </div>
 
-            <h3
-              className="font-display font-semibold leading-[1.15] tracking-[-0.02em] transition-colors duration-300"
-              style={{
-                fontSize: "1.1875rem",
-                color: hovered ? note.accentColor : "rgb(232, 238, 248)",
-              }}
-            >
-              {note.title}
-            </h3>
-
-            <p className="text-[13.5px] text-slate-400 leading-[1.65] line-clamp-3 flex-grow">
-              {note.excerpt}
-            </p>
-
-            <div className="flex items-center justify-between pt-3 border-t border-white/5">
-              <span className="text-[10px] font-mono text-slate-600 uppercase tracking-[0.18em]">
-                {note.file}
-              </span>
-              <motion.span
-                className="inline-flex items-center gap-1 text-xs font-semibold"
-                style={{ color: note.accentColor }}
-                animate={{ x: hovered ? 2 : 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                Read
-                <ArrowUpRight className="h-3 w-3" />
-              </motion.span>
+            <div className="p-5 flex flex-1 items-end justify-between gap-4">
+              <div className="space-y-1.5">
+                <p className="label-mono tabular-nums">{note.date}</p>
+                <h3 className="text-[17px] leading-[1.2] tracking-[-0.025em] text-bone">{note.title}</h3>
+              </div>
+              <ArrowChip />
             </div>
-          </div>
-        </article>
+          </article>
         </Spotlight>
       </Link>
     </motion.div>
@@ -249,88 +83,61 @@ export function NotesSection() {
   const [featured, ...rest] = filteredNotes
 
   return (
-    <SectionWrapper
-      id="chapter-5"
-      windowTitle="NOTES · OBSERVATIONS FROM THE FIELD"
-      moduleLabel="NOTES · OBSERVATIONS FROM THE FIELD"
-    >
-      {/* Decorative chapter numeral */}
-      <div aria-hidden="true" className="absolute top-4 right-6 md:right-10 marquee-num select-none">
-        05
-      </div>
+    <SectionWrapper id="chapter-5" windowTitle="NOTES · OBSERVATIONS FROM THE FIELD" moduleLabel="NOTES · OBSERVATIONS FROM THE FIELD">
+      <div className="relative space-y-8">
+        <div className="grid @3xl:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] gap-6 @3xl:gap-12 items-end">
+          <div className="space-y-6">
+            <motion.div variants={childRise} initial="hidden" animate="show" custom={0}>
+              <span className="eyebrow">Scene 05 · Notes</span>
+            </motion.div>
+            <motion.h2 variants={childRiseHeavy} initial="hidden" animate="show" custom={1} className="display-lg text-bone">
+              <span className="ink-dim">Short dispatches</span>
+              <br />
+              <DecodeText text="from in-between work." delay={300} className="ink-accent" />
+            </motion.h2>
+          </div>
+          <motion.p variants={childRise} initial="hidden" animate="show" custom={2} className="lede">
+            Short notes from between projects. One idea each.
+          </motion.p>
+        </div>
 
-      <div className="relative space-y-6">
-        {/* Header */}
-        <motion.div
-          variants={childRise}
-          initial="hidden"
-          animate="show"
-          custom={0}
-          className="space-y-4 max-w-3xl"
-        >
-          <span className="eyebrow">Chapter 05 · Notes from the Field</span>
-
-          <motion.h2
-            variants={childRiseHeavy}
-            initial="hidden"
-            animate="show"
-            custom={1}
-            className="display-lg text-slate-50"
-          >
-            Short dispatches{" "}
-            <em className="not-italic text-gradient"><DecodeText text="from in-between work." delay={300} /></em>
-          </motion.h2>
-
-          <p className="lede">
-            Between big projects I keep short notes — little system logs on what I'm learning
-            about UX, AI, and working with teams. Not polished essays. Honest snapshots of
-            how I think.
-          </p>
+        {/* Filters — a segmented row; the bone pill slides to the active one */}
+        <motion.div variants={childRise} initial="hidden" animate="show" custom={2} role="group" aria-label="Filter notes by topic">
+          <LayoutGroup id="note-filters">
+            <div className="inline-flex flex-wrap gap-1 rounded-[10px] border border-hair p-1">
+              {filters.map((filter) => {
+                const active = activeFilter === filter
+                return (
+                  <button
+                    key={filter}
+                    type="button"
+                    onClick={() => setActiveFilter(filter)}
+                    aria-pressed={active}
+                    className={`relative isolate h-8 px-3.5 rounded-[7px] font-mono text-[11px] transition-colors ${
+                      active ? "text-[#111110]" : "text-bone-3 hover:text-bone"
+                    }`}
+                  >
+                    {active && (
+                      <motion.span layoutId="note-filter-pill" className="absolute inset-0 -z-10 rounded-[7px] bg-bone" transition={SNAP} />
+                    )}
+                    <span className="relative">{filter}</span>
+                  </button>
+                )
+              })}
+            </div>
+          </LayoutGroup>
         </motion.div>
 
-        {/* Filter pills */}
-        <motion.div
-          variants={childRise}
-          initial="hidden"
-          animate="show"
-          custom={2}
-          className="flex flex-wrap gap-2"
-        >
-          {filters.map((filter) => (
-            <motion.button
-              key={filter}
-              onClick={() => setActiveFilter(filter)}
-              whileHover={{ y: -1 }}
-              whileTap={{ scale: 0.97 }}
-              className="px-3.5 py-1.5 rounded-full text-[11px] font-mono uppercase tracking-[0.2em] transition-all"
-              style={{
-                background:
-                  activeFilter === filter
-                    ? "rgba(245, 158, 11, 0.18)"
-                    : "rgba(24, 24, 28, 0.55)",
-                border:
-                  activeFilter === filter
-                    ? "1px solid rgba(245, 158, 11, 0.5)"
-                    : "1px solid rgba(255,255,255,0.07)",
-                color: activeFilter === filter ? "rgb(147, 197, 253)" : "rgb(148, 163, 184)",
-                boxShadow: activeFilter === filter ? "0 0 14px rgba(245,158,11,0.18)" : "none",
-              }}
-            >
-              {filter}
-            </motion.button>
-          ))}
-        </motion.div>
+        {featured ? (
+          <FeaturedNote key={`f-${featured.slug}`} note={featured} number={NOTES.indexOf(featured) + 1} />
+        ) : (
+          <p className="text-[14px] text-bone-3">No notes in this topic yet.</p>
+        )}
 
-        <div className="rule-tick" />
-
-        {/* Featured note */}
-        {featured && <FeaturedNote note={featured} />}
-
-        {/* Supporting grid */}
         {rest.length > 0 && (
-          <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-5">
+          <div className="grid @xl:grid-cols-2 @5xl:grid-cols-3 gap-4">
             {rest.map((note, i) => (
-              <NoteCard key={note.slug} note={note} index={i + 1} />
+              <NoteCard key={note.slug} note={note} index={i + 1} number={NOTES.indexOf(note) + 1} />
             ))}
           </div>
         )}

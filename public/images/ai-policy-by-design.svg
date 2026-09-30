@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" fill="none" role="img" aria-labelledby="t d">
+  <title id="t">AI policy by design</title>
+  <desc id="d">Twelve co-designed policy nodes flowing into a redesigned AI tool interface.</desc>
+  <defs>
+    <linearGradient id="flow" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="#7a9cf2" stop-opacity="0.15"/>
+      <stop offset="1" stop-color="#7a9cf2" stop-opacity="0.8"/>
+    </linearGradient>
+    <pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse">
+      <circle cx="1" cy="1" r="1" fill="#f2f1ec" fill-opacity="0.05"/>
+    </pattern>
+  </defs>
+
+  <rect width="800" height="500" fill="#121211"/>
+  <rect width="800" height="500" fill="url(#dots)"/>
+
+  <!-- 12 policy nodes (4 × 3) -->
+  <g font-family="ui-monospace, 'Azeret Mono', monospace" font-size="11" fill="#8f8e88">
+    <g stroke="#f2f1ec" stroke-opacity="0.18" fill="#f2f1ec" fill-opacity="0.025">
+      <rect x="60"  y="110" width="64" height="40" rx="8"/><rect x="140" y="110" width="64" height="40" rx="8"/><rect x="220" y="110" width="64" height="40" rx="8"/>
+      <rect x="60"  y="170" width="64" height="40" rx="8"/><rect x="140" y="170" width="64" height="40" rx="8"/><rect x="220" y="170" width="64" height="40" rx="8" stroke="#7a9cf2" stroke-opacity="0.9" fill="#7a9cf2" fill-opacity="0.08"/>
+      <rect x="60"  y="230" width="64" height="40" rx="8"/><rect x="140" y="230" width="64" height="40" rx="8" stroke="#7a9cf2" stroke-opacity="0.9" fill="#7a9cf2" fill-opacity="0.08"/><rect x="220" y="230" width="64" height="40" rx="8"/>
+      <rect x="60"  y="290" width="64" height="40" rx="8"/><rect x="140" y="290" width="64" height="40" rx="8"/><rect x="220" y="290" width="64" height="40" rx="8" stroke="#7a9cf2" stroke-opacity="0.9" fill="#7a9cf2" fill-opacity="0.08"/>
+    </g>
+    <text x="80" y="134">P01</text><text x="160" y="134">P02</text><text x="240" y="134">P03</text>
+    <text x="80" y="194">P04</text><text x="160" y="194">P05</text><text x="240" y="194" fill="#a9bdf7">P06</text>
+    <text x="80" y="254">P07</text><text x="160" y="254" fill="#a9bdf7">P08</text><text x="240" y="254">P09</text>
+    <text x="80" y="314">P10</text><text x="160" y="314">P11</text><text x="240" y="314" fill="#a9bdf7">P12</text>
+    <text x="60" y="372" fill="#5f5e5a">12 policies · co-designed with 11 students</text>
+  </g>
+
+  <!-- flows into the interface -->
+  <g stroke="url(#flow)" stroke-width="1">
+    <path d="M284 190 C 360 190, 380 200, 440 200"/>
+    <path d="M204 250 C 330 250, 370 250, 440 250"/>
+    <path d="M284 310 C 360 310, 380 300, 440 300"/>
+  </g>
+  <g fill="#7a9cf2">
+    <circle cx="440" cy="200" r="2.5"/><circle cx="440" cy="250" r="2.5"/><circle cx="440" cy="300" r="2.5"/>
+  </g>
+
+  <!-- redesigned AI tool -->
+  <g>
+    <rect x="450" y="96" width="290" height="308" rx="14" fill="#1a1a19" stroke="#f2f1ec" stroke-opacity="0.16"/>
+    <line x1="450" y1="130" x2="740" y2="130" stroke="#f2f1ec" stroke-opacity="0.08"/>
+    <text x="468" y="118" font-family="ui-monospace, 'Azeret Mono', monospace" font-size="10.5" fill="#8f8e88">assistant.fig</text>
+
+    <!-- message -->
+    <rect x="468" y="148" width="190" height="12" rx="6" fill="#f2f1ec" fill-opacity="0.14"/>
+    <rect x="468" y="166" width="150" height="12" rx="6" fill="#f2f1ec" fill-opacity="0.08"/>
+
+    <!-- policy-aware nudge -->
+    <rect x="468" y="194" width="254" height="58" rx="10" fill="#7a9cf2" fill-opacity="0.07" stroke="#7a9cf2" stroke-opacity="0.45"/>
+    <circle cx="484" cy="211" r="4" fill="#f0a647"/>
+    <text x="496" y="215" font-family="ui-sans-serif, Geist, system-ui" font-size="12" fill="#f2f1ec">Policy-aware moment</text>
+    <text x="484" y="238" font-family="ui-monospace, 'Azeret Mono', monospace" font-size="10" fill="#8f8e88">embedded · P06</text>
+
+    <!-- transparency row -->
+    <rect x="468" y="266" width="120" height="26" rx="13" stroke="#f2f1ec" stroke-opacity="0.22"/>
+    <text x="482" y="283" font-family="ui-monospace, 'Azeret Mono', monospace" font-size="10" fill="#c9c8c1">embedded · P08</text>
+    <rect x="598" y="266" width="124" height="26" rx="13" stroke="#f2f1ec" stroke-opacity="0.22"/>
+    <text x="612" y="283" font-family="ui-monospace, 'Azeret Mono', monospace" font-size="10" fill="#c9c8c1">embedded · P12</text>
+
+    <!-- input -->
+    <rect x="468" y="346" width="254" height="40" rx="10" stroke="#f2f1ec" stroke-opacity="0.18"/>
+    <rect x="484" y="362" width="120" height="8" rx="4" fill="#f2f1ec" fill-opacity="0.1"/>
+    <circle cx="704" cy="366" r="11" fill="#f2f1ec"/>
+    <path d="M700 366 h8 m-3.5 -3.5 l3.5 3.5 l-3.5 3.5" stroke="#121211" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

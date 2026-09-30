@@ -57,7 +57,7 @@ export default function HirelloNetworkingPage() {
                         <Label>Module 01 · Networking Intelligence System</Label>
                         <H1><DecodeText text="Designing a CRM for job seekers" delay={250} /></H1>
                         <P className="max-w-2xl">
-                          Job seekers don't need "contacts" — they need strategy. This module replaced
+                          Job seekers don't need "contacts." They need strategy. This module replaced
                           ad-hoc spreadsheets with a structured, priority-driven networking workflow:
                           contact tiers, guided outreach, and a visual opportunity pipeline.
                         </P>
@@ -93,7 +93,7 @@ export default function HirelloNetworkingPage() {
                         <SectionLabel>1. The problem</SectionLabel>
                         <Lead>
                           Networking is one of the highest-leverage job search activities. But almost
-                          no one does it well — because the tooling doesn't support it.
+                          no one does it well, because the tooling doesn't support it.
                         </Lead>
                         <P>
                           Job seekers track contacts in spreadsheets, forget who they reached out to,
@@ -161,20 +161,20 @@ export default function HirelloNetworkingPage() {
                             <P className="font-medium text-foreground">Four tiers, each with distinct follow-up logic:</P>
                             <List spacing="normal">
                               <ListItem marker="dot">
-                                <span><span className="font-medium text-foreground">Inner Circle</span> — warm contacts, prioritised for direct referrals</span>
+                                <span><span className="font-medium text-foreground">Inner Circle</span>: warm contacts, prioritised for direct referrals</span>
                               </ListItem>
                               <ListItem marker="dot">
-                                <span><span className="font-medium text-foreground">Close Network</span> — second-degree connections worth cultivating</span>
+                                <span><span className="font-medium text-foreground">Close Network</span>: second-degree connections worth cultivating</span>
                               </ListItem>
                               <ListItem marker="dot">
-                                <span><span className="font-medium text-foreground">Specialty Recruiting Firms</span> — niche recruiters relevant to target roles</span>
+                                <span><span className="font-medium text-foreground">Specialty Recruiting Firms</span>: niche recruiters relevant to target roles</span>
                               </ListItem>
                               <ListItem marker="dot">
-                                <span><span className="font-medium text-foreground">Previous Co-Workers</span> — historical context, re-engagement opportunities</span>
+                                <span><span className="font-medium text-foreground">Previous Co-Workers</span>: historical context, re-engagement opportunities</span>
                               </ListItem>
                             </List>
                             <P>
-                              Tiers drive prioritisation logic throughout the pipeline — inner circle
+                              Tiers drive prioritisation logic throughout the pipeline: inner circle
                               contacts surface first, have tighter follow-up windows, and get richer
                               outreach templates.
                             </P>
@@ -186,7 +186,7 @@ export default function HirelloNetworkingPage() {
                               className="block h-auto w-full"
                             />
                             <Caption className="px-3 py-2 border-t border-white/10">
-                              Add Contact modal — tier, metadata, and follow-up state in one view.
+                              Add Contact modal: tier, metadata, and follow-up state in one view.
                             </Caption>
                           </div>
                         </div>
@@ -195,7 +195,7 @@ export default function HirelloNetworkingPage() {
                         <ModuleCard variant="dashed" eyebrow="Design decision">
                           <P className="mt-1">
                             Early explorations used tags instead of tiers. Tags felt flexible but created
-                            decision paralysis — users didn't know which tags mattered. Fixed tiers with
+                            decision paralysis: users didn't know which tags mattered. Fixed tiers with
                             clear definitions removed the ambiguity without removing control.
                           </P>
                         </ModuleCard>
@@ -209,7 +209,7 @@ export default function HirelloNetworkingPage() {
                         custom={5}
                         className="space-y-6"
                       >
-                        <H3>B. Guided outreach wizard — reducing decision fatigue</H3>
+                        <H3>B. Guided outreach wizard: reducing decision fatigue</H3>
                         <P>
                           Cold outreach is paralysing because there are too many open questions at once:
                           who to reach out to, what to say, whether to follow up. The wizard collapses
@@ -241,9 +241,9 @@ export default function HirelloNetworkingPage() {
 
                         <div className="flex flex-wrap gap-3">
                           {[
-                            { src: "/hirello-outreach-step-1.png", alt: "Outreach wizard step 1 — contact selection" },
-                            { src: "/hirello-outreach-step-2.png", alt: "Outreach wizard step 2 — template selection" },
-                            { src: "/hirello-outreach-step-3.png", alt: "Outreach wizard step 3 — preview and send" },
+                            { src: "/hirello-outreach-step-1.png", alt: "Outreach wizard step 1: contact selection" },
+                            { src: "/hirello-outreach-step-2.png", alt: "Outreach wizard step 2: template selection" },
+                            { src: "/hirello-outreach-step-3.png", alt: "Outreach wizard step 3: preview and send" },
                           ].map(({ src, alt }) => (
                             <div
                               key={src}
@@ -253,13 +253,13 @@ export default function HirelloNetworkingPage() {
                             </div>
                           ))}
                         </div>
-                        <Caption>Three-step wizard — each screen has a single decision to make.</Caption>
+                        <Caption>Three-step wizard: each screen has a single decision to make.</Caption>
 
                         <ModuleCard variant="dashed" eyebrow="Design decision">
                           <P className="mt-1">
                             Tested a free-form compose view first. Users spent more time editing
                             templates than sending messages. The wizard format shifted the mental model
-                            from "writing an email" to "completing a workflow step" — send rates
+                            from "writing an email" to "completing a workflow step," and send rates
                             improved noticeably in usability testing.
                           </P>
                         </ModuleCard>
@@ -273,11 +273,11 @@ export default function HirelloNetworkingPage() {
                         custom={6}
                         className="space-y-6"
                       >
-                        <H3>C. Opportunity pipeline — making momentum visible</H3>
+                        <H3>C. Opportunity pipeline: making momentum visible</H3>
                         <P>
                           Networking without a view of overall progress feels chaotic. The pipeline
                           gives users a Kanban-style view of where every lead sits and what should
-                          happen next — shifting networking from reactive to repeatable.
+                          happen next, shifting networking from reactive to repeatable.
                         </P>
 
                         <div className="rounded-lg border border-white/10 bg-white/[0.05] overflow-hidden">
@@ -287,7 +287,7 @@ export default function HirelloNetworkingPage() {
                             className="block h-auto w-full"
                           />
                           <Caption className="px-4 py-2 border-t border-white/10">
-                            Kanban pipeline — leads move through stages with clear next-action prompts.
+                            Kanban pipeline: leads move through stages with clear next-action prompts.
                           </Caption>
                         </div>
 
@@ -296,7 +296,7 @@ export default function HirelloNetworkingPage() {
                             Pipeline stages map to real job-search milestones, not generic CRM stages.
                           </ListItem>
                           <ListItem marker="bullet">
-                            Cards show last-contact date and suggested next action — no need to click in.
+                            Cards show last-contact date and suggested next action, so there's no need to click in.
                           </ListItem>
                           <ListItem marker="bullet">
                             Overdue follow-ups are flagged visually, eliminating the "out of sight, out of mind" problem.
@@ -323,13 +323,13 @@ export default function HirelloNetworkingPage() {
                           <ModuleCard variant="elevated" eyebrow="Behavioural shift">
                             <Lead className="mt-1">Reactive → intentional outreach</Lead>
                             <P className="mt-1">
-                              The guided wizard reduced decision fatigue and increased outreach consistency — users sent more messages with less friction.
+                              The guided wizard reduced decision fatigue and increased outreach consistency. Users sent more messages with less friction.
                             </P>
                           </ModuleCard>
                         </ModuleCardGrid>
                         <P>
                           Both modules shipped into live production. Networking Intelligence now forms
-                          the foundation of Hirello's career operating system — the data collected here
+                          the foundation of Hirello's career operating system: the data collected here
                           feeds into the platform's broader recommendation and coaching layers.
                         </P>
                       </motion.section>
@@ -345,7 +345,7 @@ export default function HirelloNetworkingPage() {
                         <SectionLabel>5. What this taught me</SectionLabel>
                         <P>
                           CRM design for consumers is fundamentally different from enterprise CRM. Users
-                          don't want full control — they want guidance. Every extra configuration option
+                          don't want full control. They want guidance. Every extra configuration option
                           is a decision they have to make under stress. The best design decisions here
                           removed choices, not added them.
                         </P>
@@ -373,7 +373,7 @@ export default function HirelloNetworkingPage() {
                             href="/case-stories/hirello-ai/interview"
                             className="text-xs md:text-sm font-medium inline-flex items-center gap-1.5 rounded-full px-4 py-2 border border-transparent bg-foreground text-background hover:bg-background hover:text-foreground hover:border-foreground/40 transition-colors"
                           >
-                            Module 02 — AI Interview Gym →
+                            Module 02: AI Interview Gym →
                           </Link>
                         </div>
                         <Link

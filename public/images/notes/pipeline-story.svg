@@ -73,5 +73,5 @@
   <text x="636" y="208" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="9" fill="#f97362">on it</text>
 
   <!-- Caption -->
-  <text x="350" y="255" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#2d3f57">same pipeline, same data — one sentence changed what users did next</text>
+  <text x="350" y="255" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,system-ui,sans-serif" font-size="10" fill="#2d3f57">same pipeline, same data: one sentence changed what users did next</text>
 </svg>

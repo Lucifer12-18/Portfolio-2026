@@ -20,7 +20,7 @@ export const NOTES: NoteMetadata[] = [
     file: "ai_ux_balance.md",
     title: "Designing with AI without overwhelming users",
     excerpt:
-      "In early testing of Hirello's interview feedback panel, users ignored the AI output entirely—not because it was wrong, but because it appeared all at once. Here's what progressive disclosure actually looks like in an AI product.",
+      "In early testing of Hirello's interview feedback panel, users ignored the AI output entirely, not because it was wrong, but because it appeared all at once. Here's what progressive disclosure actually looks like in an AI product.",
     date: "Nov 2024",
     isoDate: "2024-11-01",
     imagePath: "/images/notes/thumb-ai-ux.svg",
@@ -34,7 +34,7 @@ export const NOTES: NoteMetadata[] = [
     file: "is_to_ux.md",
     title: "From engineering to UX: thinking in systems",
     excerpt:
-      "The honest version of my career pivot—it wasn't dissatisfaction with engineering. It was noticing that the systems I was building had invisible failure modes that only showed up when humans used them.",
+      "The honest version of my career pivot: it wasn't dissatisfaction with engineering. It was noticing that the systems I was building had invisible failure modes that only showed up when humans used them.",
     date: "Oct 2024",
     isoDate: "2024-10-01",
     imagePath: "/images/notes/thumb-career.svg",

@@ -7,16 +7,7 @@ import { WindowShell } from "@/components/window-shell"
 import { useSystemLog } from "@/contexts/system-log-context"
 import { useReadingStore } from "@/contexts/reading-store-context"
 import { CHAPTERS } from "@/lib/chapters-config"
-
-const SECTION_ACCENT: Record<string, string> = {
-  prologue: "34, 211, 238",
-  "chapter-1": "6, 182, 212",
-  "chapter-2": "124, 58, 237",
-  "chapter-3": "167, 139, 250",
-  "chapter-4": "56, 189, 248",
-  "chapter-5": "147, 197, 253",
-  epilogue: "224, 249, 255",
-}
+import { accentRgb } from "@/lib/chapter-palette"
 
 interface SectionWrapperProps {
   id: string
@@ -30,44 +21,48 @@ export function SectionWrapper({ id, children, className, windowTitle, moduleLab
   const { addLog } = useSystemLog()
   const { setActiveModule } = useReadingStore()
   const hasLoggedRef = useRef(false)
-  const accentRgb = SECTION_ACCENT[id] ?? "34, 211, 238"
+
+  const chapterIndex = CHAPTERS.findIndex((c) => c.sectionId === id)
+  const chapter = CHAPTERS[chapterIndex]
+  // Shell titles read as sentence-case labels ("Work · Case Stories in
+  // Practice"), not the old SHOUTED module IDs.
+  const shellTitle = chapter?.fullLabel ?? windowTitle ?? id
 
   useEffect(() => {
     if (hasLoggedRef.current) return
     hasLoggedRef.current = true
 
-    const chapterConfig = CHAPTERS.find((c) => c.sectionId === id)
-    const sectionName = chapterConfig ? chapterConfig.fullLabel.toUpperCase() : id.toUpperCase()
+    const sectionName = chapter ? chapter.fullLabel.toUpperCase() : id.toUpperCase()
     addLog(`> loaded section: ${sectionName}`)
     if (moduleLabel) {
       setActiveModule(moduleLabel)
     }
-  }, [id, moduleLabel, addLog, setActiveModule])
+  }, [id, chapter, moduleLabel, addLog, setActiveModule])
 
   return (
-    <section
-      id={id}
-      className={cn("relative h-full flex flex-col", className)}
-    >
-      {/* Radial gradient spotlight — per-section accent glow */}
-      <div
-        className="pointer-events-none absolute inset-0 overflow-hidden"
-        aria-hidden="true"
-      >
+    <section id={id} className={cn("relative h-full flex flex-col", className)}>
+      {/* Ambient wash in this chapter's pigment — barely there, ties the
+          window to the field behind it. */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
         <div
-          className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[600px] rounded-full opacity-[0.035]"
+          className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[600px] rounded-full opacity-[0.08]"
           style={{
-            background: `radial-gradient(ellipse at center, rgba(${accentRgb}, 0.6) 0%, transparent 70%)`,
+            background: `radial-gradient(ellipse at center, rgba(${accentRgb(Math.max(0, chapterIndex))}, 0.6) 0%, transparent 70%)`,
           }}
         />
       </div>
 
       <div className="relative flex-1 min-h-0 w-full">
         {/* The page-level shell (pageFlipVariants) reveals the window; the
-            per-element childRise cascade reveals the content. No competing
-            block-fade here — that's what made the chapter "arrive as a block". */}
+            per-element childRise cascade reveals the content. */}
         <div className="h-full">
-          {windowTitle ? <WindowShell title={windowTitle}>{children}</WindowShell> : children}
+          {windowTitle ? (
+            <WindowShell title={shellTitle} chapterIndex={chapterIndex >= 0 ? chapterIndex : undefined}>
+              {children}
+            </WindowShell>
+          ) : (
+            children
+          )}
         </div>
       </div>
     </section>
