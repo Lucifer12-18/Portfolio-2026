@@ -251,6 +251,32 @@ User feedback: "a lot of text — it should feel like moving through a storyboar
 
 ---
 
+## Clarity: the interlude game (built 2026-10-01)
+
+A small art game that is the portfolio's thesis as a mechanic: the screen is noise; the pointer is a storyboard viewfinder lens; sweeping it along a formation's faint outline pulls particles home until they BIND (glow in the scene's pigment, pluck a rising note). Bind 90% to clear a formation; noise storms (from formation 3) telegraph, then unbind ~30% of what their front crosses. Seven formations = the seven scenes, each in its pigment; finale card "Storyboard bound." Hold = focus (pull speed ×1.85) and is the intended skill.
+
+| File | Owns |
+|---|---|
+| `lib/interlude.ts` | open/close store + iris origin (external store, no provider) |
+| `lib/formations.ts` | the 7 formations as polylines + even arc-length sampler (`formationPoints`) |
+| `components/interlude/clarity-engine.ts` | framework-free canvas engine: flow-field noise, lens claim (particles keep homing ~1.1s after the lens passes), capped streaming speed (`HOME_SPEED`), binding, storms, additive sprite rendering, trails, shockwave. Tunables at top + `levelConfig` |
+| `components/interlude/clarity-game.tsx` | overlay: iris clip-path wipe from the launching button, HUD (pips, timer, best, binding meter), intro / scene-title / bound / complete cards; best times in localStorage `plx.clarity.best` |
+| `components/interlude/play-button.tsx` | navbar + Epilogue launcher (morphing mini glyph) |
+
+Mounted globally in `app/layout.tsx`. While open, page.tsx pauses both R3F canvases, hides CursorEffect, and the arrow-key chapter flip yields. Sound cues in `lib/sound.ts`: `bind`, `storm`, `formed`.
+
+Balance was tuned with a headless sim (perfect tracer at 650 px/s, 1440×900): no-hold ≈ 7 / 9 / 31 / 6 / 13 / 31-49 / 22-31 s per formation; with hold every formation clears (Wave ≈ 22-28 s). Dev builds expose `window.__clarity` to step the engine manually (rAF doesn't run in hidden tabs).
+
+---
+
+## Briefing (first-visit tutorial) + AAA sound pass (2026-10-01)
+
+**Briefing** (`components/briefing.tsx`, store `lib/tour.ts`): AAA-style onboarding. After the boot gates, a "System briefing." title flash, then a scrim with a spotlight cut-out springs between real UI marked `data-tour`: `rail`/`dots` → `window` (chapter title bar) → `modes`/`menu` → `now` → `extras` (Play + sound). Pigment crop marks + one scan pass frame each target; a leader line draws to an auto-placed callout (right/left/below/above). Steps whose target isn't visible at the current size are dropped (desktop 5, phone 3). Esc skips, ←/→/Enter step; page.tsx yields arrows while open. Auto-plays once (`plx.tour.seen`), skipped on deep links; `?tour` forces it; footer "Replay briefing" (home only).
+
+**Sound** (`lib/sound.ts`) rebuilt from melodic plucks to a cinematic palette: muted ticks (hover), weighted thocks (press), saturated sub impacts, stereo-travelling noise whooshes, dark detuned-saw pads (root/5th/9th, no third), FM glass shimmer, darker 3.2s room, bus compression. Roots dropped an octave (D2 to F#3). Same public API plus `tourOpen/tourStep/tourClose`. Dev builds expose `window.__sfx` to audition cues.
+
+---
+
 ## Architecture Decisions (the "why" behind choices)
 
 - **Formation-watch window (2.6s):** Intentional — gives users time to watch the 3D particle formation morph between shapes. The content is deliberately hidden during this window (`isWatching=true`).

@@ -4,6 +4,7 @@ import { Geist, Azeret_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 import { SoundLayer } from "@/components/sound"
+import { ClarityGame } from "@/components/interlude/clarity-game"
 
 // Geist — one variable family for display AND text. Medium weights + tight
 // tracking carry the editorial voice; no second display face needed.
@@ -84,6 +85,7 @@ export default function RootLayout({
       <body className={`${geist.variable} ${azeret.variable} font-sans antialiased`}>
         {children}
         <SoundLayer />
+        <ClarityGame />
         <Analytics />
       </body>
     </html>

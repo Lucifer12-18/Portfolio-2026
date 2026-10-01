@@ -11,6 +11,7 @@ import { useReadingStore } from "@/contexts/reading-store-context"
 import { CURRENT_ROLE, PROFILE } from "@/lib/profile"
 import { SNAP } from "@/lib/motion"
 import { SoundToggle } from "@/components/sound"
+import { PlayButton } from "@/components/interlude/play-button"
 import { sfx } from "@/lib/sound"
 
 type Mode = "recruiter" | "designer"
@@ -22,6 +23,7 @@ function ModeToggle({ mode, onChange, id }: { mode: Mode; onChange: (m: Mode) =>
       role="group"
       aria-label="View mode"
       data-sfx-skip
+      data-tour={id === "desk" ? "modes" : undefined}
       className="relative flex items-center rounded-[9px] border border-hair-2 p-[3px]"
     >
       {(["recruiter", "designer"] as const).map((m) => {
@@ -110,7 +112,10 @@ export function Navbar() {
 
           {/* ── Controls ─────────────────────────────────────────────── */}
           <div className="hidden lg:flex items-center gap-3">
-            <SoundToggle />
+            <span data-tour="extras" className="flex items-center gap-3">
+              <PlayButton />
+              <SoundToggle />
+            </span>
             <ModeToggle mode={viewMode as Mode} onChange={handleViewModeToggle} id="desk" />
             <a href={PROFILE.resume} target="_blank" rel="noopener noreferrer" className="btn-ghost btn-sm h-[36px]">
               Résumé
@@ -122,6 +127,7 @@ export function Navbar() {
           {/* ── Mobile menu button ─────────────────────────────────── */}
           <button
             type="button"
+            data-tour="menu"
             className="lg:hidden -mr-2 p-2 rounded-md text-bone-2 hover:text-bone transition-colors"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
@@ -156,6 +162,7 @@ export function Navbar() {
                   Reading · <span className="text-bone-2">{activeChapterConfig?.label ?? "Prologue"}</span>
                 </span>
                 <span className="flex items-center gap-2">
+                  <PlayButton labelClassName="inline" />
                   <SoundToggle />
                   <ModeToggle mode={viewMode as Mode} onChange={handleViewModeToggle} id="mob" />
                 </span>

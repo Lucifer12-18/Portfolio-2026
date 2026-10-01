@@ -15,6 +15,7 @@ import { accentHex } from "@/lib/chapter-palette"
 import { railHover } from "@/lib/pointer-state"
 import Image from "next/image"
 import { sfx } from "@/lib/sound"
+import { PlayButton } from "@/components/interlude/play-button"
 
 /** Roll credits — the whole storyboard in one strip, each frame a way back. */
 function Credits() {
@@ -155,6 +156,22 @@ export function ContactSection() {
           </motion.div>
 
           <Credits />
+
+          <motion.div
+            variants={childRise}
+            initial="hidden"
+            animate="show"
+            custom={6}
+            className="flex flex-wrap items-center justify-between gap-4 rounded-[14px] border border-hair-2 bg-[rgb(22_22_21/0.5)] px-4 py-3.5"
+          >
+            <span className="min-w-0">
+              <span className="label-mono block">Before you go</span>
+              <span className="mt-1 block text-[14px] text-bone-2">
+                <span className="text-bone">Clarity.</span> A small game about turning noise into order.
+              </span>
+            </span>
+            <PlayButton labelClassName="inline" />
+          </motion.div>
         </div>
 
         {/* ── Right — profile card ─────────────────────────────────────── */}

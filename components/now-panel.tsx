@@ -20,6 +20,7 @@ export function NowPanel() {
   return (
     <motion.aside
       aria-label="Current role"
+      data-tour="now"
       variants={childSlide}
       initial="hidden"
       animate="show"

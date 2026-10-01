@@ -102,7 +102,7 @@ export function ChapterRail() {
   const spineX = FRAME_W / 2
 
   return (
-    <nav aria-label="Chapters" className="relative w-full py-2 pl-6">
+    <nav aria-label="Chapters" data-tour="rail" className="relative w-full py-2 pl-6">
       <p className="label-mono mb-3">Storyboard</p>
 
       <div className="relative">

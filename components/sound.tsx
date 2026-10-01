@@ -18,6 +18,8 @@ export function useSoundEnabled() {
  */
 export function SoundLayer() {
   useEffect(() => {
+    // Dev-only handle for auditioning cues from devtools
+    if (process.env.NODE_ENV !== "production") (window as unknown as { __sfx?: typeof sfx }).__sfx = sfx
     let hovered: Element | null = null
 
     const unlock = () => sfx.unlock()

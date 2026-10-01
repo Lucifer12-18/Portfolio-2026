@@ -8,7 +8,7 @@ import { useReducedMotion, prefersReducedMotion } from "@/lib/use-reduced-motion
 import { accentAt } from "@/lib/chapter-palette"
 
 
-export function CursorEffect() {
+export function CursorEffect({ hidden = false }: { hidden?: boolean }) {
   const { activeChapterIndex } = useReadingStore()
   const reduced = useReducedMotion()
   const { r, g, b } = accentAt(activeChapterIndex)
@@ -134,7 +134,7 @@ export function CursorEffect() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  if (!mounted || isTouch || reduced) return null
+  if (!mounted || isTouch || reduced || hidden) return null
 
   const accent    = `rgba(${r},${g},${b}`
   const ringSize  = isHover ? 44 : isClick ? 16 : 28

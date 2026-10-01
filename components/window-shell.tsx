@@ -46,7 +46,10 @@ export function WindowShell({ title, children, className, chapterIndex }: Window
       }}
     >
       {/* ── Title bar ───────────────────────────────────────────────── */}
-      <div className="relative flex items-center justify-between gap-4 px-5 h-11 flex-shrink-0 border-b border-hair">
+      <div
+        data-tour={isChapter ? "window" : undefined}
+        className="relative flex items-center justify-between gap-4 px-5 h-11 flex-shrink-0 border-b border-hair"
+      >
         <div className="flex items-center gap-3 min-w-0 font-mono text-[11px] tracking-[0.02em]">
           {isChapter && <span className="text-bone tabular-nums">{pad(chapterIndex)}</span>}
           <span className="text-bone-3 truncate">{title}</span>

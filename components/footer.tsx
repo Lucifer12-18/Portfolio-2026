@@ -2,9 +2,12 @@
 
 import { PROFILE } from "@/lib/profile"
 import { SPECTRUM_GRADIENT } from "@/lib/chapter-palette"
+import { usePathname } from "next/navigation"
+import { tour } from "@/lib/tour"
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
+  const onHome = usePathname() === "/"
 
   return (
     <footer className="relative border-t border-hair bg-[rgb(15_15_14/0.72)] backdrop-blur-xl">
@@ -18,10 +21,18 @@ export function Footer() {
         </div>
 
         {/* Navigation hint — the chapter model isn't obvious; say it once, quietly */}
-        <div className="hidden md:flex items-center gap-2" aria-hidden>
-          <span className="keycap">←</span>
-          <span className="keycap">→</span>
-          <span className="ml-1">to move between chapters</span>
+        <div className="hidden md:flex items-center gap-2">
+          <span className="keycap" aria-hidden>←</span>
+          <span className="keycap" aria-hidden>→</span>
+          <span className="ml-1" aria-hidden>to move between chapters</span>
+          {onHome && (
+            <>
+              <span aria-hidden className="mx-1.5 text-bone-4">/</span>
+              <button type="button" onClick={() => tour.open()} className="text-bone-2 hover:text-bone transition-colors">
+                Replay briefing
+              </button>
+            </>
+          )}
         </div>
 
         <div className="flex items-center gap-4">

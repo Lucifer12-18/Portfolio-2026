@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback, useRef, type ComponentType } from "react"
+import { useState, useEffect, useCallback, useRef, useSyncExternalStore, type ComponentType } from "react"
 import dynamic from "next/dynamic"
 import { motion, AnimatePresence, MotionConfig } from "framer-motion"
 import { Navbar } from "@/components/navbar"
@@ -32,6 +32,9 @@ import { FormationTelemetry } from "@/components/formation-telemetry"
 import { NowPanel } from "@/components/now-panel"
 import { ChapterTint } from "@/components/chapter-tint"
 import { sfx } from "@/lib/sound"
+import { interlude } from "@/lib/interlude"
+import { tour } from "@/lib/tour"
+import { Briefing } from "@/components/briefing"
 import { CHAPTER_ACCENTS as ACCENT_COLORS, FORMATION_IDS } from "@/lib/chapter-palette"
 
 // ── CRT module IDs shown during transition ────────────────────────────────────
@@ -443,6 +446,8 @@ function PageFlipContainer() {
       if (!isArrow) return
       if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return
       if (modalOpenRef.current) return
+      if (interlude.isOpen()) return // the game owns the keyboard while open
+      if (tour.isOpen()) return // so does the briefing
       const ae = document.activeElement as HTMLElement | null
       const inChapterNav = !!ae?.closest?.("[data-chapter-nav]")
       if (ae && ae !== document.body && !inChapterNav) return
@@ -539,6 +544,7 @@ function PageFlipContainer() {
       <nav
         aria-label="Chapters"
         data-chapter-nav
+        data-tour="dots"
         className="absolute bottom-0.5 left-1/2 -translate-x-1/2 flex lg:hidden z-20"
       >
         {CHAPTERS.map((_, i) => (
@@ -570,6 +576,9 @@ function PageLevelModal() {
 
 export default function Home() {
   const [cinematicDone, setCinematicDone]     = useState(false)
+  // While Clarity is open the 3D field pauses (the game gets the GPU) and the
+  // custom cursor steps aside (the lens IS the cursor).
+  const playing = useSyncExternalStore(interlude.subscribe, interlude.isOpen, () => false)
   const [bootScreenDismissed, setBootScreenDismissed] = useState(false)
 
   // ── Unified gate logic ───────────────────────────────────────────────────
@@ -659,7 +668,7 @@ export default function Home() {
                 style={{ zIndex: 1 }}
                 aria-hidden
               >
-                <PersistentScene active={bootScreenDismissed} />
+                <PersistentScene active={bootScreenDismissed && !playing} />
               </div>
 
               {/* Index-reactive gradient overlay + the interface pigment */}
@@ -675,7 +684,7 @@ export default function Home() {
                 style={{ zIndex: 3 }}
                 aria-hidden
               >
-                <ForegroundParticles active={bootScreenDismissed} />
+                <ForegroundParticles active={bootScreenDismissed && !playing} />
               </div>
 
               {/* All content above the 3D background — flex column so navbar /
@@ -724,11 +733,14 @@ export default function Home() {
             </div>
             </PointerProvider>
 
+            {/* First-visit briefing — waits for the boot gates, then plays once */}
+            <Briefing ready={bootScreenDismissed && cinematicDone} />
+
             {/* Modal rendered at page-level, OUTSIDE the perspective container */}
             <PageLevelModal />
 
             {/* Custom cursor — always on top, chapter-color reactive */}
-            <CursorEffect />
+            <CursorEffect hidden={playing} />
 
             {/* Cinematic film grain — sits above scene, below cursor */}
             <FilmGrain />
