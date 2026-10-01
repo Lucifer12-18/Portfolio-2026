@@ -184,15 +184,18 @@ export function ContactSection() {
 
             <div className="p-5 space-y-5">
               <div className="flex items-center gap-4">
-                <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-full border border-hair-2">
-                  <Image
-                    src="/images/vishal-portrait.jpg"
-                    alt={PROFILE.name}
-                    width={64}
-                    height={64}
-                    sizes="64px"
-                    className="h-full w-full object-cover grayscale transition-[filter] duration-700 group-hover:grayscale-0"
-                  />
+                {/* Portrait — full colour, ringed in the scene's pigment */}
+                <div className="relative h-[72px] w-[72px] flex-shrink-0 rounded-full p-[2px] ring-1 ring-chapter/60 ring-offset-2 ring-offset-[#161615]">
+                  <div className="h-full w-full overflow-hidden rounded-full">
+                    <Image
+                      src="/images/vishal-portrait-2026.jpg"
+                      alt={PROFILE.name}
+                      width={144}
+                      height={144}
+                      sizes="72px"
+                      className="h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.06]"
+                    />
+                  </div>
                 </div>
                 <div className="min-w-0">
                   <p className="text-[17px] tracking-[-0.02em] text-bone">{PROFILE.name}</p>
