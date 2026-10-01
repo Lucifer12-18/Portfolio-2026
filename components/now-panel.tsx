@@ -65,6 +65,7 @@ export function NowPanel() {
       <div className="flex items-center justify-between border-t border-hair px-5 py-3.5">
         <a
           href={PROFILE.resume}
+          data-track="resume_open"
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-1.5 font-mono text-[11px] text-bone-2 hover:text-bone transition-colors"

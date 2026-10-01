@@ -15,6 +15,7 @@ import { accentHex } from "@/lib/chapter-palette"
 import { railHover } from "@/lib/pointer-state"
 import Image from "next/image"
 import { sfx } from "@/lib/sound"
+import { trackEvent } from "@/lib/stats"
 import { PlayButton } from "@/components/interlude/play-button"
 
 /** Roll credits — the whole storyboard in one strip, each frame a way back. */
@@ -81,6 +82,7 @@ function EmailBar() {
     try {
       await navigator.clipboard.writeText(PROFILE.email)
       setCopied(true)
+      trackEvent("email_copy")
       sfx.chime(true)
       if (timer.current) clearTimeout(timer.current)
       timer.current = setTimeout(() => setCopied(false), 1800)
@@ -114,7 +116,7 @@ function EmailBar() {
         </span>
       </button>
       <span role="status" className="sr-only">{copied ? "Email address copied" : ""}</span>
-      <a href={`mailto:${PROFILE.email}`} className="btn-solid h-11 px-5">
+      <a href={`mailto:${PROFILE.email}`} data-track="email_send" className="btn-solid h-11 px-5">
         Send a note
         <ArrowUpRight className="h-3.5 w-3.5" strokeWidth={1.6} aria-hidden />
       </a>
@@ -147,10 +149,10 @@ export function ContactSection() {
           </motion.div>
 
           <motion.div variants={childRise} initial="hidden" animate="show" custom={4} className="flex flex-wrap items-center gap-x-7 gap-y-3">
-            <ActionLink href={PROFILE.linkedin} external>
+            <ActionLink href={PROFILE.linkedin} external track="linkedin_open">
               Connect on LinkedIn
             </ActionLink>
-            <ActionLink href={PROFILE.resume} external>
+            <ActionLink href={PROFILE.resume} external track="resume_open">
               Read the résumé
             </ActionLink>
           </motion.div>

@@ -12,6 +12,7 @@ import { DecodeText } from "@/components/decode-text"
 import { ArrowChip, InBrief } from "@/components/primitives"
 import { childRise, childRiseHeavy, childSlide } from "@/lib/motion"
 import { CaseCover } from "@/components/covers"
+import { trackEvent } from "@/lib/stats"
 import { accentRgb } from "@/lib/chapter-palette"
 
 interface Project {
@@ -150,6 +151,7 @@ export function WorkSection() {
       imagePath: project.imagePath,
     })
     addLog(`> opened case study: ${shortTitle(project.title)}`)
+    trackEvent(`case_open:${project.file}`)
   }
 
   const cardProps = (project: Project) => ({

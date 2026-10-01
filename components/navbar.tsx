@@ -13,6 +13,7 @@ import { SNAP } from "@/lib/motion"
 import { SoundToggle } from "@/components/sound"
 import { PlayButton } from "@/components/interlude/play-button"
 import { sfx } from "@/lib/sound"
+import { trackEvent } from "@/lib/stats"
 
 type Mode = "recruiter" | "designer"
 
@@ -62,6 +63,7 @@ export function Navbar() {
 
   const handleViewModeToggle = (mode: Mode) => {
     if (mode !== viewMode) sfx.toggle(mode === "designer")
+    if (mode !== viewMode) trackEvent(`mode_${mode}`)
     setViewMode(mode)
     addLog(`> mode.switch: ${mode}_view enabled`)
   }
@@ -117,7 +119,7 @@ export function Navbar() {
               <SoundToggle />
             </span>
             <ModeToggle mode={viewMode as Mode} onChange={handleViewModeToggle} id="desk" />
-            <a href={PROFILE.resume} target="_blank" rel="noopener noreferrer" className="btn-ghost btn-sm h-[36px]">
+            <a href={PROFILE.resume} target="_blank" rel="noopener noreferrer" data-track="resume_open" className="btn-ghost btn-sm h-[36px]">
               Résumé
               <ArrowUpRight className="h-3.5 w-3.5" strokeWidth={1.6} aria-hidden />
               <span className="sr-only">(opens in new tab)</span>
@@ -169,12 +171,12 @@ export function Navbar() {
               </div>
 
               <div className="grid grid-cols-2 gap-2.5 pt-1">
-                <a href={PROFILE.resume} target="_blank" rel="noopener noreferrer" className="btn-solid">
+                <a href={PROFILE.resume} target="_blank" rel="noopener noreferrer" data-track="resume_open" className="btn-solid">
                   Résumé
                   <ArrowUpRight className="h-3.5 w-3.5" strokeWidth={1.6} aria-hidden />
                   <span className="sr-only">(opens in new tab)</span>
                 </a>
-                <a href={`mailto:${PROFILE.email}`} className="btn-ghost">
+                <a href={`mailto:${PROFILE.email}`} data-track="email_send" className="btn-ghost">
                   Email
                 </a>
               </div>

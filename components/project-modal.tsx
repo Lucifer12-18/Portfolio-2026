@@ -174,6 +174,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                   {project.file === "hirello_ai.tsx" && (
                     <Link
                       href="/case-stories/hirello-ai/full"
+                      data-track="case_full"
                       className="group mt-6 flex items-center justify-between gap-4 rounded-[14px] border border-hair-2 px-5 py-4 transition-colors hover:border-bone/50"
                     >
                       <span>

@@ -48,6 +48,7 @@ export function PlayButton({
     <button
       type="button"
       onClick={(e) => interlude.open(e.currentTarget)}
+      data-track="play_clarity"
       aria-label="Play Clarity, a small interactive interlude"
       title="Play · Clarity"
       className={cn(

@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Minus, Plus } from "lucide-react"
 import { useSystemLog } from "@/contexts/system-log-context"
+import { useVisitors } from "@/components/stats"
+import { visitorStore } from "@/lib/stats"
 import { childSlide, EASE_SETTLE } from "@/lib/motion"
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -15,7 +17,17 @@ import { childSlide, EASE_SETTLE } from "@/lib/motion"
 const VISIBLE = 7
 
 export function SystemLogConsole() {
-  const { logs } = useSystemLog()
+  const { logs, addLog } = useSystemLog()
+  const visitors = useVisitors()
+  const greeted = useRef(false)
+
+  // Once the count arrives: "visitor #1,285 connected" (or the running total)
+  useEffect(() => {
+    if (visitors === null || greeted.current) return
+    greeted.current = true
+    const you = visitorStore.you()
+    addLog(you ? `> visitor #${you.toLocaleString("en-US")} connected` : `> visitors.total: ${visitors.toLocaleString("en-US")}`)
+  }, [visitors, addLog])
   const [collapsed, setCollapsed] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
   const tail = logs.slice(-VISIBLE)

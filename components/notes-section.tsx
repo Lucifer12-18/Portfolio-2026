@@ -22,7 +22,7 @@ const hexToRgbTriple = (hex: string) =>
 function FeaturedNote({ note, number }: { note: NoteMetadata; number: number }) {
   return (
     <motion.div variants={childSlide} initial="hidden" animate="show" custom={3}>
-      <Link href={`/notes/${note.slug}`} className="group block rounded-2xl">
+      <Link href={`/notes/${note.slug}`} data-track={`note_open:${note.slug}`} className="group block rounded-2xl">
         <Spotlight size={420} color={hexToRgbTriple(notePigment(note.slug))} intensity={0.09} className="rounded-2xl">
           <article className="surface surface-interactive overflow-hidden grid @2xl:grid-cols-5">
             <div className="@2xl:col-span-3 relative aspect-[16/10] @2xl:aspect-auto @2xl:min-h-[280px] overflow-hidden border-b @2xl:border-b-0 @2xl:border-r border-hair">
@@ -51,7 +51,7 @@ function FeaturedNote({ note, number }: { note: NoteMetadata; number: number }) 
 function NoteCard({ note, index, number }: { note: NoteMetadata; index: number; number: number }) {
   return (
     <motion.div variants={childSlide} initial="hidden" animate="show" custom={3 + index} className="h-full">
-      <Link href={`/notes/${note.slug}`} className="group block h-full rounded-2xl">
+      <Link href={`/notes/${note.slug}`} data-track={`note_open:${note.slug}`} className="group block h-full rounded-2xl">
         <Spotlight size={300} color={hexToRgbTriple(notePigment(note.slug))} intensity={0.09} className="rounded-2xl h-full">
           <article className="surface surface-interactive h-full overflow-hidden flex flex-col">
             <div className="w-full aspect-[16/10] relative overflow-hidden border-b border-hair">

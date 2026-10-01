@@ -29,6 +29,8 @@ type ActionLinkProps = {
   className?: string
   /** Chip before the label instead of after. */
   chipFirst?: boolean
+  /** Stats event name, counted on click (see lib/stats.ts). */
+  track?: string
 } & (
   | { href: string; external?: boolean; onClick?: never }
   | { onClick: () => void; href?: never; external?: never }
@@ -36,7 +38,7 @@ type ActionLinkProps = {
 
 /** Mono label + arrow chip — the site's text-link / tertiary action. */
 export function ActionLink(props: ActionLinkProps) {
-  const { children, className, chipFirst } = props
+  const { children, className, chipFirst, track } = props
   const cls = cn(
     "group inline-flex items-center gap-3 font-mono text-[12px] tracking-[0.01em] text-bone rounded-full",
     className,
@@ -52,6 +54,7 @@ export function ActionLink(props: ActionLinkProps) {
     return (
       <a
         href={props.href}
+        data-track={track}
         className={cls}
         {...(props.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
       >
@@ -61,7 +64,7 @@ export function ActionLink(props: ActionLinkProps) {
     )
   }
   return (
-    <button type="button" onClick={props.onClick} className={cls}>
+    <button type="button" onClick={props.onClick} data-track={track} className={cls}>
       {inner}
     </button>
   )

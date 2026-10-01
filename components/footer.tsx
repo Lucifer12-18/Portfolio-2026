@@ -4,6 +4,7 @@ import { PROFILE } from "@/lib/profile"
 import { SPECTRUM_GRADIENT } from "@/lib/chapter-palette"
 import { usePathname } from "next/navigation"
 import { tour } from "@/lib/tour"
+import { VisitorCounter } from "@/components/stats"
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
@@ -17,7 +18,9 @@ export function Footer() {
         <div className="flex items-center gap-3 min-w-0">
           <span className="whitespace-nowrap">© {currentYear} {PROFILE.name}</span>
           <span aria-hidden className="hidden sm:inline text-bone-4">/</span>
-          <span className="hidden sm:inline whitespace-nowrap">{PROFILE.location}</span>
+          <span className="hidden lg:inline whitespace-nowrap">{PROFILE.location}</span>
+          <span aria-hidden className="hidden lg:inline text-bone-4">/</span>
+          <VisitorCounter />
         </div>
 
         {/* Navigation hint — the chapter model isn't obvious; say it once, quietly */}
@@ -38,12 +41,14 @@ export function Footer() {
         <div className="flex items-center gap-4">
           <a
             href={`mailto:${PROFILE.email}`}
+            data-track="email_send"
             className="hidden sm:inline text-bone-2 hover:text-bone underline decoration-hair-2 underline-offset-4 hover:decoration-bone transition-colors"
           >
             {PROFILE.email}
           </a>
           <a
             href={PROFILE.linkedin}
+            data-track="linkedin_open"
             target="_blank"
             rel="noopener noreferrer"
             className="text-bone-2 hover:text-bone transition-colors"

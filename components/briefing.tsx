@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 import { tour, TOUR_SEEN_KEY } from "@/lib/tour"
 import { sfx } from "@/lib/sound"
+import { trackEvent } from "@/lib/stats"
 import { EASE_SETTLE } from "@/lib/motion"
 import { useReducedMotion } from "@/lib/use-reduced-motion"
 import { DecodeText } from "@/components/decode-text"
@@ -188,7 +189,8 @@ function BriefingOverlay() {
     if (phase === "steps") nextRef.current?.focus({ preventScroll: true })
   }, [phase, i])
 
-  const finish = useCallback(() => {
+  const finish = useCallback((completed = false) => {
+    trackEvent(completed ? "briefing_done" : "briefing_skip")
     sfx.tourClose()
     tour.close()
   }, [])
@@ -202,7 +204,7 @@ function BriefingOverlay() {
       }
       const n = i + d
       if (n < 0) return
-      if (n >= steps.length) return finish()
+      if (n >= steps.length) return finish(true)
       setDir(d)
       setI(n)
       sfx.tourStep(d)
@@ -360,7 +362,7 @@ function BriefingOverlay() {
                   Start
                   <ArrowRight className="h-3.5 w-3.5" strokeWidth={1.6} aria-hidden />
                 </button>
-                <button type="button" onClick={finish} className="font-mono text-[12px] text-bone-3 hover:text-bone">
+                <button type="button" onClick={() => finish()} className="font-mono text-[12px] text-bone-3 hover:text-bone">
                   Skip <span className="keycap ml-1">Esc</span>
                 </button>
               </div>
@@ -428,7 +430,7 @@ function BriefingOverlay() {
                 </span>
               ))}
             </div>
-            <button type="button" onClick={finish} className="font-mono text-[11px] text-bone-3 hover:text-bone">
+            <button type="button" onClick={() => finish()} className="font-mono text-[11px] text-bone-3 hover:text-bone">
               Skip
             </button>
             {i > 0 && (

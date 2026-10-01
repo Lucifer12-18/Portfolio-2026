@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "framer-motion"
 import { ArrowRight, RotateCcw, X } from "lucide-react"
 import { interlude } from "@/lib/interlude"
 import { sfx } from "@/lib/sound"
+import { trackEvent } from "@/lib/stats"
 import { accentAt, accentHex, FORMATION_IDS } from "@/lib/chapter-palette"
 import { EASE_SETTLE } from "@/lib/motion"
 import { useReducedMotion } from "@/lib/use-reduced-motion"
@@ -181,7 +182,10 @@ function ClarityOverlay({ origin }: { origin: { x: number; y: number } }) {
 
   const next = useCallback(() => {
     const lv = levelRef.current
-    if (lv >= LEVEL_COUNT - 1) setPhase("complete")
+    if (lv >= LEVEL_COUNT - 1) {
+      setPhase("complete")
+      trackEvent("clarity_complete")
+    }
     else startLevel(lv + 1, true)
   }, [startLevel])
 

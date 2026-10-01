@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 import { SoundLayer } from "@/components/sound"
 import { ClarityGame } from "@/components/interlude/clarity-game"
+import { StatsBeacon } from "@/components/stats"
 
 // Geist — one variable family for display AND text. Medium weights + tight
 // tracking carry the editorial voice; no second display face needed.
@@ -86,6 +87,7 @@ export default function RootLayout({
         {children}
         <SoundLayer />
         <ClarityGame />
+        <StatsBeacon />
         <Analytics />
       </body>
     </html>
