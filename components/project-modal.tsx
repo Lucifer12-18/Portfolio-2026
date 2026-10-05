@@ -16,7 +16,7 @@ interface ProjectDetails {
   problem: string
   approach: string[]
   outcome: string
-  imagePath?: string
+  href?: string
 }
 
 interface ProjectModalProps {
@@ -170,17 +170,17 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                     </section>
                   </div>
 
-                  {/* Hirello — deeper case study (Level 3) */}
-                  {project.file === "hirello_ai.tsx" && (
+                  {/* The trailer's payoff — the deep page, when the case has one */}
+                  {project.href && (
                     <Link
-                      href="/case-stories/hirello-ai/full"
-                      data-track="case_full"
+                      href={project.href}
+                      data-track={`case_full:${project.file}`}
                       className="group mt-6 flex items-center justify-between gap-4 rounded-[14px] border border-hair-2 px-5 py-4 transition-colors hover:border-bone/50"
                     >
                       <span>
-                        <span className="label-mono block">Next module</span>
+                        <span className="label-mono block">Full case study</span>
                         <span className="mt-1 block text-[16px] tracking-[-0.02em] text-bone">Read the full case study</span>
-                        <span className="block text-[13px] text-bone-3">Decisions, flows, trade-offs, and what shipped.</span>
+                        <span className="block text-[13px] text-bone-3">Screens, decisions, the design system, and what shipped.</span>
                       </span>
                       <ArrowChip large />
                     </Link>

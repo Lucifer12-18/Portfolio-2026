@@ -1,7 +1,10 @@
 "use client"
 
 import type React from "react"
-import Image from "next/image"
+import { ScaleToFit } from "@/components/case/kit"
+import { HubDashboard } from "@/components/case/hirello/networking"
+import { DashboardRow } from "@/components/case/hirello/platform"
+import { DayToday, MashPlayer, RewindMoment } from "@/components/case/onese/screens"
 import { cn } from "@/lib/utils"
 import { CropMarks, FormationGlyph } from "@/components/storyboard"
 import { accentHex } from "@/lib/chapter-palette"
@@ -79,41 +82,89 @@ const dotted = (w = 2.2, gap = 5) =>
 
 // ── Case covers ──────────────────────────────────────────────────────────────
 
-function HirelloCover({ featured }: { featured?: boolean }) {
-  const p = accentHex(4) // periwinkle — the Work chapter
+/** A product screen, framed and tilted onto the stage like a print on a desk. */
+function TiltedScreen({ url, children, h = 800 }: { url: string; children: React.ReactNode; h?: number }) {
   return (
-    <Stage pigment={p} label="SH 04.1 · hirello.ai / pipeline" glow="80% 18%">
-      {/* Real product, framed and tilted onto the stage */}
-      <div className="absolute left-[8%] top-[14%] w-[108%] -rotate-[2.5deg] origin-top-left transition-transform duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:rotate-0 group-hover:-translate-y-[2%]">
-        <div className="overflow-hidden rounded-[10px] border border-hair-2 bg-[#1a1a19] shadow-[0_40px_80px_-24px_rgba(0,0,0,0.85)]">
-          <div className="flex items-center gap-1.5 px-3 h-[22px] border-b border-hair">
-            {[0, 1, 2].map((i) => (
-              <span key={i} className="h-[5px] w-[5px] rounded-full bg-bone-4" />
-            ))}
-            <span className="ml-2 font-mono text-[8.5px] text-bone-3">hirello.ai/pipeline</span>
-          </div>
-          <div className="relative aspect-[1315/1080]">
-            <Image
-              src="/hirello-pipeline.png"
-              alt=""
-              fill
-              sizes={featured ? "(max-width: 1024px) 100vw, 60vw" : "(max-width: 768px) 100vw, 40vw"}
-              loading={featured ? "eager" : "lazy"}
-              className="object-cover object-left-top brightness-[0.93]"
-            />
+    <div className="absolute left-[8%] top-[13%] w-[104%] -rotate-[2.5deg] origin-top-left transition-transform duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:rotate-0 group-hover:-translate-y-[2%]">
+      <div className="overflow-hidden rounded-[10px] border border-hair-2 bg-[#1a1a19] shadow-[0_40px_80px_-24px_rgba(0,0,0,0.85)]">
+        <div className="flex items-center gap-1.5 px-3 h-[22px] border-b border-hair">
+          {[0, 1, 2].map((i) => (
+            <span key={i} className="h-[5px] w-[5px] rounded-full bg-bone-4" />
+          ))}
+          <span className="ml-2 font-mono text-[8.5px] text-bone-3">{url}</span>
+        </div>
+        <ScaleToFit width={1280} height={h}>
+          {children}
+        </ScaleToFit>
+      </div>
+    </div>
+  )
+}
+
+function EvidenceChip({ p, k, v }: { p: string; k: string; v: string }) {
+  return (
+    <div
+      className="absolute right-[5%] bottom-[11%] z-10 rounded-[10px] border bg-[rgb(17_17_16/0.82)] px-3 py-2 backdrop-blur-md transition-transform duration-700 group-hover:-translate-y-1"
+      style={{ borderColor: mix(p, 45) }}
+    >
+      <span className="block font-mono text-[9px] text-bone-3">{k}</span>
+      <span className="block text-[20px] leading-none tracking-[-0.04em] tabular-nums" style={{ color: p }}>
+        {v}
+      </span>
+    </div>
+  )
+}
+
+function NetworkingCover() {
+  const p = accentHex(4)
+  return (
+    <Stage pigment={p} label="SH 04.1 · hirello / networking hub" glow="80% 18%">
+      <TiltedScreen url="app.hirello.ai/networking-hub">
+        <HubDashboard />
+      </TiltedScreen>
+      <EvidenceChip p={p} k="screens designed + built" v="16" />
+    </Stage>
+  )
+}
+
+function PlatformCover() {
+  const p = accentHex(3)
+  return (
+    <Stage pigment={p} label="SH 04.2 · hirello / agent platform" glow="78% 22%">
+      <TiltedScreen url="app.hirello.ai/ai-dashboard">
+        <DashboardRow />
+      </TiltedScreen>
+      <EvidenceChip p={p} k="onboarding completion" v="+18%" />
+    </Stage>
+  )
+}
+
+function OneSECover() {
+  const p = accentHex(0)
+  const phones = [
+    { node: <DayToday />, cls: "left-[12%] top-[16%] -rotate-[8deg] group-hover:-rotate-[11deg]" },
+    { node: <MashPlayer />, cls: "left-[38%] top-[9%] rotate-0 z-10 group-hover:-translate-y-[3%]" },
+    { node: <RewindMoment controls />, cls: "left-[64%] top-[16%] rotate-[8deg] group-hover:rotate-[11deg]" },
+  ]
+  return (
+    <Stage pigment={p} label="SH 04.3 · 1se / one commit contract" glow="50% 30%">
+      {phones.map((ph, i) => (
+        <div
+          key={i}
+          className={cn(
+            "absolute w-[25%] transition-transform duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
+            ph.cls,
+          )}
+        >
+          <div className="rounded-[14%/6.5%] border border-hair-2 bg-black p-[3.5%] shadow-[0_30px_60px_-20px_rgba(0,0,0,0.9)]">
+            <div className="overflow-hidden rounded-[11%/5%]">
+              <ScaleToFit width={390} height={844}>
+                {ph.node}
+              </ScaleToFit>
+            </div>
           </div>
         </div>
-      </div>
-      {/* Floating evidence chip */}
-      <div
-        className="absolute right-[5%] bottom-[11%] z-10 rounded-[10px] border bg-[rgb(17_17_16/0.82)] px-3 py-2 backdrop-blur-md transition-transform duration-700 group-hover:-translate-y-1"
-        style={{ borderColor: mix(p, 45) }}
-      >
-        <span className="block font-mono text-[9px] text-bone-3">onboarding completion</span>
-        <span className="block text-[20px] leading-none tracking-[-0.04em] tabular-nums" style={{ color: p }}>
-          +18%
-        </span>
-      </div>
+      ))}
     </Stage>
   )
 }
@@ -167,80 +218,20 @@ function PolicyCover() {
   )
 }
 
-function RedditCover() {
-  const p = accentHex(1) // terracotta
-  // Before: a dense, noisy feed. After: two calm cards and one focus.
-  const noise = [34, 22, 40, 28, 16, 36, 24, 30, 20, 38, 26, 18]
-  return (
-    <Stage pigment={p} label="SH 04.3 · density → focus" glow="78% 45%">
-      <Art>
-        {noise.map((w, i) => (
-          <g key={i} opacity={0.35 + (i % 3) * 0.15}>
-            <rect x={36} y={40 + i * 14} width={112} height={10} rx={3} fill="rgba(242,241,236,0.04)" stroke={BONE_FAINT} />
-            <rect x={41} y={43 + i * 14} width={w} height={4} rx={2} fill={BONE_LINE} />
-            <rect x={45 + w} y={43 + i * 14} width={48 - (w % 20)} height={4} rx={2} fill={BONE_FAINT} />
-          </g>
-        ))}
-        <path d="M162 125 L206 125" {...dotted()} />
-        <path d="M200 119 L207 125 L200 131" fill="none" stroke={p} strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" />
-
-        <rect x={222} y={46} width={140} height={70} rx={12} fill={INK} stroke={p} strokeOpacity={0.7} />
-        <rect x={236} y={60} width={56} height={8} rx={4} fill="rgba(242,241,236,0.75)" />
-        <rect x={236} y={76} width={108} height={5} rx={2.5} fill={BONE_LINE} />
-        <rect x={236} y={86} width={84} height={5} rx={2.5} fill={BONE_LINE} />
-        <rect x={236} y={98} width={38} height={10} rx={5} fill={p} />
-        <rect x={222} y={128} width={140} height={46} rx={12} fill={INK} stroke={BONE_LINE} opacity={0.8} />
-        <rect x={236} y={142} width={70} height={6} rx={3} fill={BONE_LINE} />
-        <rect x={236} y={154} width={96} height={5} rx={2.5} fill={BONE_FAINT} />
-        <rect x={222} y={186} width={140} height={30} rx={12} fill={INK} stroke={BONE_FAINT} opacity={0.6} />
-      </Art>
-    </Stage>
-  )
-}
-
-function DashboardCover() {
-  const p = accentHex(5) // sage
-  const pts: [number, number][] = [
-    [70, 178], [100, 170], [130, 174], [160, 156], [190, 160], [220, 138], [250, 142], [280, 116], [310, 104], [340, 84],
-  ]
-  const line = pts.map(([x, y], i) => `${i ? "L" : "M"}${x} ${y}`).join(" ")
-  return (
-    <Stage pigment={p} label="SH 04.4 · ai × jobs, 2020 → now" glow="80% 25%">
-      <Art>
-        <rect x={52} y={36} width={306} height={178} rx={14} fill={INK} stroke={BONE_LINE} />
-        {[0, 1, 2].map((i) => (
-          <g key={i} transform={`translate(${68 + i * 96} 52)`}>
-            <rect width={84} height={34} rx={8} fill="rgba(242,241,236,0.03)" stroke={i === 0 ? p : BONE_FAINT} strokeOpacity={i === 0 ? 0.6 : 1} />
-            <rect x={10} y={9} width={30} height={4} rx={2} fill={BONE_LINE} />
-            <rect x={10} y={19} width={i === 0 ? 46 : 36} height={8} rx={3} fill={i === 0 ? p : "rgba(242,241,236,0.55)"} />
-          </g>
-        ))}
-        {[110, 140, 170, 200].map((y) => (
-          <path key={y} d={`M68 ${y} L342 ${y}`} stroke={BONE_FAINT} strokeWidth={0.8} />
-        ))}
-        <path d={`${line} L340 200 L70 200 Z`} fill={mix(p, 14)} />
-        <path d={line} {...dotted(2.4, 5.5)} />
-        <circle cx={340} cy={84} r={4.5} fill={p} />
-        <circle cx={340} cy={84} r={9} fill="none" stroke={p} strokeOpacity={0.35} />
-      </Art>
-    </Stage>
-  )
-}
-
-export function CaseCover({ file, featured, className }: { file: string; featured?: boolean; className?: string }) {
+export function CaseCover({ file, className }: { file: string; featured?: boolean; className?: string }) {
   let cover: React.ReactNode
   switch (file) {
-    case "hirello_ai.tsx":
-      cover = <HirelloCover featured={featured} />
+    case "hirello_networking.vue":
+      cover = <NetworkingCover />
+      break
+    case "hirello_platform.vue":
+      cover = <PlatformCover />
+      break
+    case "1se_one_contract.fig":
+      cover = <OneSECover />
       break
     case "ai_policy_by_design.fig":
       cover = <PolicyCover />
-      break
-    case "reddit_redesign.tsx":
-      cover = <RedditCover />
-      break
-    case "job_dashboard.tsx":
-      cover = <DashboardCover />
       break
     default:
       cover = (

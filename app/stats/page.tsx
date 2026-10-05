@@ -2,6 +2,7 @@ import { notFound } from "next/navigation"
 import type { Metadata } from "next"
 import Link from "next/link"
 import { getStats } from "@/lib/stats-server"
+import { CASE_NAMES } from "@/lib/cases"
 
 // Private dashboard: /stats?key=<STATS_KEY>. Without the right key it's a 404,
 // so the page doesn't even admit to existing. Never indexed.
@@ -18,21 +19,17 @@ const LABELS: Record<string, string> = {
   clarity_complete: "Clarity finished (all 7)",
   briefing_done: "Briefing finished",
   briefing_skip: "Briefing skipped",
-  case_full: "Full Hirello case study opened",
+  case_full: "Full Hirello case study opened (retired link)",
   mode_recruiter: "Switched to Recruiter view",
   mode_designer: "Switched to Designer view",
 }
 
-const CASE_NAMES: Record<string, string> = {
-  "hirello_ai.tsx": "Hirello.ai",
-  "ai_policy_by_design.fig": "AI Policy by Design",
-  "reddit_redesign.tsx": "Reddit Redesign",
-  "job_dashboard.tsx": "AI Job Market Dashboard",
-}
+const caseName = (file?: string) => CASE_NAMES[file ?? ""] ?? file?.replace(/[_.]/g, " ")
 
 const label = (name: string) => {
   const [base, detail] = name.split(":")
-  if (base === "case_open") return `Case opened · ${CASE_NAMES[detail ?? ""] ?? detail?.replace(/[_.]/g, " ")}`
+  if (base === "case_open") return `Case opened · ${caseName(detail)}`
+  if (base === "case_full" && detail) return `Full case study read · ${caseName(detail)}`
   if (base === "note_open") return `Note opened · ${detail?.replace(/_/g, " ")}`
   return LABELS[name] ?? name
 }

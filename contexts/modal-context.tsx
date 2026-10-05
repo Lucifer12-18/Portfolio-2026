@@ -10,7 +10,8 @@ interface ProjectDetails {
     problem: string
     approach: string[]
     outcome: string
-    imagePath?: string
+    /** Deep case-study page, when the case has one. */
+    href?: string
 }
 
 interface ModalContextValue {

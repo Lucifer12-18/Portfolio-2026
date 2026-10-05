@@ -1,6 +1,6 @@
 import type React from "react"
 import type { Metadata, Viewport } from "next"
-import { Geist, Azeret_Mono } from "next/font/google"
+import { Geist, Azeret_Mono, Fraunces, Inter, Figtree } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 import { SoundLayer } from "@/components/sound"
@@ -21,6 +21,14 @@ const azeret = Azeret_Mono({
   variable: "--font-mono",
   display: "swap",
 })
+
+// Product faces for the case-study mockups — Hirello's own Fraunces + Inter,
+// and Figtree standing in for 1SE's geometric sans. preload:false keeps them
+// off every page's critical path; the browser fetches a file only when a
+// mockup actually renders text in it.
+const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-fraunces", display: "swap", preload: false })
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap", preload: false })
+const figtree = Figtree({ subsets: ["latin"], variable: "--font-figtree", display: "swap", preload: false })
 
 // Share cards always resolve against the public domain. Every Vercel build
 // (previews included) pins it: per-deployment URLs sit behind Vercel's login,
@@ -84,7 +92,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geist.variable} ${azeret.variable} font-sans antialiased`}>
+      <body
+        className={`${geist.variable} ${azeret.variable} ${fraunces.variable} ${inter.variable} ${figtree.variable} font-sans antialiased`}
+      >
         {children}
         <SoundLayer />
         <ClarityGame />

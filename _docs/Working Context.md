@@ -39,9 +39,9 @@
 - [x] Chapter 6 — `ContactSection` (Epilogue · Open Channel)
 
 ### Work / Case Studies
-- [x] 3 projects in `WorkSection` — Hirello.ai (featured), Reddit Redesign, AI Job Dashboard
-- [x] `ProjectModal` — click any project card → full modal overlay with problem/approach/outcome
-- [x] Case story pages: `/case-stories/hirello-ai/` (snapshot), `/full`, `/interview`, `/networking`
+- [x] 4 cases from `lib/cases.ts` — Hirello Networking Hub (featured), Hirello Platform & Agents, 1 Second Everyday, AI Policy by Design (modal only). Reddit + Job Dashboard removed 2026-10-04.
+- [x] `ProjectModal` — the card's "trailer"; its "Read the full case study" CTA comes from the case's `href`
+- [x] Deep pages: `/case-stories/hirello-networking`, `/hirello-platform`, `/1-second-everyday` (old `/case-stories/hirello-ai/**` 308-redirect, see next.config.mjs)
 
 ### Notes Section
 - [x] 5 articles in `/content/notes/` (markdown)
@@ -199,11 +199,11 @@ WCAG-level pass across the whole site. The important mechanics:
 - **Hash deep links**: `/#chapter-4` etc. resolve BEFORE first content mount (PageFlipContainer `hydrated` gate + mount-time sync of both indices — nothing to interrupt). In-page hashchange uses `skipTransitionRef` (lib/formation-state) through the quick unmount-gap flow. URL hash syncs on chapter change (replaceState).
 - **AnimatePresence NOTE**: the chapter slot deliberately uses DEFAULT mode, not mode="wait" — "wait" wedges permanently if an exit interrupts a just-started enter (blank chapter). Sequencing comes from the isWatching gap; don't reintroduce mode="wait" here.
 - **SR semantics**: single sr-only h1 in page.tsx (hero headline demoted to h2); aria-live polite region announces chapter changes; aria-pressed/expanded/current on toggles/menu/pills/steps/dots; decorative layers + separators aria-hidden; DecodeText renders sr-only real text + aria-hidden scramble.
-- **Metadata**: root layout has metadataBase (NEXT_PUBLIC_SITE_URL → VERCEL_URL → localhost), OG + twitter cards, title template; `app/opengraph-image.tsx` renders the share card via next/og; case pages get titles via per-segment layout.tsx files (pages are client components — and the hirello-ai layout must keep its nested title TEMPLATE or grandchildren lose the suffix).
+- **Metadata**: root layout has metadataBase (NEXT_PUBLIC_SITE_URL → on any Vercel build the public domain https://vishal-deshmukh.vercel.app → localhost; never VERCEL_URL, whose per-deploy hosts sit behind Vercel login and break LinkedIn previews), OG + twitter cards, title template; `app/opengraph-image.tsx` renders the share card via next/og; case pages get titles via per-segment layout.tsx files (pages are client components — and the hirello-ai layout must keep its nested title TEMPLATE or grandchildren lose the suffix).
 - **Hygiene**: `ignoreBuildErrors` REMOVED (tsc must stay clean — it is); ESLint 9 + eslint-config-next flat config (`eslint.config.mjs`; native flat exports, no FlatCompat; vault/scaffold dirs ignored; React-Compiler-era rules demoted to warn); postprocessing deps removed; three-scene dpr capped [1,1.5]; hidden canvases pause via `frameloop` gated on an `active` prop.
 - Global styled 404 (`app/not-found.tsx`); broken `#work` back-link fixed to `/#chapter-4`.
 
-## Case-story pages joined the system (shipped 2026-06-28)
+## Case-story pages joined the system (shipped 2026-06-28) — superseded 2026-10-04, see "Case studies v2"
 
 All 4 pages under `app/case-stories/hirello-ai/` (snapshot, full, interview, networking): light-theme remnants (`#F0EDE8`, `bg-slate-50`, `border-slate-200/300`, dark `text-slate-600..900`) mapped to dark (`bg-white/[0.08]`, `bg-slate-900/50`, `border-white/10`, `text-slate-200/400`); major blocks wrapped in the shared `childRise`/`childRiseHeavy` cascade; H1s use `DecodeText`; `CursorEffect` + `FilmGrain` rendered inside the providers for ambient continuity (no 3D Canvas — keeps these content pages fast). Full-scroll responsiveness preserved.
 
@@ -276,6 +276,22 @@ Balance was tuned with a headless sim (perfect tracer at 650 px/s, 1440×900): n
 **Sound** (`lib/sound.ts`) rebuilt from melodic plucks to a cinematic palette: muted ticks (hover), weighted thocks (press), saturated sub impacts, stereo-travelling noise whooshes, dark detuned-saw pads (root/5th/9th, no third), FM glass shimmer, darker 3.2s room, bus compression. Roots dropped an octave (D2 to F#3). Same public API plus `tourOpen/tourStep/tourClose`. Dev builds expose `window.__sfx` to audition cues.
 
 ---
+
+## Case studies v2 (2026-10-04)
+
+Three deep, recruiter-first case studies replaced the old Hirello pages and two thin concept cards.
+
+- **Data:** `lib/cases.ts` (`CASES`, `CaseMeta`, `caseBySlug`, `DEEP_CASES`, `CASE_NAMES`) feeds the Work cards, the modal, the deep pages and the /stats labels. `file` is the stable key (covers, `case_open:<file>`, `case_full:<file>`); never rename a shipped one.
+- **Kit:** `components/case/blocks.tsx` (server: CaseShell, CaseHero, ThirtySecondRead, Scene, Stage, ScreenFrame, PhoneFrame, Decisions, Findings, ProcessStrip, Columns, ContractDiagram, StatesGrid, KeyTable, Insight, DesignSystemBoard, Credits) + `components/case/kit.tsx` (client: Reveal, ScaleToFit, SceneIndex, BeforeAfter, ChatDemo). A case = numbered Scenes: headline, ≤2-line caption, one big visual, "Decision → Why" cards.
+- **Mockups:** coded re-drawings at product size, scaled by `ScaleToFit` — `components/case/hirello/{ui,networking,platform}.tsx` (Hirello tokens: #3B5BFF, gradient #3B5BFF→#7C5CFF, Fraunces + Inter) and `components/case/onese/{ui,screens}.tsx` (1SE: teal #0C8A93, yellow #FFBA00, Figtree stand-in). Fictional people/data only; 1SE photos replaced by abstract `MOMENTS` gradients (real screenshots had real people).
+- **Real screenshots:** drop PNGs at `public/case/<slug>/<name>.png` and `<ShotOr>` (`components/case/shot.tsx`, fs check at build) swaps them in for the mockup. Slots: hirello-networking/{hub,import,organize,build-outreach,sequence-editor,replies,pipeline}, hirello-platform/{dashboard,toolbox,agent-tasks}, 1se/{day-today,day-after}.
+- **Fonts:** Fraunces / Inter / Figtree are declared in the root layout with `preload:false` — files load only where a mockup renders them.
+- **Honesty rules (keep them):** teammates credited by role, not name; only Vishal's own work is claimed (Platform case shows teammates' pieces in a labelled "team context" strip); no invented metrics (Networking has none yet; onboarding numbers are résumé-backed).
+- **Sources:** facts came from the Hirello stage-server repos (read-only — never modify Hirello code) and the 1SE Figma PDF in `D:/UMBC/1se assgn/`.
+
+## Visitor stats (shipped 2026-10-01)
+
+Upstash Redis via REST (`lib/stats-server.ts`), `/api/stats` (visit + event counters, bot filter, event-name regex), private dashboard `/stats?key=<STATS_KEY>` (404 without it), footer "● N visitors" + log line. Disabled cleanly when env vars are missing. Clicks tracked through `data-track` attributes (delegated listener in `components/stats.tsx`).
 
 ## Architecture Decisions (the "why" behind choices)
 

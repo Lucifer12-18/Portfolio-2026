@@ -56,13 +56,14 @@ Design process / design rhythm. How the work gets done. Shows the repeatable app
 **File:** `components/work-section.tsx`
 **Module ID:** `MODULE_04_WORK`
 
-The portfolio work. Contains 3 projects (hardcoded in the `projects` array at the top of the file):
+The portfolio work. Cases come from `lib/cases.ts` (shared with the deep pages and /stats):
 
-| Project | Type | Featured |
-|---|---|---|
-| Hirello.ai – AI-First Hiring Flow | Product Design, AI & UX | ✅ Featured (large card) |
-| Reddit Redesign | Product Design, Concept | Grid |
-| AI Job Market Dashboard | Data Visualization, Systems | Grid |
+| Case | Type | Layout | Deep page |
+|---|---|---|---|
+| Hirello · Networking Hub | Product Design, AI & UX, Design Systems | ✅ Featured (large card) | /case-stories/hirello-networking |
+| Hirello · Platform & Agents | Product Design, AI & UX, Systems | Grid | /case-stories/hirello-platform |
+| 1 Second Everyday · One commit contract | Product Design, Mobile | Grid | /case-stories/1-second-everyday |
+| AI Policy by Design | UX Research, AI & UX | Grid | modal only |
 
 Clicking any card calls `openModal()` from `ModalContext` → renders `ProjectModal`.
 
