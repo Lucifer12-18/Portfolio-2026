@@ -22,10 +22,11 @@ const azeret = Azeret_Mono({
   display: "swap",
 })
 
-// Resolves share-card URLs: explicit site URL → Vercel deployment → localhost.
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ??
-  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3001")
+// Share cards always resolve against the public domain. Every Vercel build
+// (previews included) pins it: per-deployment URLs sit behind Vercel's login,
+// so LinkedIn and Slack can't fetch an og:image from them.
+const PRODUCTION_URL = "https://vishal-deshmukh.vercel.app"
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? (process.env.VERCEL ? PRODUCTION_URL : "http://localhost:3001")
 
 const siteTitle = "Vishal Deshmukh · Product Designer · Pixelogic OS"
 const siteDescription =
