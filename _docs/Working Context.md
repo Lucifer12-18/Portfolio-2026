@@ -289,6 +289,17 @@ Three deep, recruiter-first case studies replaced the old Hirello pages and two 
 - **Honesty rules (keep them):** teammates credited by role, not name; only Vishal's own work is claimed (Platform case shows teammates' pieces in a labelled "team context" strip); no invented metrics (Networking has none yet; onboarding numbers are résumé-backed).
 - **Sources:** facts came from the Hirello stage-server repos (read-only — never modify Hirello code) and the 1SE Figma PDF in `D:/UMBC/1se assgn/`.
 
+- **Jump to a section:** header `SceneJump` (kit.tsx) names the current scene ("04 / 10 Toolbox") and opens a list of every scene at any width; `Contents` (blocks.tsx) lists all scenes as numbered links under the 30-second read; the 2xl rail stays. All three share `useActiveScene` (a scene is current once its top passes 35% of the viewport). Plain `#id` anchors, smooth-scrolled via `html:has([data-case-page])` in globals.css (instant under reduced motion).
+
+## SEO (shipped 2026-10-05)
+
+- `lib/seo.ts` is the single source: `SITE_URL`, `METADATA_BASE` (public domain on any Vercel build), `caseMetadata()` (title, ~150-char `summary` from lib/cases, canonical, OG/Twitter), JSON-LD builders (`siteGraph` = WebSite + Person in the root layout; `caseGraph` = Article + BreadcrumbList in CaseShell; `noteGraph` = BlogPosting + BreadcrumbList on note pages).
+- `app/sitemap.ts` (home, 3 cases, 5 notes) and `app/robots.ts` (disallow /stats, /api/).
+- Share images: `lib/og-card.tsx` renders 1200×630 PNG cards; each case route and `notes/[slug]` has an `opengraph-image.tsx` (the old SVG note thumbnails can't be shown by LinkedIn/X).
+- Canonical: root sets "/", every route overrides with its own.
+- Home: one h1 (the boot-screen name is a `<p>`), plus an sr-only "Case studies and notes" link index in app/page.tsx so crawlers and screen readers reach the deep pages (the chapters are hash states, not routes).
+- To do on the user's side: add the domain in Google Search Console and submit `/sitemap.xml`.
+
 ## Visitor stats (shipped 2026-10-01)
 
 Upstash Redis via REST (`lib/stats-server.ts`), `/api/stats` (visit + event counters, bot filter, event-name regex), private dashboard `/stats?key=<STATS_KEY>` (404 without it), footer "● N visitors" + log line. Disabled cleanly when env vars are missing. Clicks tracked through `data-track` attributes (delegated listener in `components/stats.tsx`).

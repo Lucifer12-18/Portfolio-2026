@@ -7,6 +7,7 @@ import { notePigmentIndex } from "@/lib/note-covers"
 import { NOTES } from "@/lib/notes-data"
 import { ArrowLeft, Clock, Calendar } from "lucide-react"
 import { ChapterTint } from "@/components/chapter-tint"
+import { noteGraph, SITE_NAME, SITE_URL } from "@/lib/seo"
 
 export async function generateStaticParams() {
   const slugs = getAllNoteSlugs()
@@ -21,15 +22,20 @@ export async function generateMetadata({
   const { slug } = await params
   const note = await getNoteBySlug(slug)
   if (!note) return {}
+  // The share image comes from ./opengraph-image.tsx (a PNG card); the old
+  // SVG thumbnails can't be shown by LinkedIn, X or Slack.
   return {
     title: note.title,
     description: note.excerpt,
+    alternates: { canonical: `/notes/${slug}` },
     openGraph: {
       title: note.title,
       description: note.excerpt,
-      images: [{ url: note.imagePath }],
       type: "article",
+      url: `/notes/${slug}`,
+      siteName: SITE_NAME,
       publishedTime: note.isoDate,
+      authors: [SITE_URL],
     },
     twitter: {
       card: "summary_large_image",
@@ -50,6 +56,10 @@ export default async function NotePage({
 
   return (
     <div className="min-h-screen bg-ink-0">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(noteGraph({ ...note, slug: note.slug })) }}
+      />
       {/* Each note wears its cover's pigment */}
       <ChapterTint index={notePigmentIndex(note.slug)} />
       {/* Top bar */}

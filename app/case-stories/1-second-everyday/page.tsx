@@ -1,9 +1,11 @@
 import type React from "react"
 import type { Metadata } from "next"
 import { caseBySlug } from "@/lib/cases"
+import { caseMetadata } from "@/lib/seo"
 import {
   CaseHero,
   CaseShell,
+  Contents,
   Columns,
   ContractDiagram,
   Decisions,
@@ -50,11 +52,8 @@ import { DayTile, FONT, PillBtn, RecordRing, S } from "@/components/case/onese/u
 
 const meta = caseBySlug("1-second-everyday")!
 
-export const metadata: Metadata = {
-  title: "1 Second Everyday · Case Study",
-  description: meta.hook,
-  openGraph: { title: "1 Second Everyday · Case Study", description: meta.hook, type: "article" },
-}
+// Title, canonical, share text; the image comes from ./opengraph-image.tsx.
+export const metadata: Metadata = caseMetadata(meta)
 
 const SCENES = [
   { id: "thesis", label: "The pattern" },
@@ -143,6 +142,8 @@ export default function OneSecondEverydayCase() {
           { value: "6", label: "Success metrics + 1 guardrail" },
         ]}
       />
+
+      <Contents scenes={SCENES} />
 
       <Scene
         id="thesis"

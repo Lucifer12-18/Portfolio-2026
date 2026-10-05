@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useCallback, useRef, useSyncExternalStore, type ComponentType } from "react"
 import dynamic from "next/dynamic"
+import { DEEP_CASES } from "@/lib/cases"
+import { NOTES } from "@/lib/notes-data"
 import { motion, AnimatePresence, MotionConfig } from "framer-motion"
 import { Navbar } from "@/components/navbar"
 import { OpeningHero } from "@/components/opening-hero"
@@ -646,6 +648,27 @@ export default function Home() {
 
             {/* Document h1 — chapters render their visible headings as h2 */}
             <h1 className="sr-only">Vishal Deshmukh, Product Designer · Pixelogic OS</h1>
+
+            {/* Site index — direct links to every case study and note. The
+                chapters are interactive states, so this list is how screen
+                readers (and search engines) reach the deep pages without
+                driving the chapter interface. */}
+            <nav aria-label="Case studies and notes" className="sr-only">
+              <ul>
+                {DEEP_CASES.map((c) => (
+                  <li key={c.slug}>
+                    <a href={c.href}>
+                      Case study: {c.title.replace(" · ", ", ")}. {c.hook}
+                    </a>
+                  </li>
+                ))}
+                {NOTES.map((n) => (
+                  <li key={n.slug}>
+                    <a href={`/notes/${n.slug}`}>Note: {n.title}</a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
 
             {/* ── Cinematic intro — z-[9999] overlay, covers OpeningHero until done ── */}
             {!cinematicDone && (

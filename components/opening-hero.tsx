@@ -112,14 +112,15 @@ export function OpeningHero({ onDismiss }: OpeningHeroProps) {
                 System online
               </motion.div>
 
-              <motion.h1
+              {/* A paragraph, not an h1: the page's one h1 lives in app/page.tsx */}
+              <motion.p
                 initial={{ opacity: 0, y: 18, filter: "blur(8px)" }}
                 animate={{ opacity: showContent ? 1 : 0, y: showContent ? 0 : 18, filter: showContent ? "blur(0px)" : "blur(8px)" }}
                 transition={{ delay: 0.2, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
                 className="mt-6 display-xl text-bone"
               >
                 {PROFILE.name}
-              </motion.h1>
+              </motion.p>
 
               <motion.p
                 initial={{ opacity: 0, y: 10 }}

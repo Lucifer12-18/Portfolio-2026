@@ -4,8 +4,9 @@ import { ArrowLeft, ArrowUpRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { ChapterTint } from "@/components/chapter-tint"
 import { CropMarks } from "@/components/storyboard"
-import { Reveal, ScaleToFit, SceneIndex } from "@/components/case/kit"
+import { Reveal, ScaleToFit, SceneIndex, SceneJump } from "@/components/case/kit"
 import { DEEP_CASES, shortTitle, type CaseMeta } from "@/lib/cases"
+import { caseGraph } from "@/lib/seo"
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CASE KIT (static half) — the storyboard grammar every case study is written
@@ -29,23 +30,29 @@ export function CaseShell({
   const i = DEEP_CASES.findIndex((c) => c.slug === meta.slug)
   const next = DEEP_CASES[(i + 1) % DEEP_CASES.length]
   return (
-    <div className="min-h-screen bg-ink-0">
+    <div className="min-h-screen bg-ink-0" data-case-page>
       <ChapterTint index={meta.pigment} />
-      <header className="sticky top-0 z-50 flex h-14 items-center justify-between border-b border-hair bg-[rgb(15_15_14/0.8)] px-5 backdrop-blur-xl md:px-8">
+      {/* The case as an Article + breadcrumb trail, for search engines. */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(caseGraph(meta)) }} />
+      <header className="sticky top-0 z-50 grid h-14 grid-cols-[1fr_auto_1fr] items-center gap-3 border-b border-hair bg-[rgb(15_15_14/0.8)] px-5 backdrop-blur-xl md:px-8">
         <Link
           href="/#chapter-4"
-          className="inline-flex items-center gap-2 font-mono text-[11px] text-bone-3 transition-colors hover:text-bone"
+          className="inline-flex items-center gap-2 justify-self-start font-mono text-[11px] text-bone-3 transition-colors hover:text-bone"
         >
           <ArrowLeft className="h-3.5 w-3.5" strokeWidth={1.6} />
-          All work
+          <span className="hidden sm:inline">All work</span>
+          <span className="sm:hidden">Work</span>
         </Link>
-        <span className="hidden font-mono text-[11px] text-bone-3 sm:block">case_story / {meta.file}</span>
-        <span className="font-sans text-[14px] font-semibold uppercase tracking-[0.02em]">
-          <span className="text-bone">Pixelogic</span> <span className="text-chapter">OS</span>
+        <SceneJump scenes={scenes} />
+        <span className="justify-self-end font-sans text-[14px] font-semibold uppercase tracking-[0.02em]">
+          <span className="hidden text-bone sm:inline">Pixelogic </span>
+          <span className="text-chapter">OS</span>
         </span>
       </header>
       <SceneIndex scenes={scenes} />
-      <main className="mx-auto w-full max-w-6xl px-5 md:px-8">{children}</main>
+      <main id="top" className="mx-auto w-full max-w-6xl scroll-mt-20 px-5 md:px-8">
+        {children}
+      </main>
       <footer className="mx-auto mt-10 w-full max-w-6xl px-5 pb-16 md:px-8">
         {next && next.slug !== meta.slug && (
           <Link
@@ -135,7 +142,7 @@ export function ThirtySecondRead({
   stats: { value: string; label: string }[]
 }) {
   return (
-    <section aria-label="The 30-second read" className="py-14 md:py-20">
+    <section aria-label="The 30-second read" className="pb-10 pt-14 md:pb-12 md:pt-20">
       <Reveal>
         <div className="grid gap-8 rounded-[20px] border border-hair-2 bg-[rgb(22_22_21/0.6)] p-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] md:gap-12 md:p-9">
           <div>
@@ -166,6 +173,38 @@ export function ThirtySecondRead({
   )
 }
 
+/** "In this case study" — every scene as a numbered jump link, near the top. */
+export function Contents({ scenes }: { scenes: { id: string; label: string }[] }) {
+  return (
+    <nav aria-label="In this case study" className="pb-14 md:pb-20">
+      <Reveal>
+        <div className="flex items-baseline justify-between border-b border-hair pb-3">
+          <span className="label-mono">In this case study</span>
+          <span className="label-mono">{scenes.length} scenes · jump to any</span>
+        </div>
+        <ol className="mt-3 grid grid-cols-1 gap-x-8 min-[420px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          {scenes.map((s, i) => (
+            <li key={s.id} className="border-b border-hair/60">
+              <a
+                href={`#${s.id}`}
+                className="group flex items-baseline gap-3 py-3 text-[14.5px] tracking-[-0.01em] text-bone-2 transition-colors hover:text-bone"
+              >
+                <span className="font-mono text-[10.5px] tabular-nums text-bone-4 transition-colors group-hover:text-chapter">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span className="flex-1">{s.label}</span>
+                <span aria-hidden className="text-[12px] text-chapter opacity-0 transition-opacity group-hover:opacity-100">
+                  ↓
+                </span>
+              </a>
+            </li>
+          ))}
+        </ol>
+      </Reveal>
+    </nav>
+  )
+}
+
 // ── Scenes ───────────────────────────────────────────────────────────────────
 
 export function Scene({
@@ -184,7 +223,7 @@ export function Scene({
   children?: React.ReactNode
 }) {
   return (
-    <section id={id} className="scroll-mt-20 border-t border-hair py-16 md:py-24">
+    <section id={id} className="scroll-mt-14 border-t border-hair py-16 md:py-24">
       <Reveal>
         <div className="mb-9 grid items-end gap-5 md:mb-12 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] md:gap-14">
           <div>

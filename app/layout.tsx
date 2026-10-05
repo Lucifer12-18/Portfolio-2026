@@ -6,6 +6,8 @@ import "./globals.css"
 import { SoundLayer } from "@/components/sound"
 import { ClarityGame } from "@/components/interlude/clarity-game"
 import { StatsBeacon } from "@/components/stats"
+import { METADATA_BASE, SITE_NAME, SITE_URL, siteGraph } from "@/lib/seo"
+import { PROFILE } from "@/lib/profile"
 
 // Geist — one variable family for display AND text. Medium weights + tight
 // tracking carry the editorial voice; no second display face needed.
@@ -30,15 +32,10 @@ const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-fraunces", dis
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap", preload: false })
 const figtree = Figtree({ subsets: ["latin"], variable: "--font-figtree", display: "swap", preload: false })
 
-// Share cards always resolve against the public domain. Every Vercel build
-// (previews included) pins it: per-deployment URLs sit behind Vercel's login,
-// so LinkedIn and Slack can't fetch an og:image from them.
-const PRODUCTION_URL = "https://vishal-deshmukh.vercel.app"
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? (process.env.VERCEL ? PRODUCTION_URL : "http://localhost:3001")
-
-const siteTitle = "Vishal Deshmukh · Product Designer · Pixelogic OS"
+const siteTitle = "Vishal Deshmukh · Product Designer · Design Systems & AI"
+// ~155 characters: the length Google shows before truncating.
 const siteDescription =
-  "Vishal Deshmukh designs customer-facing AI products end-to-end: interaction design, design systems, and research. Product Designer, Design Systems at TasteMakers (Taste Labs); previously Founding Product Designer at Hirello.ai."
+  "Vishal Deshmukh, product designer for AI products and design systems. Case studies from Hirello and 1 Second Everyday: research, interaction design, and build."
 
 export const viewport: Viewport = {
   themeColor: "#0f0f0e",
@@ -48,7 +45,22 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  // Share cards and canonicals resolve against the public domain (lib/seo).
+  metadataBase: new URL(METADATA_BASE),
+  applicationName: SITE_NAME,
+  authors: [{ name: PROFILE.name, url: SITE_URL }],
+  creator: PROFILE.name,
+  keywords: [
+    "Vishal Deshmukh",
+    "product designer",
+    "design systems",
+    "AI product design",
+    "UX designer portfolio",
+    "interaction design",
+    "Baltimore",
+  ],
+  // Every route overrides this with its own canonical.
+  alternates: { canonical: "/" },
   title: {
     default: siteTitle,
     template: "%s · Vishal Deshmukh",
@@ -56,7 +68,7 @@ export const metadata: Metadata = {
   description: siteDescription,
   openGraph: {
     type: "website",
-    siteName: "Pixelogic OS",
+    siteName: SITE_NAME,
     title: siteTitle,
     description: siteDescription,
     url: "/",
@@ -91,10 +103,12 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" data-scroll-behavior="smooth">
       <body
         className={`${geist.variable} ${azeret.variable} ${fraunces.variable} ${inter.variable} ${figtree.variable} font-sans antialiased`}
       >
+        {/* Who this site is about, for search engines (WebSite + Person). */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(siteGraph) }} />
         {children}
         <SoundLayer />
         <ClarityGame />

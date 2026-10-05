@@ -12,6 +12,9 @@ export interface CaseMeta {
   /** "Name · Subtitle" — cards and the modal split on " · ". */
   title: string
   hook: string
+  /** Search/share description, ~150 characters, written for someone who
+   *  has never heard of the product. */
+  summary: string
   tags: string[]
   role: string
   team: string
@@ -29,6 +32,9 @@ export interface CaseMeta {
   outcome: string
   /** Deep page, when the case has one. */
   href?: string
+  /** ISO dates for the deep page (structured data + sitemap). */
+  published?: string
+  updated?: string
 }
 
 export const CASES: CaseMeta[] = [
@@ -37,6 +43,8 @@ export const CASES: CaseMeta[] = [
     file: "hirello_networking.vue",
     title: "Hirello · Networking Hub",
     hook: "A job seeker's contact list, turned into a pipeline of conversations.",
+    summary:
+      "Case study: how Vishal Deshmukh redesigned and built Hirello's AI networking hub, from LinkedIn import and contact groups to outreach sequences and a confirm-first agent.",
     tags: ["Product Design", "AI & UX", "Design Systems"],
     role: "Founding Product Designer · design + front end",
     team: "PM, AI engineer, 3 backend engineers",
@@ -63,12 +71,16 @@ export const CASES: CaseMeta[] = [
     outcome:
       "One hub instead of a dead-end wizard, built on staging and rolling out. Its visual language became the reference: Career GPS was restyled to match it.",
     href: "/case-stories/hirello-networking",
+    published: "2026-10-04",
+    updated: "2026-10-05",
   },
   {
     slug: "hirello-platform",
     file: "hirello_platform.vue",
     title: "Hirello · Platform & Agents",
     hook: "One front door for nine AI agents.",
+    summary:
+      "Case study: one front door for nine AI agents. Vishal Deshmukh's dashboard redesign, Toolbox mega-menu and agent tasks popup for Hirello, plus a design-system proposal.",
     tags: ["Product Design", "AI & UX", "Systems"],
     role: "Founding Product Designer · design + full-stack build",
     team: "PM, platform engineer, agent owners",
@@ -95,12 +107,16 @@ export const CASES: CaseMeta[] = [
     outcome:
       "The winning onboarding variants lifted completion 18% and cut drop-off 30%; feature adoption rose 14%. One popup now teaches 8 agent pages.",
     href: "/case-stories/hirello-platform",
+    published: "2026-10-04",
+    updated: "2026-10-05",
   },
   {
     slug: "1-second-everyday",
     file: "1se_one_contract.fig",
     title: "1 Second Everyday · One commit contract",
     hook: "Three features, one promise: every path ends the same way.",
+    summary:
+      "Product design case study for 1 Second Everyday: auditing the Day screen, mashing and Rewind, and redesigning all three around one consistent commit contract.",
     tags: ["Product Design", "Mobile", "Systems Thinking"],
     role: "Product Designer · home task",
     team: "Solo",
@@ -127,12 +143,16 @@ export const CASES: CaseMeta[] = [
     outcome:
       "A single commit contract shared by capture, mashing and Rewind, so the mental model holds everywhere. 29 states designed across three tracks.",
     href: "/case-stories/1-second-everyday",
+    published: "2026-10-04",
+    updated: "2026-10-05",
   },
   {
     slug: "ai-policy-by-design",
     file: "ai_policy_by_design.fig",
     title: "AI Policy by Design · UMBC HCC Research",
     hook: "Designing AI policy into the interface itself.",
+    summary:
+      "UMBC HCC research by Vishal Deshmukh: participatory design with 11 graduate students that built 12 AI policies directly into an AI tool's interface.",
     tags: ["UX Research", "AI & UX"],
     role: "Product Designer",
     team: "HCC research group",

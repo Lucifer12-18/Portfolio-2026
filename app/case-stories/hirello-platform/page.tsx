@@ -1,9 +1,11 @@
 import type { Metadata } from "next"
 import Image from "next/image"
 import { caseBySlug } from "@/lib/cases"
+import { caseMetadata } from "@/lib/seo"
 import {
   CaseHero,
   CaseShell,
+  Contents,
   Columns,
   Credits,
   Decisions,
@@ -23,11 +25,8 @@ import { Btn, H, Pill } from "@/components/case/hirello/ui"
 
 const meta = caseBySlug("hirello-platform")!
 
-export const metadata: Metadata = {
-  title: "Hirello Platform & Agents · Case Study",
-  description: meta.hook,
-  openGraph: { title: "Hirello Platform & Agents · Case Study", description: meta.hook, type: "article" },
-}
+// Title, canonical, share text; the image comes from ./opengraph-image.tsx.
+export const metadata: Metadata = caseMetadata(meta)
 
 const SCENES = [
   { id: "before", label: "Before" },
@@ -83,6 +82,8 @@ export default function PlatformCase() {
           { value: "+18%", label: "Onboarding completion (A/B)" },
         ]}
       />
+
+      <Contents scenes={SCENES} />
 
       <Scene
         id="before"

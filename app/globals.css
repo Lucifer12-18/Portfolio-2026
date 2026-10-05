@@ -895,3 +895,16 @@ p, li, blockquote {
   transform-origin: bottom;
   animation: sfx-bar 1.1s ease-in-out infinite;
 }
+
+/* Case studies: in-page jumps (contents, jump menu, rail) glide to the scene.
+   Scoped to case pages; the home page manages its own scroll. Instant under
+   reduced motion. data-scroll-behavior on <html> lets Next switch it off
+   during route changes. */
+html:has([data-case-page]) {
+  scroll-behavior: smooth;
+}
+@media (prefers-reduced-motion: reduce) {
+  html:has([data-case-page]) {
+    scroll-behavior: auto;
+  }
+}

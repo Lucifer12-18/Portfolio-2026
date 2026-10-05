@@ -1,9 +1,11 @@
 import type { Metadata } from "next"
 import Image from "next/image"
 import { caseBySlug } from "@/lib/cases"
+import { caseMetadata } from "@/lib/seo"
 import {
   CaseHero,
   CaseShell,
+  Contents,
   Columns,
   Credits,
   Decisions,
@@ -33,11 +35,8 @@ import { Avatar, Bar, Btn, H, Pill, Steps } from "@/components/case/hirello/ui"
 
 const meta = caseBySlug("hirello-networking")!
 
-export const metadata: Metadata = {
-  title: "Hirello Networking Hub · Case Study",
-  description: meta.hook,
-  openGraph: { title: "Hirello Networking Hub · Case Study", description: meta.hook, type: "article" },
-}
+// Title, canonical, share text; the image comes from ./opengraph-image.tsx.
+export const metadata: Metadata = caseMetadata(meta)
 
 const SCENES = [
   { id: "before", label: "Before" },
@@ -103,6 +102,8 @@ export default function NetworkingCase() {
           { value: "5", label: "Hard send caps" },
         ]}
       />
+
+      <Contents scenes={SCENES} />
 
       <Scene
         id="before"

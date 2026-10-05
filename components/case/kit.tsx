@@ -84,68 +84,78 @@ export function ScaleToFit({
   )
 }
 
+type SceneRef = { id: string; label: string }
+
+/**
+ * Which scene is on screen, and how far down the page we are. A scene is
+ * "current" once its top passes 35% of the viewport; above the first scene
+ * (the hero and the 30-second read) nothing is current. Shared by the
+ * progress hairline, the wide-screen rail and the header jump menu.
+ */
+function useActiveScene(scenes: SceneRef[]) {
+  const [active, setActive] = useState<string | null>(null)
+  const [progress, setProgress] = useState(0)
+
+  useEffect(() => {
+    let frame = 0
+    const measure = () => {
+      frame = 0
+      const line = window.innerHeight * 0.35
+      let current: string | null = null
+      for (const s of scenes) {
+        const el = document.getElementById(s.id)
+        if (el && el.getBoundingClientRect().top <= line) current = s.id
+      }
+      setActive(current)
+      const max = document.documentElement.scrollHeight - window.innerHeight
+      setProgress(max > 0 ? window.scrollY / max : 0)
+    }
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(measure)
+    }
+    // First measure on the next frame (not synchronously in the effect).
+    onScroll()
+    window.addEventListener("scroll", onScroll, { passive: true })
+    window.addEventListener("resize", onScroll)
+    return () => {
+      if (frame) cancelAnimationFrame(frame)
+      window.removeEventListener("scroll", onScroll)
+      window.removeEventListener("resize", onScroll)
+    }
+  }, [scenes])
+
+  return { active, progress }
+}
+
+const nn = (i: number) => String(i + 1).padStart(2, "0")
+
 /**
  * The scene filmstrip — a quiet vertical index on wide screens that tracks
  * where you are and jumps on click; a hairline progress bar everywhere else.
  */
-export function SceneIndex({ scenes }: { scenes: { id: string; label: string }[] }) {
-  const [active, setActive] = useState(scenes[0]?.id)
-  const [progress, setProgress] = useState(0)
-
-  useEffect(() => {
-    const els = scenes.map((s) => document.getElementById(s.id)).filter(Boolean) as HTMLElement[]
-    const io = new IntersectionObserver(
-      (entries) => {
-        const visible = entries.filter((e) => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)
-        if (visible[0]) setActive(visible[0].target.id)
-      },
-      { rootMargin: "-30% 0px -55% 0px" },
-    )
-    els.forEach((el) => io.observe(el))
-    const onScroll = () => {
-      const max = document.documentElement.scrollHeight - window.innerHeight
-      setProgress(max > 0 ? window.scrollY / max : 0)
-    }
-    onScroll()
-    window.addEventListener("scroll", onScroll, { passive: true })
-    return () => {
-      io.disconnect()
-      window.removeEventListener("scroll", onScroll)
-    }
-  }, [scenes])
+export function SceneIndex({ scenes }: { scenes: SceneRef[] }) {
+  const { active, progress } = useActiveScene(scenes)
 
   return (
     <>
       <div aria-hidden className="fixed left-0 right-0 top-14 z-40 h-px bg-hair">
         <div className="h-full origin-left bg-chapter" style={{ transform: `scaleX(${progress})` }} />
       </div>
-      <nav
-        aria-label="Scenes"
-        className="fixed left-6 top-1/2 z-30 hidden -translate-y-1/2 2xl:block"
-      >
+      <nav aria-label="Scenes" className="fixed left-6 top-1/2 z-30 hidden -translate-y-1/2 2xl:block">
         <ol className="space-y-2.5">
           {scenes.map((s, i) => {
             const on = s.id === active
             return (
               <li key={s.id}>
-                <a
-                  href={`#${s.id}`}
-                  className="group flex items-center gap-3"
-                  aria-current={on ? "true" : undefined}
-                >
+                <a href={`#${s.id}`} className="group flex items-center gap-3" aria-current={on ? "location" : undefined}>
                   <span
                     className={cn(
                       "h-px transition-all duration-500",
                       on ? "w-8 bg-chapter" : "w-4 bg-bone-4 group-hover:w-6 group-hover:bg-bone-3",
                     )}
                   />
-                  <span
-                    className={cn(
-                      "font-mono text-[10px] transition-colors",
-                      on ? "text-bone" : "text-bone-4 group-hover:text-bone-3",
-                    )}
-                  >
-                    {String(i + 1).padStart(2, "0")}
+                  <span className={cn("font-mono text-[10px] transition-colors", on ? "text-bone" : "text-bone-4 group-hover:text-bone-3")}>
+                    {nn(i)}
                     <span className={cn("ml-2 transition-opacity", on ? "opacity-100" : "opacity-0 group-hover:opacity-100")}>
                       {s.label}
                     </span>
@@ -157,6 +167,113 @@ export function SceneIndex({ scenes }: { scenes: { id: string; label: string }[]
         </ol>
       </nav>
     </>
+  )
+}
+
+/**
+ * "Jump to" — the header control that names the scene you're in and opens a
+ * list of every scene. Works at every width (the rail only shows on very
+ * wide screens). Plain anchor links, so it also works before hydration.
+ */
+export function SceneJump({ scenes }: { scenes: SceneRef[] }) {
+  const { active } = useActiveScene(scenes)
+  const [open, setOpen] = useState(false)
+  const wrapRef = useRef<HTMLDivElement>(null)
+  const buttonRef = useRef<HTMLButtonElement>(null)
+  const listRef = useRef<HTMLOListElement>(null)
+  const index = scenes.findIndex((s) => s.id === active)
+  const current = index >= 0 ? scenes[index] : null
+
+  useEffect(() => {
+    if (!open) return
+    // Focus the scene you're in (or the first), so arrows and Tab start there.
+    const list = listRef.current
+    const target = list?.querySelector<HTMLAnchorElement>("[aria-current=location]") ?? list?.querySelector<HTMLAnchorElement>("a")
+    target?.focus({ preventScroll: true })
+    const onDown = (e: PointerEvent) => {
+      if (!wrapRef.current?.contains(e.target as Node)) setOpen(false)
+    }
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false)
+        buttonRef.current?.focus()
+      }
+    }
+    document.addEventListener("pointerdown", onDown)
+    document.addEventListener("keydown", onKey)
+    return () => {
+      document.removeEventListener("pointerdown", onDown)
+      document.removeEventListener("keydown", onKey)
+    }
+  }, [open])
+
+  const onListKey = (e: React.KeyboardEvent) => {
+    if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return
+    e.preventDefault()
+    const links = Array.from(listRef.current?.querySelectorAll<HTMLAnchorElement>("a") ?? [])
+    const at = links.indexOf(document.activeElement as HTMLAnchorElement)
+    links[(at + (e.key === "ArrowDown" ? 1 : -1) + links.length) % links.length]?.focus()
+  }
+
+  return (
+    <div ref={wrapRef} className="relative">
+      <button
+        ref={buttonRef}
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        aria-controls="scene-jump-list"
+        aria-label={`Jump to a section. Now: ${current ? current.label : "Overview"}`}
+        className={cn(
+          "flex h-8 max-w-[58vw] items-center gap-2 rounded-full border px-3.5 font-mono text-[11px] transition-colors sm:max-w-none",
+          open ? "border-chapter bg-[rgb(22_22_21/0.95)] text-bone" : "border-hair-2 bg-[rgb(22_22_21/0.7)] text-bone-2 hover:border-hair-3 hover:text-bone",
+        )}
+      >
+        <span className="text-chapter tabular-nums">{current ? nn(index) : "00"}</span>
+        <span className="text-bone-4">/ {String(scenes.length).padStart(2, "0")}</span>
+        <span className="truncate">{current ? current.label : "Overview"}</span>
+        <span aria-hidden className={cn("text-[8px] text-bone-3 transition-transform duration-300", open && "rotate-180")}>
+          ▼
+        </span>
+      </button>
+
+      {open && (
+        <nav
+          id="scene-jump-list"
+          aria-label="Jump to a section"
+          className="fixed left-1/2 top-[62px] z-[60] w-[min(92vw,400px)] -translate-x-1/2 overflow-hidden rounded-[16px] border border-hair-2 bg-ink-1 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.9)]"
+        >
+          <div className="flex items-center justify-between border-b border-hair px-4 py-3">
+            <span className="label-mono">Jump to a scene</span>
+            <a href="#top" onClick={() => setOpen(false)} className="font-mono text-[10.5px] text-bone-3 hover:text-bone">
+              Back to top ↑
+            </a>
+          </div>
+          <ol ref={listRef} onKeyDown={onListKey} className="max-h-[min(70vh,560px)] overflow-y-auto p-1.5">
+            {scenes.map((s, i) => {
+              const on = s.id === active
+              return (
+                <li key={s.id}>
+                  <a
+                    href={`#${s.id}`}
+                    onClick={() => setOpen(false)}
+                    aria-current={on ? "location" : undefined}
+                    className={cn(
+                      "flex items-center gap-3 rounded-[10px] px-3 py-2.5 text-[14px] outline-none transition-colors focus-visible:bg-white/[0.07]",
+                      on ? "bg-white/[0.05] text-bone" : "text-bone-2 hover:bg-white/[0.04] hover:text-bone",
+                    )}
+                  >
+                    <span className={cn("w-6 font-mono text-[10.5px] tabular-nums", on ? "text-chapter" : "text-bone-4")}>{nn(i)}</span>
+                    <span className="flex-1">{s.label}</span>
+                    {on && <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-chapter" />}
+                  </a>
+                </li>
+              )
+            })}
+          </ol>
+        </nav>
+      )}
+    </div>
   )
 }
 
